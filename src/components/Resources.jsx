@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FaChartLine, FaCoins, FaTools } from 'react-icons/fa'
+import { FaChartLine, FaCoins, FaTools, FaFileContract } from 'react-icons/fa'
 
 const ResourcesSection = styled.section`
   padding: 5rem 2rem;
@@ -70,6 +70,12 @@ const Resources = () => {
       title: 'DexTools',
       description: 'Trade $OVERDOSE on DexTools',
       url: 'https://www.dextools.io/app/en/ether/pair-explorer/0x8fbce1ab5ee29aada1b716cb3d09ed61f7657668'
+    },
+    {
+      icon: <FaFileContract />,
+      title: 'Contract',
+      description: '2722Zpk2jDLFjKdqeFe1GBgYxN1SLR3ioVNiojrppump',
+      url: 'https://solscan.io/address/2722Zpk2jDLFjKdqeFe1GBgYxN1SLR3ioVNiojrppump'
     }
   ]
 

@@ -64,6 +64,9 @@ const Footer = () => {
         <FooterColumn>
           <Title>$OVERDOSE</Title>
           <Description>The memecoin that's hiding 20 BTC</Description>
+          <Description style={{ fontSize: '0.8rem', marginTop: '1rem', color: '#00f2ff' }}>
+            Contract: <a href="https://solscan.io/address/2722Zpk2jDLFjKdqeFe1GBgYxN1SLR3ioVNiojrppump" target="_blank" rel="noopener noreferrer" style={{ color: '#00f2ff', textDecoration: 'underline' }}>2722Zpk2jDLFjKdqeFe1GBgYxN1SLR3ioVNiojrppump</a>
+          </Description>
         </FooterColumn>
         
         <FooterColumn>
