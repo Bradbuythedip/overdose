@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
@@ -69,6 +70,7 @@ const CTAButton = styled(motion.button)`
 `
 
 const Hero = () => {
+  const navigate = useNavigate()
   return (
     <HeroSection>
       <HeroContent
@@ -93,7 +95,7 @@ const Hero = () => {
         </Title>
         <Subtitle>Featuring Max Keiser's Hidden 20 BTC</Subtitle>
         <CTAButton
-          onClick={() => window.location.href = '/hunt'}
+          onClick={() => navigate('/hunt')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

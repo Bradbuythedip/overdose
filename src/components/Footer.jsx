@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FaTwitter, FaTelegram, FaDiscord } from 'react-icons/fa'
+import { FaTelegram, FaDiscord } from 'react-icons/fa'
+import { UilTwitterAlt } from '@iconscout/react-unicons'
 
 const FooterSection = styled.footer`
   padding: 3rem 2rem;
@@ -69,13 +70,13 @@ const Footer = () => {
           <Title>Follow Us</Title>
           <SocialLinks>
             <SocialLink 
-              href="#" 
+              href="https://x.com/notMaxKeiser" 
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
             >
-              <FaTwitter />
+              <UilTwitterAlt style={{ transform: 'scale(1.2)' }} />
             </SocialLink>
             <SocialLink 
               href="#" 
