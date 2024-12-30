@@ -1,5 +1,4 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
@@ -54,7 +53,9 @@ const Subtitle = styled(motion.h2)`
   }
 `
 
-const CTAButton = styled(motion.button)`
+const CTAButton = styled(motion.a)`
+  display: inline-block;
+  text-decoration: none;
   padding: 1rem 2rem;
   font-size: 1.2rem;
   background: transparent;
@@ -70,7 +71,6 @@ const CTAButton = styled(motion.button)`
 `
 
 const Hero = () => {
-  const navigate = useNavigate()
   return (
     <HeroSection>
       <HeroContent
@@ -95,7 +95,9 @@ const Hero = () => {
         </Title>
         <Subtitle>Featuring Max Keiser's Hidden 20 BTC</Subtitle>
         <CTAButton
-          onClick={() => navigate('/hunt')}
+          href="https://pump.fun/coin/2722Zpk2jDLFjKdqeFe1GBgYxN1SLR3ioVNiojrppump"
+          target="_blank"
+          rel="noopener noreferrer"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
