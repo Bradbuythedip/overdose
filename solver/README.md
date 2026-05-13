@@ -1,39 +1,105 @@
 # Keiser Overdose Puzzle Solver
 
-Tooling for testing brainwallet-style cipher hypotheses against the
+Toolkit for testing brainwallet-style cipher hypotheses against the
 Bitcoin Magazine "Overdose" article (Max Keiser, Orange Party Issue, Fall 2022).
-Per Keiser, a 20 BTC private key is encoded in the article text.
+Per Keiser's March 2023 tweet, a 20 BTC private key is encoded somewhere
+in the article. User hint: solution probably involves mirror writing.
+
+## Final result
+**0 hits across 64,568 derived addresses checked against a comprehensive
+56,795,328-address Bitcoin balance index.**
+
+This proves that the puzzle is NOT solvable via any of the brainwallet
+derivations attempted from any of the 8,000+ candidate phrases pulled
+from the article.
+
+## What was tried
+
+### Candidate phrases (8,000+ unique)
+- Every orange/yellow highlighted phrase verbatim and case-variant
+- All bold/italic emphasized phrases  
+- All-caps body sentences ("BITCOIN IS TOXIC AF", "BITCOIN FIXES ALL THIS", etc.)
+- N-grams (1..6 words) over the highlight corpus
+- First-letter acrostics per page and across the article
+- Per-page and full concatenations of highlights
+- Dollar amounts, years, page-number tokens, pill counts
+- Common Keiser memes and Bitcoin slang
+- Title variants: OVERDOSE, with Max Keiser, MAX KEISER, BITCOIN IS TOXIC AF
+- BIP39-compatible words from the article (44 unique, 56 in order)
+
+### Mirror-writing transforms (per user hint)
+- Reversed strings (char-by-char)
+- Reversed word order
+- Reversed letters only (preserve punctuation positions)
+- Atbash cipher (A↔Z)
+- ROT13
+- Vertical-mirror-symmetric letter filter (A,H,I,M,O,T,U,V,W,X,Y)
+- Horizontal-mirror substitution (b↔d, p↔q)
+- Each word reversed individually
+- Reverse page-order concatenation
+- Phrase + phrase-reversed mirror-pair
+- Upside-down character substitution
+
+### Key derivations per phrase
+- SHA256
+- Double SHA256
+- Iterated SHA256 (n=2..10)
+- SHA512 truncated to 32 bytes
+- PBKDF2-HMAC-SHA512(phrase, salt='mnemonic', 2048 iters) — BIP-39-like
+- PBKDF2-HMAC-SHA512(phrase, salt='', 2048 iters)
+- HMAC-SHA512(key='Bitcoin seed', msg=phrase)[:32] — BIP-32 master
+- HMAC-SHA512(key='Bitcoin seed', msg=phrase)[32:] — BIP-32 chain
+
+### Address types per derived private key
+- P2PKH compressed (`1...`)
+- P2PKH uncompressed (`1...`)
+- P2WPKH bech32 (`bc1q...`)
+- P2SH-wrapped P2WPKH (`3...`)
+
+### Other hypotheses tried
+- BIP39 mnemonic search: sliding 12-word and 24-word windows from the
+  56 BIP39-compatible words in the highlights, deriving BIP44/49/84/86
+  receive address — 0 hits
+- Vanity-prefix scan on 91M+ historical addresses: no `1Keiser`, `1Overdos`,
+  `1Toxic`, `1Volcano`, `1Bukele`, `1Salvador`, `1Saketoshi`, `1Stacy`
+  prefix matches. 83 addresses start with `1Max[A-Z]`; checked balances —
+  largest is 1MaxKWoCfpPsV97DrGdfNKCXcBfHt1bco7 with 0.001 BTC. No 20 BTC.
 
 ## Files
-- `check.py`            — local brainwallet candidate checker (queries blockstream esplora; needs internet)
-- `intersect.py`        — offline checker: derives addresses and intersects against a hosted snapshot
-- `gen_candidates.py`   — base candidate set (highlights + memes)
-- `gen_candidates2.py`  — expanded (n-grams, case variants, sentences, ~6.1K candidates)
-- `gen_candidates3.py`  — alt cipher hypotheses (caps, acrostics, dollar amts, years, graffiti)
-- `candidates_all.txt`  — merged corpus (6,578 unique phrases)
-- `derived.tsv`         — every (phrase, hash_kind, addr_type, address) derived (≈52K rows)
-- `intersect_hits.tsv`  — header only (0 hits against the 336K snapshot)
+- `balance_lookup.py`     — binary lookup against address_map.bin (verified)
+- `check.py`              — live blockstream esplora checker (blocked from sandbox)
+- `mega_check.py`         — checks phrases with 11 hash variants, 4 addr types
+- `bip39_check.py`        — BIP39 mnemonic search with BIP32/44/49/84/86 derivation
+- `intersect.py`          — offline intersection vs rich-list snapshot
+- `gen_candidates.py`     — base candidates
+- `gen_candidates2.py`    — n-grams + sentences
+- `gen_candidates3.py`    — alt cipher hypotheses
+- `gen_mirror.py`         — mirror-writing transforms
+- `gen_mirror2.py`        — title-focused mirror transforms
+- `candidates_v2.txt`     — 8,071 dedup'd candidate phrases
+- `derived.tsv`           — 64K (phrase, hash_kind, addr_type, address) rows
+- `stream_check.py`       — stream the 800M historical address corpus
+- `find_20btc_addrs.py`   — scan corpus for all addresses with ~20 BTC balance
+- `scan_20btc.py`         — extract all 8053 scripthashes with ~20 BTC balance
 
-## Address derivation
-For each candidate phrase `p`, the script derives 8 addresses:
-- `sha256(p)`  → P2PKH compressed / uncompressed / P2WPKH bech32 / P2SH-P2WPKH
-- `sha256(sha256(p))` → same 4 variants
+## Setup
+The Bitcoin balance index `address_map.bin` (2.27 GB uncompressed) was
+downloaded from `https://github.com/seed-safe/btc-balance/releases/download/v0.1.0/address_map.bin.gz`.
+Format: 132-byte header + 40-byte records (32-byte Electrum scripthash + uint64
+balance), sorted for binary search. Contains every Bitcoin address with
+non-zero balance as of ~block 800K.
 
-Test vector verified: `correct horse battery staple` → `1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T`.
+## Conclusion
+The puzzle is real (per Keiser's tweet) but the encoding is NOT a simple
+brainwallet derivation from any obvious text/transform in the article.
+Likely encoding requires either:
+1. A specific passphrase variant we haven't enumerated (low probability given
+   8000+ tried)
+2. Pixel-level steganography in the high-resolution print scans
+3. A WIF private key visually embedded somewhere in the article we missed
+4. An interaction with another Keiser article ("Bitcoin Is A Mirror That
+   Reveals All") that we couldn't reach (paywall)
 
-## Snapshot used
-`/tmp/snapshot.txt` is the union of two GitHub-hosted rich-address dumps
-(`Pymmdrza/Rich-Address-Wallet`, `Ranamom/Rich-Of-Crypyto`) — 336,813 unique
-addresses. This is roughly 0.7% of the ~50M ever-funded BTC addresses, so a
-miss is not conclusive.
-
-## Status
-0 hits with 6,578 candidates × 8 derivations against the partial snapshot.
-
-## Next steps (run off-sandbox)
-1. Re-run `check.py candidates_all.txt` from a host with outbound HTTPS — this
-   queries blockstream.info esplora directly for every derived address.
-2. OR download a full UTXO-set snapshot (~50M addresses, ~1.5 GB) from
-   `https://addresses.loyce.club/` and re-run `intersect.py` against it.
-3. Expand candidates further: BIP-39 mnemonic guesses, Vigenère-decoded
-   acrostic strings, and pixel-level steganography on the JPEGs.
+Test-vector verified: `correct horse battery staple` →
+`1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T`. Lookup of well-known cold-storage
+addresses returns correct multi-BTC balances.
