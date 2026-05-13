@@ -103,3 +103,38 @@ Likely encoding requires either:
 Test-vector verified: `correct horse battery staple` →
 `1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T`. Lookup of well-known cold-storage
 addresses returns correct multi-BTC balances.
+
+## CRITICAL FINDING
+
+The puzzle's target wallet is almost certainly:
+
+  **`1xxxtzAkynEy8PTvj7bPvcP1Suveibc7j`** — balance 20.00000000 BTC
+
+Evidence:
+- Exact balance match (Keiser's tweet says "20 BTC")
+- Vanity prefix `1xxx` matches the prominent **X X X** hand-drawn marks
+  scrawled on pages 76, 78, and 79 of the article
+- It is the ONLY `1xxx`-prefix address in the 56.8M-record funded BTC
+  address index
+- No public attribution found via web search — consistent with an
+  unsolved puzzle
+
+Implication for cracking:
+- A `1xxx`-prefix address required vanity-grinding the private key
+  (≈ 58³ ≈ 195,000 random keys tried until one happened to produce
+  this prefix). This means the private key is **random**, not the output
+  of any brainwallet hash of an obvious phrase. That fully explains why
+  all 64,568 of our brainwallet derivations missed.
+- The article must therefore encode the **raw private key string itself**
+  (52-char WIF starting with `K`/`L` or `5`, OR 64 hex chars), distributed
+  across visual / textual features we have not yet extracted:
+  - orange-highlighted character positions
+  - pill (x, y, orientation) coordinates
+  - X-mark positions as a stencil over body text
+  - mirror-flipped bleed-through letters
+  - capitalization anomalies in the typewriter body text
+
+To proceed off-sandbox: get high-resolution scans of pages 73–79, extract
+ALL marked characters in reading order, and treat the resulting string as
+either a 51/52-char base58 WIF or a 64-char hex private key. Then verify
+the derived address matches `1xxxtzAkynEy8PTvj7bPvcP1Suveibc7j`.
