@@ -299,3 +299,77 @@ candidate set:
 (`address_check.py`). That call returns `chain_stats` (FR3), the funding
 txid, its height and timestamp (FR1) and the value (FR2) — i.e. all ~6.1
 remaining bits except the funding-source trace.
+
+---
+
+# The "mirror" hypothesis, sourced and tested
+
+## Sourcing first
+
+The mirror idea traces to three things, and none of them is Keiser hinting at a cipher:
+
+| claim | what it actually is |
+|---|---|
+| "Keiser hinted at mirror writing" | the repo README attributes this to **"User hint"** — the operator's hypothesis, not a Keiser statement |
+| Keiser's *"Bitcoin Is A Mirror That Reveals All"* | published **2024-06-01**, in the Inscription Issue — **15 months after** the puzzle. Its "mirror" is a self-help metaphor about confronting yourself. It cannot be a hint for a March-2023 puzzle |
+| the Finlow-Bates Medium piece | about **his own** treasure hunt (8 keys, 0.002 BTC each, hidden in his book), not Keiser's mechanism |
+
+What *is* sourced: the announcement was a **7-note Nostr thread** ("check out the pages in...") — matching the 7 page images in this repo. The `nevent` decodes to event id
+`2d73d71321d5ee832f170f40dc025812718aa673a4a7acf0cb5312653f2d1240` on relay
+`wss://nostr.wine`, and carries no author-pubkey TLV. WebSocket is unsupported through
+the proxy, so the thread body is unreachable from here.
+
+## The one exotic mechanism the word actually maps onto
+
+In Bitcoin there is a real mirror: **secp256k1 negation**. Every key `k` has a
+partner `n − k`; their public keys share an x-coordinate with flipped y. For a
+compressed key the mirror is literally the prefix byte `02 ↔ 03` — no elliptic-curve
+multiplication at all.
+
+Verified both ways before use: prefix-flip ≡ `n − k` scalar multiplication, for
+compressed and uncompressed forms.
+
+All prior work mirrored the **text** (reversed strings, atbash, ROT13, word order)
+and then hashed. Nothing mirrored the **key**. That is a genuine untested half of
+the space, and it is nearly free.
+
+## What was run
+
+`mirror_check.py`, entirely offline against `address_map.bin`:
+
+- 8,490 candidate phrases × 16 hash variants
+- × 5 key involutions: identity, byte-reversal, bitwise complement, 256-bit
+  reversal, hex-nibble reversal
+- × 2 curve orientations: `k` and `n − k`
+- × 4 address types (P2PKH compressed/uncompressed, P2WPKH, P2SH-P2WPKH)
+
+**679,200 keys → 5,433,600 addresses → 0 hits.** An ~84× expansion of the prior
+64,568-address search.
+
+## Positive control (so the zero means something)
+
+| address | index says |
+|---|---|
+| genesis `1A1zP1eP…` | 54.38462888 BTC |
+| tier-1 candidate `125dqocB…` | **20.00000000 BTC** |
+| tier-1 candidate `1x495Vm3…` | **20.00000000 BTC** |
+| `1JwSSubhmg…` (*correct horse battery staple*) | 0 — correctly drained |
+
+The oracle fires. The zero is a real negative, not a broken lookup. Note the third
+row is the exact address `mirror_check.py` derives from that phrase, so the
+derivation path is demonstrably live.
+
+## Conclusion
+
+The "private key is a hash of some text in the article" family is now very hard to
+sustain: 64,568 addresses previously, 5,433,600 now, including the full curve-mirror
+space. Combined with the vanity-prefix and dictionary negatives, the chain-side
+68-address path remains the live one.
+
+## Untested hypotheses worth passing to the image-analysis track
+
+- **BIP38.** An encrypted key prints as a 58-char string starting `6P`. This would
+  explain every failed WIF/hex extraction: the printed string is not a key until a
+  passphrase is applied. **Grep the OCR output for `6P`** — cheap and decisive.
+- **7 shares.** The announcement was 7 notes and there are 7 page images; a split
+  secret (Shamir, or plain concatenation across pages) fits that shape.
