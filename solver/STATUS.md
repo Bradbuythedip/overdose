@@ -175,3 +175,48 @@ The address corpus was re-probed past its documented end: `xlk` returns 200
 (69 MB) and `xll` … `xna` all 404. It genuinely stops at 297 files / 2021-01-17,
 so no first-appearance ordering exists past that date. `mountaineerbr`'s variant
 is not reachable at that path either. The `T_new` lower bound stands.
+
+---
+
+## Wide band [15, 25] BTC — completed to the same standard
+
+The narrow band [19.5, 20.5] had the full treatment; the wide band matching the
+laptop scan's `MIN_SATS/MAX_SATS` did not. It does now — a second 784M-address
+corpus sweep was run against its own 28,034-scripthash target set.
+
+| stage | n |
+|---|---|
+| [15, 25] BTC in the 2025-10 index | 28,034 |
+| − present in the corpus ending 2021-01-17 | −10,384 |
+| `T_new_wide` | 17,650 |
+| resolved to addresses **and** unmoved 2025-10 → 2026-08 | **12,418** |
+
+Sweep integrity: **784,345,877** addresses scanned, **0** fetch failures — exactly
+the corpus's own published total.
+
+### Tiers
+
+| tier | n | description |
+|---|---|---|
+| 1 | **68** | exactly 20.00000000 + legacy P2PKH |
+| 2 | 144 | exactly 20.00000000 + P2SH |
+| 5 | 2,385 | within [19.5, 20.5] |
+| 6 | 278 | whole-BTC legacy, wider band |
+| 7 | 1 | whole-BTC, wider band |
+| 8 | 9,542 | remainder of [15, 25] |
+| | **12,418** | total |
+
+Files: `window/candidates_wide.tsv` (with balance, type, tier),
+`window/candidates_wide.txt`, `window/Tnew_wide_15_25.tsv`.
+
+### Independent validation
+
+The two pipelines were built from different target sets and different corpus
+sweeps. **All 2,559 narrow-band candidates fall inside the wide set (2,559 /
+2,559)**, exactly as set inclusion requires. That is a genuine cross-check of the
+band extraction, the C scripthash implementation, the corpus subtraction and the
+2026 resolution — not a restatement of one result.
+
+9,859 candidates are new, i.e. outside [19.5, 20.5]. Tier 1 is unchanged at 68,
+so widening the band does not disturb the top of the ranking; it only adds
+coverage in case "20 BTC" was approximate.
