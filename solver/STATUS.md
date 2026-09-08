@@ -140,3 +140,38 @@ BIP32 paths, the secp256k1 mirror, and four key involutions.
 comprehensively dead at every derivation scheme we can construct. Either the key
 material is not recoverable from these 1800 px scans, or the mechanism is not a
 passphrase at all. The live path remains chain-side.
+
+---
+
+## Tier-1 prior: verified, with a correction
+
+I initially observed that **0 of 1,707** segwit candidates hold exactly
+20.00000000 BTC versus **212 of 852** legacy ones, and read that as segwit
+holdings never being round. **That was overstated.** On the full 2026 band the
+picture is:
+
+| type | in band | whole-BTC | rate |
+|---|---|---|---|
+| P2PKH | 1,930 | 125 | 6.5% |
+| P2SH | 1,147 | 248 | 21.6% |
+| segwit | 2,531 | **62** | 2.4% |
+
+Segwit *does* hold round amounts. The reason none survive into the candidate set
+is temporal, and it checks out cleanly:
+
+> All **62** segwit whole-BTC addresses in the 2026 band are **absent from the
+> 2025-10 snapshot** — so they were funded after October 2025, four years outside
+> the puzzle window, and the filter excluded them correctly.
+
+The corrected statement is narrower but still useful: **within the puzzle window,
+the population of never-moved exactly-20-BTC wallets is entirely legacy** (68
+P2PKH + 144 P2SH). That is a mechanically explained property of the filtered set,
+not an artifact, and it is why tier 1 is ranked as it is. Legacy survival through
+the 2025-10 filter runs ~55% (68/125 P2PKH, 144/248 P2SH); segwit's is 0/62.
+
+## Corpus extent re-verified
+
+The address corpus was re-probed past its documented end: `xlk` returns 200
+(69 MB) and `xll` … `xna` all 404. It genuinely stops at 297 files / 2021-01-17,
+so no first-appearance ordering exists past that date. `mountaineerbr`'s variant
+is not reachable at that path either. The `T_new` lower bound stands.
