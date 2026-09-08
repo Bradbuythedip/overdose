@@ -686,3 +686,30 @@ the corpus that ends **2021-01-17**". That covers everything funded from January
 corrected window.** The date-agnostic construction absorbed the premise error —
 which is exactly why the balance-first inversion was the right design: it never
 depended on the publication date being right.
+
+---
+
+# Hunt for a 2023 snapshot: found the right dataset, cannot reach it
+
+With the window corrected to Sept 2021 → Mar 2023, the missing constraint is an
+**upper** date bound. Snapshots in hand (2021-01 corpus, 2025-10 index, 2026-08
+address list) all sit outside the window, so none of them bounds the top.
+
+Sources tried:
+
+| source | outcome |
+|---|---|
+| Pymmdrza dated 2023 release tags | assets consolidated away (previously verified) |
+| `shlima/fortune` git tree | `addresses/` is **not in git**; README says the dataset ships in the Docker image |
+| `ghcr.io/shlima/fortune` image | manifest and tags fetch fine; **blobs 307-redirect to `pkg-containers.githubusercontent.com`, which the egress policy blocks (403 at CONNECT)** |
+| blockchair / loyceV / archive.org | blocked hosts |
+
+So the bound is not obtainable from here. But the dataset is real and correctly
+dated — `addresses/Bitcoin/2023/04/p2pkh_Rich_Max_*.txt`, P2PKH bucketed by
+balance — and the tier-1 candidate set is **entirely P2PKH**, so it applies
+directly. Exact commands to run it on an unrestricted machine are in
+`RUNBOOK_window.md`; it dates the tier-1 set in minutes with no blockchain API.
+
+Also searched, with no result: any public report of the puzzle being solved, or
+of any Keiser column key being claimed. Nothing found. Consistent with the puzzle
+still being open.

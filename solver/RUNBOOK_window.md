@@ -194,3 +194,51 @@ so every ranking is auditable rather than a bare number.
   outside the window. Path A's height filter is what narrows it.
 - Attribution scoring is a heuristic ranking, not evidence. Step 3 against
   primary sources is what actually confirms a candidate.
+
+---
+
+## FASTEST PATH: date the tier-1 candidates with no blockchain API at all
+
+`ghcr.io/shlima/fortune` bundles a **April 2023** snapshot of P2PKH addresses,
+bucketed by balance, at `addresses/Bitcoin/2023/04/p2pkh_Rich_Max_*.txt`.
+
+That is exactly the missing bound. Every tier-1 candidate is already known to be
+(a) holding ~20 BTC now and (b) absent from the corpus that ends 2021-01-17. If a
+candidate **also appears in the April-2023 snapshot**, it was funded before April
+2023 — i.e. inside the corrected Sept-2021 → Mar-2023 window. If it is absent, it
+was funded after the announcement and is excluded.
+
+The sandbox cannot fetch it: the image blobs 307-redirect to
+`pkg-containers.githubusercontent.com`, which the egress policy blocks. From an
+unrestricted machine it is a two-minute job:
+
+```bash
+# pull the image and copy the dataset out
+docker pull ghcr.io/shlima/fortune:latest
+cid=$(docker create ghcr.io/shlima/fortune:latest)
+docker cp "$cid:/addresses/Bitcoin/2023/04" ./apr2023
+docker rm "$cid"
+ls -la ./apr2023          # p2pkh_Rich_Max_{1,10,100,1000,10000,100000}.txt
+```
+
+(If the path differs, `docker run --rm --entrypoint sh ghcr.io/shlima/fortune -c
+'find / -name "p2pkh_Rich_Max*" 2>/dev/null'` will locate it.)
+
+Then intersect — a 20 BTC address lives in the `Max_100` bucket:
+
+```bash
+cat apr2023/p2pkh_Rich_Max_100.txt | tr -d '\r' | sort -u > apr2023.sorted
+sort -u solver/window/candidates_p2pkh_exact20.txt > tier1.sorted
+echo "tier-1 candidates funded BEFORE Apr 2023 (in-window):"
+comm -12 tier1.sorted apr2023.sorted | tee tier1_in_window.txt | wc -l
+echo "tier-1 funded AFTER Apr 2023 (excluded):"
+comm -23 tier1.sorted apr2023.sorted | wc -l
+```
+
+Anything in `tier1_in_window.txt` is a wallet that holds exactly 20.00000000 BTC,
+is legacy P2PKH, did not exist before 2021-01-17, existed by April 2023, and has
+never moved. Run `address_check.py` on just those to get funding dates and
+confirm FR3.
+
+Worth doing **before** the block scan finishes — it is minutes rather than hours,
+and it uses a completely independent data source.
