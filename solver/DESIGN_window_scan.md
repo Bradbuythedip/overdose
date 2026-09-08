@@ -258,3 +258,44 @@ P2PKH, created after 2021-01-17, and unmoved across two independent snapshots
 - Address-type distribution of the candidates is 59.5 % P2WPKH, 21.2 % P2SH,
   12.1 % P2PKH — i.e. the legacy-P2PKH tier is a genuine 8× enrichment over
   base rate, not an arbitrary cut.
+
+---
+
+# Where the offline path terminates
+
+The remaining ~6.1 bits are the funding **date** and the funding **source**.
+Every offline DP for the date was enumerated and tested:
+
+| DP for FR1 (date), offline | outcome |
+|---|---|
+| snapshot bracketing via dated 2023 releases | **dead** — tags survive, assets were consolidated away (8 filenames + 3 tag READMEs probed, all 404) |
+| snapshot bracketing via 2024 monthlies | **dead** — no assets under those tags either; and a 2024-01 bound would not isolate a 2022-10..2023-04 window regardless |
+| published UTXO dump carrying per-output height | **dead** — chainstate *does* store each UTXO's height, and for an FR3 wallet that height is exactly the funding height, but every result is a *tool* to produce such a dump, not a published dump. `seed-safe/btc-balance` is balance-only |
+| address corpus preserving first-appearance order past 2021 | **dead** — the ordered corpus (Qalander) ends 2021-01-17; no successor found |
+
+So FR1 is not solvable from an environment with no Bitcoin egress. That is a
+constraint, not a gap in the method: **nothing reachable carries a date.**
+
+## Final negative results
+
+Three checks that close off search directions, all run against the resolved
+candidate set:
+
+1. **Brainwallet cross-check.** Intersecting all 64,568 previously-derived
+   addresses with the 2,559 candidates gives **0 hits**. This independently
+   confirms the prior session's balance-index result by a completely different
+   route, and supports the conclusion that the key is random rather than the
+   hash of any phrase in the article.
+2. **Semantic scan.** Against a 344,415-word English dictionary, **0 of 2,559**
+   candidate addresses contain an embedded word of 7+ characters. Combined with
+   the token scan, the "the address advertises itself" hypothesis is dead in
+   this set.
+3. **XXX-prefix scan.** 0 candidates match the prior session's `1xxx`/repeated-
+   character pattern.
+
+## What the last step costs
+
+68 addresses × one `blockstream.info/api/address/:a` call ≈ one minute
+(`address_check.py`). That call returns `chain_stats` (FR3), the funding
+txid, its height and timestamp (FR1) and the value (FR2) — i.e. all ~6.1
+remaining bits except the funding-source trace.
