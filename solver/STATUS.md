@@ -102,3 +102,41 @@ bitcointalk, nostr, bitcoinmagazine, archive.org and
 egress proxy. Only github.com, raw/release githubusercontent, ghcr.io manifests
 and the package registries pass. Every offline result above was produced within
 that constraint.
+
+---
+
+## Session 3 additions (workflow + HD derivation)
+
+**New derivation dimension — BIP32 hierarchy.** Every prior sweep, in both
+sessions, treated a hash of the passphrase as the private key *directly*. Real
+wallets do not: they turn the passphrase into a **seed** and walk a BIP32 path.
+`hd_derive.py` closes that gap — PBKDF2-HMAC-SHA512(phrase, salt, 2048) → master
+→ 11 paths (m, m/0, m/0', m/0'/0'/0', m/44'/0'/0'/0/{0,1}, m/49', m/84', m/86')
+across 5 salts, plus scrypt at three parameter sets, each key also tested at its
+secp256k1 mirror across 4 address types.
+
+Validated against **all three official BIP32 spec test vectors** before use.
+
+**New candidate corpus.** A 13-agent workflow generated **2,300** passphrase
+candidates across 12 semantic angles (exact sentences, Keiser persona, El
+Salvador/Bukele autumn-2021 context, title/masthead, artwork and scrawls,
+Fall-2021 news, Bitcoin-culture coinages, numbers/dates, the George Sand hint
+itself, puzzle-meta phrasing, token compounds, display type) plus a completeness
+critic. Prior corpora were all built before the Issue-24/Fall-2021 correction.
+
+| sweep | keys | result |
+|---|---|---|
+| hash + mirror over 2,300 new candidates | 184,000 (1,472,000 addresses) | **0** |
+| BIP32 + scrypt over the 8,622-phrase corpus | 500,076 | **0** |
+| BIP32 + scrypt over the 2,300 new candidates | 133,400 | **0** |
+| **total this session** | **817,476** | **0** |
+
+Cumulative across all sessions the text-derived-key hypothesis has now absorbed
+well over **7 million** distinct address derivations with zero hits, spanning
+plain hashes, iterated hashes, PBKDF2, HMAC, scrypt, WarpWallet, BIP39 seeds,
+BIP32 paths, the secp256k1 mirror, and four key involutions.
+
+**Assessment.** The "private key is derived from text in the article" family is
+comprehensively dead at every derivation scheme we can construct. Either the key
+material is not recoverable from these 1800 px scans, or the mechanism is not a
+passphrase at all. The live path remains chain-side.
