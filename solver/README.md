@@ -89,7 +89,7 @@ Format: 132-byte header + 40-byte records (32-byte Electrum scripthash + uint64
 balance), sorted for binary search. Contains every Bitcoin address with
 non-zero balance as of ~block 800K.
 
-## Conclusion
+## Conclusion (brainwallet track)
 The puzzle is real (per Keiser's tweet) but the encoding is NOT a simple
 brainwallet derivation from any obvious text/transform in the article.
 Likely encoding requires either:
@@ -104,7 +104,23 @@ Test-vector verified: `correct horse battery staple` →
 `1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T`. Lookup of well-known cold-storage
 addresses returns correct multi-BTC balances.
 
-## CRITICAL FINDING
+## SUPERSEDED — see `DESIGN_window_scan.md` and `RUNBOOK_window.md`
+
+The "CRITICAL FINDING" below is **retracted**. `1xxxtzAkynEy8PTvj7bPvcP1Suveibc7j`
+is NOT the puzzle wallet: it is a 2016 memo.cash user's wallet, first funded
+19-Apr-2016, unrelated to Keiser. The window scan independently reproduces this
+— that address is recovered from the pre-2021 blockchair corpus, so its only
+activity predates the puzzle by six years.
+
+A further structural problem with the work below: the address corpus it scanned
+(`Qalander/bitcoin-all-addresses`) **ends 2021-01-17**. Any wallet created
+during the Oct-2022 – Apr-2023 puzzle window is absent from it by construction,
+so the vanity-prefix and rich-list scans below *could not have found* the
+puzzle wallet even in principle. That gap is what the window scan addresses.
+
+Kept below for the record.
+
+## CRITICAL FINDING (RETRACTED)
 
 The puzzle's target wallet is almost certainly:
 
