@@ -270,3 +270,34 @@ Files: `window/tier1_in_window.txt` (**32**),
 32 addresses that hold exactly 20.00000000 BTC, are legacy P2PKH, did not exist
 before 2021-01-17, existed by 2023-04-10, and have never moved since. Run
 `address_check.py` on those 32 first.
+
+### Swept-wallet hypothesis: tested, not actionable
+
+Ran the test the April-2023 snapshot made possible. Of its 139,959 addresses
+(P2PKH/P2SH decodable), **24,754** held 10–100 BTC then and hold nothing at the
+2025-10 snapshot. A further 784M-address corpus sweep (297/297 files, 0 failures)
+split those:
+
+| | n |
+|---|---|
+| existed pre-2021 (ordinary old coins) | 11,064 |
+| **funded post-2021, later emptied** | **13,690** |
+
+13,690 is ordinary churn over 2.5 years, not a lead. Narrowing it would need the
+**funding amount**, and the April-2023 data for this bucket is address-only —
+the balance-bearing `.md` files stop at 100 BTC. So the hypothesis stands
+untested at useful precision rather than refuted.
+`window/swept_post2021_candidates.txt` holds the pool if it is ever worth
+checking against an explorer.
+
+### No lower bound available
+
+The repo's 2022-era files (`100richBTC`, `798_RichWallet_BTC`,
+`6000/10000/30000BitcoinRichWalletAdd`, committed 2022-03/04) are **top-N rich
+lists**, 30,801 addresses in union — a floor of roughly 200+ BTC in 2022, far
+above 20. None of the 32 survivors appears in them, and that absence carries **no
+information**: the lists simply do not reach 20 BTC.
+
+So the achievable bound is: **funded between 2021-01-17 (corpus end) and
+2023-04-10 (snapshot)** — a 27-month window containing the true 18-month
+Sept-2021 → Mar-2023 window, with ~8 months of slack at the start.
