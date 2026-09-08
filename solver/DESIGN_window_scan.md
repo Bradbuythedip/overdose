@@ -496,3 +496,58 @@ Keiser's hint itself is solid and still points where the workflow is already
 looking: a **positional** null cipher over the body text (every Nth line/word/
 letter, acrostics), which is George Sand's actual method. Nothing here undermines
 that line of attack — it only removes "character weight" as a shortcut to it.
+
+---
+
+# George Sand positional extractions: run, and negative
+
+## Transcription
+
+All five body pages (75–79) transcribed by direct vision read of the scans, with
+**line breaks preserved exactly as printed** — `solver/transcript/p75..p79.txt`,
+142 lines. Line structure is the whole ballgame for a positional cipher, and OCR
+on this distressed typewriter face reflows lines badly, so this transcript is
+likely more faithful than an OCR pass.
+
+Layout notes that matter: page 76's top block is **centre-aligned** with hand-set
+breaks; page 79's main paragraph is set on a **curved baseline**; page 77's final
+paragraph is **justified** (which is what produces its irregular letter spacing —
+typographic, not cipher).
+
+## Extractions run
+
+`gsand_extract.py`, offline against `address_map.bin`:
+
+- first/last letter per line; first/last word per line
+- every Nth line (N=2..10), first letter
+- every Nth word (N=2..10), first letter
+- every Nth character (N=2..10)
+- alternating lines at both offsets — **George Sand's actual method**
+- capitals only; digits only
+- every one of the above also reversed
+
+74 rules × 6 sources (5 pages + combined). Each output tested as
+(a) a brainwallet passphrase across 16 hash variants × 5 key involutions × both
+curve orientations, (b) raw hex at every 64-char offset, (c) WIF at every valid
+51/52-char offset.
+
+**49,562 keys → 0 hits.**
+
+## Also negative: no readable acrostic
+
+`first_letter_per_line` over all 142 lines gives
+`HtRTMtaaataoIBacLFtItVNDKGtYhwtaGBIbnrGnshTcObplADHtHIh$bclNbhM...` — no English.
+`digits_only` gives `20081111971101201114220000100000201712000518525195196910`,
+which is simply the article's years and figures (2008, 1971, 2011, 42, 2017,
+51, 85, 1969) — not key material.
+
+## Bounds on this negative
+
+It is only as good as (a) the transcription and (b) the rule set. Not covered:
+display type (the "BITCOIN IS TOXIC AF" head, the hand-drawn scrawls, the
+signature), word-level rather than letter-level acrostics, rules keyed to the
+highlight colours, and any rule needing the physical page (column position,
+line number on the printed page rather than in my concatenation).
+
+The hand-drawn scrawls read **"SHIT"** (p77) and **"X FUCK ALL X"** (p78) — the
+source of the "shitfuckall" candidate the cipher panel already tested.
