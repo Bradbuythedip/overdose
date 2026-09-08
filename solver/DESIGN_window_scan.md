@@ -373,3 +373,65 @@ space. Combined with the vanity-prefix and dictionary negatives, the chain-side
   passphrase is applied. **Grep the OCR output for `6P`** — cheap and decisive.
 - **7 shares.** The announcement was 7 notes and there are 7 page images; a split
   secret (Shamir, or plain concatenation across pages) fits that shape.
+
+---
+
+# The cipher: Keiser's hint is real, and the marking is WEIGHT
+
+## The hint is sourced
+
+Correcting my previous entry. Keiser **did** state the method, in
+[tweet 1607378060172460032](https://x.com/maxkeiser/status/1607378060172460032),
+December 2022:
+
+> "Have you ever picked up a physical copy of @BitcoinMagazine and read my column
+> and Like George Sand's hidden cryptography, I have hidden private keys in the text."
+
+Two details matter: **"keys" is plural**, and it says **"my column"** — so this may
+span more than the Overdose piece. George Sand's trick is a null cipher: an
+innocent surface text carrying a hidden message at marked positions.
+
+## What the marking actually is
+
+Not position — **weight**. Individual characters are set in a heavier face
+*mid-word*, which no ordinary emphasis does. Confirmed by eye at 5–6× zoom on
+native-resolution crops (`window/z_being.png`, `window/z_ripped.png`):
+
+| word | reading |
+|---|---|
+| `skin being` | "skin" light; in "being", **b e i** heavy, **n g** light — the bolding stops mid-word |
+| `ripped` | "r" light, **ipped** heavy |
+| `central` | "c" light, **e** heavy, "ntra" light, **l** heavy |
+| `bankers` | **b** heavy, "an" light, **e** heavy, "rs" light |
+
+So the payload is the ordered sequence of heavy characters in the body text.
+**This is a different set from the orange/black highlights** that earlier work
+extracted (645 chars, no WIF/hex found). The highlights are design; the weight is
+the cipher.
+
+## Honest status of the detector
+
+`bold_extract.py` segments lines and glyphs and measures per-glyph stroke width
+(median horizontal ink-run length) rather than ink density, since density
+confounds letter shape with weight.
+
+It is **not reliable yet**, and should not be trusted as-is:
+
+- at 1.2σ it under-detects (finds `ripped`'s **e** and `central`'s **e**, misses the rest)
+- at 0.2σ it over-detects badly (271 flags/page; it boxes most instances of
+  `e`, `s`, `o` regardless of weight)
+- root cause: at 1800 px page width, regular strokes measure ~3 px and bold ~4–5 px,
+  so **letter identity dominates the signal**. There is no clean global threshold.
+
+The fix is one of: higher-resolution scans; or OCR each glyph and normalise its
+stroke width against the median for *that same letter* elsewhere on the page,
+which removes the shape confound. The second is the cheap one and is the
+recommended next step.
+
+## Why this matters for the search
+
+If the payload is a passphrase rather than a raw WIF, it feeds straight into the
+existing offline oracle (`address_map.bin`) — no network needed. Note the bold
+characters observed so far include `l` (lowercase L), which is **not valid
+base58**, so the extracted string is unlikely to be a WIF directly; a passphrase
+or an intermediate encoding is more likely.
