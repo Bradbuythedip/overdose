@@ -170,3 +170,91 @@ boundary, so the partition does not introduce coupling.
   record count, size, CRC-length) and behaviourally (8,053 reproduction), but its
   provenance is not independently audited; the laptop confirmation step re-derives
   every finalist from primary sources.
+
+---
+
+# Second iteration — resolving the coupling that Design B left behind
+
+Design B pushed FR2/FR4 offline but left FR1/FR3 stranded on the laptop, because
+the sandbox held **scripthashes, not addresses**, and every Bitcoin API is
+egress-blocked. So the binding requirement became a new one, not in the original
+decomposition:
+
+> **FR-R** — resolve a scripthash to its address for a wallet created *after*
+> 2021-01-17 (the point where the only reachable corpus ends).
+
+## DP candidates for FR-R
+
+| DP | verdict | reasoning |
+|---|---|---|
+| DP-c live network query | rejected | 403 policy denial (C1) |
+| DP-d invert SHA256(scriptPubKey) | rejected | 2^160. Even a 7-char vanity constraint only reduces it to ~2^125 |
+| DP-b address-keyed balance index | rejected | `address_map.bin` is built from Bitcoin Core **chainstate**, which stores no addresses — confirmed from upstream README |
+| DP-f snapshot bracketing for dates | tested, dead | dated 2023 release tags survive but their assets were consolidated away; probed 8 filenames + READMEs at 3 tags, all 404 |
+| **DP-R address+balance corpus on GitHub releases** | **selected** | a reachable data class nobody had used yet |
+
+DP-R works because the constraint is on *hosts*, not on *data*. GitHub releases
+are allowlisted, and a 1.6 GB `address,balance` dump of all 56.2 M funded
+addresses is served from exactly there.
+
+## Why the second snapshot also strengthens FR3
+
+The resolution corpus is dated **2026-08**; the balance index is **2025-10**.
+That mismatch is not noise, it is a second independent FR3 test:
+
+> A wallet satisfying `tx_count == 1 ∧ spent_txo_sum == 0` holds a constant
+> balance forever. So it must appear in the band at *both* snapshot dates.
+> Anything present at 2025-10 but absent at 2026-08 either spent or received
+> again — failing FR3 either way.
+
+So the 889 unresolved scripthashes are not a coverage gap; they are **excluded
+by FR3**. Resolution and filtering turned out to be the same operation.
+
+## Updated design matrix
+
+| | DP4′ band scan | DP6 corpus subtract | DP-R address resolve | DP-A address_check | DP5 rank |
+|---|---|---|---|---|---|
+|FR4| **X** | 0 | 0 | 0 | 0 |
+|FR2| **X** | **X** | 0 | 0 | 0 |
+|FR-R| **X** | **X** | **X** | 0 | 0 |
+|FR3| **X** | 0 | **X** | **X** | 0 |
+|FR1| 0 | **X** | **X** | **X** | 0 |
+|FR5| **X** | **X** | **X** | **X** | **X** |
+
+Still triangular ⇒ decoupled. The first four columns are now **entirely
+offline**; only DP-A needs the network, and it needs one cheap address query
+per candidate instead of 26,000 block fetches.
+
+## Information-content ledger (measured, not estimated)
+
+| stage | set | bits |
+|---|---|---|
+| all funded scripthashes | 56,795,328 | — |
+| band [19.5, 20.5] BTC | 5,745 | 13.3 |
+| − pre-2021 corpus (Corollary) | 3,448 | 0.7 |
+| − failed cross-snapshot FR3 | 2,559 | 0.4 |
+| exactly 20.00000000 | 212 | 3.6 |
+| legacy P2PKH | **68** | 1.6 |
+| **extracted offline** | | **19.7** |
+| remaining: window date + funding source | | **~6.1** |
+| **total** | | **≈ 25.8** |
+
+Section 3 predicted ≈ 26 bits for the whole problem from first principles. The
+measured total is 25.8. The estimate held.
+
+## Result
+
+FR-R is solved. 2,559 candidates in plaintext, ranked into tiers; the top tier
+is **68 addresses** that are simultaneously exactly 20.00000000 BTC, legacy
+P2PKH, created after 2021-01-17, and unmoved across two independent snapshots
+13 months apart.
+
+## Negative results worth recording
+
+- **No Keiser-token vanity match** among any of the 2,559 candidates, nor among
+  the 3,345 pre-2021 addresses recovered earlier. The FR5 vanity signal is
+  exhausted: if the puzzle wallet is in this set, it does **not** advertise
+  itself in its address. Ranking must come from funding date and funding source.
+- Address-type distribution of the candidates is 59.5 % P2WPKH, 21.2 % P2SH,
+  12.1 % P2PKH — i.e. the legacy-P2PKH tier is a genuine 8× enrichment over
+  base rate, not an arbitrary cut.

@@ -1,38 +1,81 @@
-# Runbook — finishing the window scan from a machine with Bitcoin network access
+# Runbook — the last step
 
-The sandbox that produced this could not reach **any** Bitcoin data source
-(Alchemy, blockstream, mempool, blockchair all return HTTP 403 at CONNECT from
-the org egress proxy; only `github.com`, `*.githubusercontent.com` and the
-package registries are allowed). Everything that could be done offline **is**
-done; what remains needs your laptop.
+**Status: the scan is done offline. 2,559 candidates are resolved to plaintext
+addresses; the top tier is 68.** All that remains is dating them, which needs
+one cheap address query each.
 
-Design rationale: `solver/DESIGN_window_scan.md`.
+The sandbox that produced this cannot reach any Bitcoin data source (Alchemy,
+blockstream, mempool, blockchair all return HTTP 403 at CONNECT from the org
+egress proxy; only `github.com`, `*.githubusercontent.com` and the package
+registries are allowed). Everything that could be done without them **is** done.
 
----
-
-## What is already done (offline, in-repo)
-
-| artifact | what it is |
-|---|---|
-| `window/Tnew_b1_19.5_20.5.tsv` | **3,448** scripthashes — the FR2 band, minus everything provably out of scope. **Start here.** |
-| `window/Tnew_exact_20.tsv` | 795 — the exactly-20.00000000 subset (hand this to the parallel session; it cuts their 962 by 17%) |
-| `window/Tnew_b2_39.0_41.0.tsv` | 1,093 — two ~20 BTC outputs paid to one address in one tx |
-| `window/Tnew_b3_58.5_61.5.tsv` | 575 — three such outputs |
-| `window/resolved_*.tsv` | 3,345 ~20 BTC addresses recovered in plaintext, all with pre-2021 history ⇒ excluded. Includes `1xxxtzAkynEy8PTvj7bPvcP1Suveibc7j`. |
-
-**Where the numbers come from.** 56,795,328 funded scripthashes in
-`address_map.bin` (snapshot 2025-10-11) → **5,745** hold 19.5–20.5 BTC today →
-subtract the 2,297 that already appear in the 784-million-address blockchair
-corpus (which ends 2021-01-17) → **3,448 remain**.
-
-**Why the subtraction loses nothing.** A wallet funded in-window with
-`tx_count == 1` has its *only* transaction after 2022-10. If it appeared in a
-pre-2021 corpus it had a transaction before 2021, so `tx_count ≥ 2` — it fails
-FR3 anyway. So every FR3-satisfying window wallet survives the subtraction.
+Design rationale, including the second iteration that resolved scripthashes to
+addresses entirely offline: `solver/DESIGN_window_scan.md`.
 
 ---
 
-## Step 0 — verify FR1 (block range) — 20 seconds
+## Run this first — 68 addresses, about a minute
+
+```bash
+cd solver
+python3 address_check.py --addrs window/candidates_p2pkh_exact20.txt \
+                         --out window_resolved.tsv
+python3 resolve_and_rank.py --from-tsv window_resolved.tsv \
+                         --out /tmp/window_candidates.tsv --all
+```
+
+`address_check.py` fills in, per address: `chain_stats` (FR3 — must be
+`tx_count == 1`, `spent_txo_sum == 0`), the funding txid, its block height and
+timestamp (FR1 — the window filter), and the funded value (FR2).
+`resolve_and_rank.py` then applies the window filter and the attribution
+ranking. Drop `--all` to keep only in-window rows.
+
+Then widen as far as you care to:
+
+```bash
+python3 address_check.py --addrs window/candidates_exact20.txt --out r2.tsv   # 212
+python3 address_check.py --addrs window/candidates_all.txt     --out r3.tsv   # 2,559
+```
+
+`address_check.py` is resumable — re-running skips what is already in `--out` —
+so an interrupted 2,559-address run costs nothing to restart.
+
+## Candidate files
+
+| file | n | what |
+|---|---|---|
+| `window/candidates_p2pkh_exact20.txt` | **68** | tier 1: exactly 20.00000000 BTC, legacy P2PKH. **Start here.** |
+| `window/candidates_exact20.txt` | 212 | tiers 1–2: exactly 20.00000000 BTC, any type |
+| `window/candidates_all.txt` | 2,559 | every candidate in [19.5, 20.5] BTC |
+| `window/candidates_resolved.tsv` | 2,559 | the same, with balance, script type and tier |
+| `window/Tnew_*.tsv` | | the scripthash sets these came from |
+| `window/resolved_*.tsv` | 3,345 | pre-2021 ~20 BTC addresses — excluded, kept for audit |
+
+Every candidate already satisfies: holds 19.5–20.5 BTC, did not exist before
+2021-01-17, and has not moved between the 2025-10 and 2026-08 snapshots. The
+only untested requirement is **when** it was funded.
+
+---
+
+## Then: funding source on whatever survives (FR5)
+
+The vanity-prefix signal is exhausted — no Keiser-related token appears in any
+of the 2,559 addresses. So attribution has to come from the money.
+
+```bash
+A=<surviving_address>
+curl -s https://blockstream.info/api/address/$A/txs/chain \
+  | jq -r '.[-1] | {txid, time:.status.block_time,
+                    inputs:[.vin[].prevout.scriptpubkey_address],
+                    outputs:[.vout[]|{addr:.scriptpubkey_address, btc:(.value/100000000)}]}'
+```
+
+An input tracing to an exchange withdrawal in Oct 2022 – Mar 2023, to Bitcoin
+Magazine, or to an address Keiser has posted publicly is the hit.
+
+---
+
+## Optional — verify the block range (only needed for Path B)
 
 ```bash
 for h in 755999 756000 781999 782000 782500; do
@@ -59,7 +102,7 @@ curl -s -X POST $ALCHEMY -H 'content-type: application/json' \
 
 ---
 
-## Path A — recommended. Minutes, not hours.
+## Path A — scripthash route (superseded by address_check.py, kept as a cross-check)
 
 Asks an Electrum server for the history of each of the 3,448 scripthashes.
 Exactly one history entry ⇒ funded once, never spent (FR3); its height gives
@@ -85,7 +128,7 @@ If the default server list is unreachable, force one:
 
 ---
 
-## Path B — fallback, and an independent cross-check of Path A
+## Path B — full block walk (independent cross-check; hours, ~45 GB)
 
 The literal brief: walk every block in the window. Uses `getblock` **verbosity
 0** (raw hex, ~1.7 MB/block) rather than verbosity 2 (~7 MB/block) — a ~4×
