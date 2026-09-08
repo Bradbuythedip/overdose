@@ -623,3 +623,66 @@ The 142-line transcript contains **no** BIP38 marker (`6P…`), no base58 run of
 characters, and no hex run of 32+ characters. The longest alphanumeric tokens are
 ordinary words (`hyperbitcoinized`, `simultaneously`, `DEMONETIZATION`). If a key
 is present as a literal string, it is not in the body text as transcribed.
+
+---
+
+# CRITICAL: the puzzle window is wrong by about a year
+
+The whole search has been scoped to 2022-10-01 → 2023-04-01 on the premise that
+the article ran in the **Fall 2022 Orange Party Issue**. That premise is false.
+
+## External evidence
+
+| fact | source |
+|---|---|
+| The Nostr announcement says "20 BTC hidden in Bitcoin Magazine **Issue 24**" | the announcement itself |
+| **Issue 24 = "The El Salvador Issue", Fall 2021** — and it carries "OVERDOSE with Max Keiser" | issue listings |
+| **Issue 27 = "The Orange Party Issue", Fall 2022** — a different issue | issue listings |
+| Keiser tweeted Bukele reading his "OVERDOSE" column in the **El Salvador edition** in **Feb 2022** | tweet 1492173067723886594 |
+| Our scans' sidebar reads "Bitcoin Magazine \| **El Salvador**", pages 73–79 | the scans |
+
+## Internal evidence (independent of any of the above)
+
+Every datable reference in the transcript points to autumn 2021:
+
+- "Sorry **Bhutan**, you fell for that snake oil salesmen over at XRP" — Bhutan's
+  Ripple partnership was announced **September 2021**
+- "America left $85 BILLION worth of hate toys in **Afghanistan**" — withdrawal
+  **August 2021**
+- "Now he's slinging **proof of stake** at the mEthereum lab" — pre-Merge, so
+  before September 2022
+- "**42%** of the country is now hyperbitcoinized" — El Salvador adopted BTC
+  **September 2021**
+- "10 years of watching Peter Schiff ... at $1 back in **2011**" → 2021
+- "**Stacy and I** have been living in here for **10 years**" → 2021
+- "ADA, and **12,000** other shitcoins" — that coin count is late 2021
+
+So the article is **Issue 24, Fall 2021**. The pages we hold are the right pages;
+only the date was wrong.
+
+## Consequence for the block scan
+
+The key existed once the issue went to print (autumn 2021). Keiser announced the
+wallet held 20 BTC on **2023-03-04**. So funding lies between those points:
+
+| | date | approx height |
+|---|---|---|
+| publication | Sept–Nov 2021 | **~700,000** (block 700,000 mined 2021-09-11) |
+| announcement | 2023-03-04 | **~780,000** |
+
+**Corrected scan range: ~695,000 → 781,000** (~86,000 blocks).
+
+The laptop scan as configured covers **754,000–784,000**. It therefore misses
+**blocks 695,000–754,000 — roughly two thirds of the plausible window**, including
+the whole period around publication, which is the most likely funding time.
+
+## Why the offline candidate set is unaffected
+
+`T_new` was defined as "in the ~20 BTC band at the 2025 snapshot AND absent from
+the corpus that ends **2021-01-17**". That covers everything funded from January
+2021 onward, so the corrected Sept-2021 → Mar-2023 window sits entirely inside it.
+
+**The 2,559 candidates and the 68 tier-1 set remain valid and complete for the
+corrected window.** The date-agnostic construction absorbed the premise error —
+which is exactly why the balance-first inversion was the right design: it never
+depended on the publication date being right.
