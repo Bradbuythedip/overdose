@@ -169,7 +169,7 @@ guessing needed.
 Per-letter-normalized stroke-width detection was noise-limited at 1843px scan resolution. Ran 6× per-word deep-zoom vision agents on 911 body-text words across pages 75-79. Only these 6 words showed partial-char bolding:
 
 - p76: "George" → "Gee" (high), "Clinton" → "C" (high), "being" → "be" (medium)
-- p78: "BILLION worth of hate toys in Afghanistan" → the entire "worth of hate toys in Afghanistan" reads BOLDER than "BILLION" (OCR combined into one crop)
+- p78: "BILLION worth of hate toys in Afghanistan" → within an orange highlight strip, "BILLION" appears lighter than "worth of hate toys in Afghanistan". **UNCONFIRMED as cipher** — mixed weight inside a highlight bar is a plausible design choice, and the sibling branch's independent 55-candidate highlight-phrase sweep returned 0 hits testing this exact string.
 - p79: "Happy" → "pp" (medium), "all" → "ll" (medium)
 
 These are all NATURAL RHETORICAL EMPHASIS in Keiser's writing style (musicians' names, headline emphasis, orange highlight strip typographic variation). Not steganographic marking.
@@ -187,7 +187,7 @@ George Sand's actual cipher method: **read every other line** (odd or even) to r
 
 **The puzzle is not solvable from the phone-scan JPEGs alone.** Remaining actionable paths:
 
-1. **User's `window_scan.py`** on their laptop (block-window fingerprint scan for 20-BTC wallets funded 2022-10..2023-04). Sandbox is 403-blocked from both Alchemy and blockstream APIs.
+1. **User's `window_scan.py`** on their laptop (block-window fingerprint scan for 20-BTC wallets funded **2021-09..2023-03** — see Session 3 update below for window correction; earlier 2022-10..2023-04 range was wrong by a year). Sandbox is 403-blocked from both Alchemy and blockstream APIs.
 2. **Higher-quality PROFESSIONAL PRINT SCAN** — 1843px phone JPEG is at the noise floor for any subtle typographic signal.
 3. **Physical magazine features** — UV inks, watermarks, embossing not visible in reflected-light JPEG.
 4. **Additional hint from Keiser** — puzzle unsolved publicly since March 2023.
@@ -296,6 +296,35 @@ Cheapest first, all off-sandbox:
 - Keiser said key**s** plural, "my column" — other Bitcoin Magazine columns
   by Keiser may carry additional keys. Only Issue 24 (Overdose) analyzed
   so far.
+
+### Tier-1 justification — corrected
+
+Sibling branch initially observed "0 of 1,707 segwit candidates hold exactly
+20.00000000 BTC" vs 212 of 852 legacy, suggesting segwit is intrinsically
+non-round. That was wrong — on the full 2026 band, segwit holds whole-BTC
+amounts at 2.4% rate (62 addresses); the difference in the *filtered* set is
+**temporal**, not format-intrinsic:
+
+| type | in band | whole-BTC | rate |
+|---|---|---|---|
+| P2PKH  | 1,930 | 125 | 6.5% |
+| P2SH   | 1,147 | 248 | 21.6% |
+| segwit | 2,531 |  62 | 2.4% |
+
+All 62 segwit whole-BTC addresses are absent from the 2025-10 snapshot ⇒
+funded after Oct 2025, four years outside the window ⇒ correctly excluded.
+The load-bearing claim is narrower but sound: **within the puzzle window,
+the never-moved exactly-20-BTC population is entirely legacy** (68 P2PKH +
+144 P2SH). Tier-1 ranking still holds; the reason is now correctly stated.
+
+### Corpus bound verified
+
+The `T_new` lower bound rests on the address corpus (Qalander/
+bitcoin-all-addresses) ending 2021-01-17. Sibling branch initially took
+"297 files" from the README without verifying. Probed past the documented
+end: `xlk` returns 200 (69 MB), `xll` through `xna` all 404. **Corpus
+genuinely stops at `xlk`.** No `mountaineerbr` variant is reachable
+either. The T_new bound stands as constructed.
 
 ### What each branch's sandbox cannot reach
 
