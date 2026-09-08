@@ -196,3 +196,112 @@ If the block-window fingerprint identifies Keiser's wallet address, its
 funding transaction inputs may reveal the source wallet (which may itself
 be a well-known Keiser address on-chain), giving fingerprint-triangulation
 of the private key derivation approach.
+
+---
+
+## SESSION 3 UPDATE (Sep 2026): cross-reference with sibling branch `claude/keiser-overdose-puzzle-itkf6t`
+
+A parallel Claude session did superior chain-side analysis on branch
+`claude/keiser-overdose-puzzle-itkf6t`. Its consolidated handoff document is
+`solver/STATUS.md` on that branch — treat it as authoritative for the chain-side
+funnel and next actions.
+
+### Two important corrections to prior work on THIS branch
+
+**Window correction.** This branch's earlier work assumed the article was Bitcoin
+Magazine Fall 2022 Orange Party Issue (Issue 27). It is actually **Issue 24, the
+El Salvador Issue, Fall 2021**. Every datable reference in the text lands in
+autumn 2021:
+
+- p76: "10 years of ... since I started honey-badgering him to buy some at $1
+  back in 2011" ⇒ 2021
+- p78: "America left $85 BILLION worth of hate toys in Afghanistan" ⇒ Aug 2021
+  US withdrawal
+- p77: "Sorry Bhutan, you fell for that snake oil salesmen over at XRP" ⇒
+  Sept 2021 Bhutan/Ripple partnership
+- Nostr announcement names "Issue 24"; every page sidebar reads "El Salvador"
+
+Correct block-window scan range is **695,000 → 781,000** (Sept 2021 through
+2023-03-04 announcement), not 754,000 → 784,000. This invalidates roughly
+two thirds of any block-window scan that used the earlier range.
+
+**Swept-wallet hypothesis.** Every text-side cipher test on this branch — and
+every chain-side scan on the sibling branch — assumes the puzzle wallet is
+still funded. If the puzzle was solved after March 2023 (when Keiser last
+said it was unsolved), the wallet is now spent and invisible to every filter
+we have used. Sibling branch measured this blind spot:
+
+> **889 post-2021 wallets in the ~20 BTC band moved between the 2025-10 and
+> 2026-08 snapshots — 130 of them holding exactly 20.00000000 BTC.**
+
+`solver/apr2023_analysis.py` on the sibling branch tests this hypothesis
+directly once an April-2023 address snapshot is available (via
+`ghcr.io/shlima/fortune`). It reports addresses that (a) held a balance
+in April 2023, (b) hold nothing today, and (c) were absent from the pre-2021
+corpus — exactly the shape a silently-solved puzzle wallet has.
+
+### Chain-side funnel (from sibling branch)
+
+| set | n | definition |
+|---|---|---|
+| funded scripthashes (2025-10 index) | 56,795,328 | — |
+| holding 19.5–20.5 BTC | 5,745 | 20-BTC band |
+| absent from pre-2021 corpus (`T_new`) | 3,448 | ⊇ any window wallet |
+| resolved + unmoved 2025-10 → 2026-08 | 2,559 | candidates |
+| exactly 20.00000000 BTC | 212 | |
+| **and legacy P2PKH (tier 1)** | **68** | **start here** |
+
+Files at `solver/window/*.txt` on the sibling branch.
+
+### Additional attacks ruled out on sibling branch (do not repeat)
+
+| attack | scale | result |
+|---|---|---|
+| brainwallet + secp256k1 mirror (k ↔ n−k) + 4 key involutions | 5,433,600 addrs | 0 |
+| George Sand positional ciphers, 74 rules × 6 sources | 49,562 keys | 0 |
+| banknote serial `CL 76841714 A` | 4,642 keys | 0 |
+| vanity/token scan over 2,559 candidates | 5,904 addrs | 0 |
+| dictionary scan (≥7-char words, 344k dict) | 2,559 addrs | 0 |
+| literal key strings in body text (BIP38 `6P`, base58 ≥40, hex ≥32) | 142 lines | none present |
+
+Combined with this branch's ~15,000 text-side derivations, the
+**text-derived-key attack surface is now exhaustively covered.**
+
+### Priority order (from sibling branch RUNBOOK)
+
+Cheapest first, all off-sandbox:
+
+1. **Docker → April-2023 snapshot intersection** — minutes, no Bitcoin API:
+   ```
+   docker pull ghcr.io/shlima/fortune
+   docker cp $(docker create ghcr.io/shlima/fortune):/addresses/Bitcoin/2023/04 ./apr2023
+   comm -12 <(sort apr2023/p2pkh_Rich_Max_100.txt) <(sort solver/window/candidates_p2pkh_exact20.txt)
+   ```
+   Any tier-1 address that appears in April 2023 was funded before then ⇒
+   inside the puzzle window.
+2. **`solver/address_check.py`** on survivors — fills funding txid, height,
+   timestamp, `chain_stats` for FR3 confirmation.
+3. **Block scan over 695,000 → 781,000** — independent cross-check via
+   `solver/alchemy_window_scan.py`.
+4. **Funding-source trace** on survivors — a Keiser-attributable input is
+   the hit.
+5. **Swept-wallet check** via `solver/apr2023_analysis.py` — same April-2023
+   snapshot, catches wallets solved and swept post-March 2023.
+
+### Split-funding and multi-key hedges
+
+- If the 20 BTC is **split across multiple addresses**, single-output band
+  search misses it. The sibling branch's `Tnew_b2` and `Tnew_b3` files carry
+  the two- and three-output splits.
+- Keiser said key**s** plural, "my column" — other Bitcoin Magazine columns
+  by Keiser may carry additional keys. Only Issue 24 (Overdose) analyzed
+  so far.
+
+### What each branch's sandbox cannot reach
+
+Both branches: Alchemy, blockstream, mempool, blockchair, bitcointalk, nostr,
+bitcoinmagazine, archive.org, and `pkg-containers.githubusercontent.com` all
+403 at CONNECT from the org egress proxy. Only github.com, raw/release
+githubusercontent, ghcr.io manifests and the language package registries pass.
+
+Everything past "priority 1" needs the user's laptop or an unrestricted host.
