@@ -376,7 +376,7 @@ space. Combined with the vanity-prefix and dictionary negatives, the chain-side
 
 ---
 
-# The cipher: Keiser's hint is real, and the marking is WEIGHT
+# The cipher: Keiser's hint is real. The WEIGHT reading is NOT confirmed (see correction below)
 
 ## The hint is sourced
 
@@ -435,3 +435,64 @@ existing offline oracle (`address_map.bin`) — no network needed. Note the bold
 characters observed so far include `l` (lowercase L), which is **not valid
 base58**, so the extracted string is unlikely to be a WIF directly; a passphrase
 or an intermediate encoding is more likely.
+
+---
+
+# CORRECTION: the weight-marking reading is not safe
+
+I previously reported the marking as a per-character bold null cipher. On further
+examination that conclusion was **overstated**, and a more parsimonious
+explanation fits the same evidence.
+
+## The competing explanation
+
+Look at *which* spans are heavy on page 76:
+
+> "UTXO ghetto up in here", "George Clinton", "James Brown", "shitcoiners'",
+> "nocoiners'", "El Salvador", "President Nayib Bukele", "IMF", "Mike Novogratz",
+> "being ripped ... central bankers"
+
+These are **names and vivid phrases** — ordinary editorial emphasis. And the piece
+is deliberately styled as a distressed, photocopied typewriter document (torn
+edges, uneven strike, mottled stock). A distress effect produces per-glyph weight
+noise, which makes an emphasis run *look* like it stops mid-word.
+
+Under that reading, `bei|ng`, `r|ipped` and `Cl|inton` are ink/print variation at
+the edges of genuine emphasis spans, not cipher marks.
+
+## What the evidence actually supports
+
+| observation | cipher reading | editorial + distress reading |
+|---|---|---|
+| heavy spans are names/vivid phrases | unexplained | **expected** |
+| "It's funkier than a whole parallel universe..." uniformly light | expected | **expected** |
+| `bei` heavy / `ng` light within one word | expected | possible (edge noise) |
+| long heavy runs (18+ chars) | awkward | **expected** |
+
+The editorial reading explains more of the data. I cannot rule the cipher reading
+out, but I should not have asserted it.
+
+## Why the tooling could not settle it
+
+- fixed-pitch cell alignment fails: no (pitch, offset) makes space cells clean,
+  so the face is not reliably monospace at this scan quality
+- per-glyph segmentation merges ~10% of characters (41 blobs for 46 non-space
+  characters on a validated line)
+- stroke width at 1800 px page width is ~3 px regular vs ~4-5 px bold, so letter
+  identity dominates the signal and no global threshold separates the classes
+
+## What would settle it
+
+1. **Higher-resolution scans** (600+ dpi). At 3 px stroke width the question is
+   simply not decidable.
+2. **OCR with per-character bounding boxes**, then normalise each glyph's ink mass
+   against the median for *that same letter* elsewhere on the page. If two real
+   font weights exist the per-letter distribution is **bimodal**; if it is
+   distress noise it is unimodal. That test is decisive and cheap once boxes exist.
+
+## What survives
+
+Keiser's hint itself is solid and still points where the workflow is already
+looking: a **positional** null cipher over the body text (every Nth line/word/
+letter, acrostics), which is George Sand's actual method. Nothing here undermines
+that line of attack — it only removes "character weight" as a shortcut to it.
