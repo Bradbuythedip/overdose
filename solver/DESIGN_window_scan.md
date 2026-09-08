@@ -551,3 +551,75 @@ line number on the printed page rather than in my concatenation).
 
 The hand-drawn scrawls read **"SHIT"** (p77) and **"X FUCK ALL X"** (p78) — the
 source of the "shitfuckall" candidate the cipher panel already tested.
+
+---
+
+# Closing out the weight question: the scans cannot answer it
+
+Two further tests were run to settle whether the heavy characters are a cipher or
+editorial emphasis. Both are reported because both constrain the answer.
+
+## Test 1 — bimodality per letter
+
+Method avoids OCR *and* pitch fitting: segment glyphs per line, keep only lines
+where the glyph count **exactly equals** the transcription's non-space character
+count (36 of 93 lines), which makes letter assignment unambiguous. Then compare
+ink mass across instances of the same letter.
+
+Result: distributions are **unimodal with a long right tail**, with a weak
+secondary bump near 1.3–1.6x for `a`, `i`, `l`. A bold class plainly exists — but
+that was never in doubt ("El Salvador", "IMF" are visibly bold. Bimodality was
+the wrong question.
+
+## Test 2 — run length and word alignment (the right question)
+
+Editorial emphasis produces long, word-aligned runs. A per-character cipher
+produces scattered singletons. Sweeping the heavy-threshold:
+
+| threshold | heavy % | runs | single-char % | word-aligned % | max run |
+|---|---|---|---|---|---|
+| 1.20 | 32.4 | 144 | 51.4 | 4.2 | 33 |
+| 1.40 | 20.9 | 124 | 56.5 | 0.8 | 17 |
+| 1.60 | 12.6 | 103 | 73.8 | 1.0 | 15 |
+| 1.80 | 6.7 | 72 | 81.9 | 2.8 | 5 |
+| 2.00 | 3.4 | 34 | 79.4 | 8.8 | 5 |
+
+**Word alignment never exceeds 9% at any threshold.** But I can see by eye that
+"El Salvador", "IMF" and "President Nayib Bukele" are bold *and* word-aligned.
+The measure therefore is not capturing the real bold class — it is measuring
+print and scan noise, whose extreme tail is naturally isolated singletons.
+
+## Conclusion
+
+This is a negative about the **method**, not about the puzzle. At 1800 px page
+width (~3 px regular vs ~4–5 px bold strokes) glyph weight is not measurable
+reliably enough to decide the question, by any of the three approaches tried
+(density, stroke width, per-letter normalised ink mass).
+
+The qualitative evidence still favours **editorial emphasis**: the phrases that
+read as bold to the eye are semantically coherent (names, vivid images), which is
+what emphasis looks like and is not what a cipher would produce.
+
+**Only a higher-resolution scan (600+ dpi) can settle it.** Until then the weight
+channel should be treated as unresolved, and not as a confirmed cipher.
+
+# Banknote serials
+
+Pages 73 and 74 photograph the same $100 note (page 73's copy is mirror-flipped).
+Serial **CL 76841714 A**, district **L12**. 58 candidate strings derived from it
+(case variants, reversals, with/without district, concatenated with article
+phrases) × 16 hash variants × 5 key involutions × both curve orientations
+= 4,642 keys → **0 hits**.
+
+Noted and deliberately down-weighted: `768417` is a valid block height inside the
+puzzle window (≈ late Dec 2022). This is almost certainly coincidence — it is a
+post-hoc match on 6 digits of a stock-photo serial, and the causality runs
+backwards, since the Fall-2022 article predates that block. Cheap to check in a
+block scan; should not be weighted.
+
+# Text scan for encoded key strings
+
+The 142-line transcript contains **no** BIP38 marker (`6P…`), no base58 run of 40+
+characters, and no hex run of 32+ characters. The longest alphanumeric tokens are
+ordinary words (`hyperbitcoinized`, `simultaneously`, `DEMONETIZATION`). If a key
+is present as a literal string, it is not in the body text as transcribed.
