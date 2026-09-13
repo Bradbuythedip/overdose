@@ -78,3 +78,44 @@ This is the same family of error as the earlier ones in this repo — a null fro
 a source that was never shown to produce a positive, and a "funded brainwallet"
 control that could not have succeeded. `englishness.py` now carries the warning
 inline so the next reader does not repeat it.
+
+## The same test applied to the acrostic / column families
+
+Run over 1,031 acrostic, column and line-length readings (block acrostics,
+line-edge first/last word and letter, line-length letter mappings):
+
+| family | max z |
+|---|---|
+| real readings | **+18.77** |
+| the same strings, letters shuffled | +5.56 |
+| prose control | +70.7 |
+
++18.77 against a shuffled-null max of +5.56 looks like a strong signal. It is
+not, and the reason is the same as before, only more obvious once you look at
+the string:
+
+```
+HERE'S REALLY MARKETS ALL AROSE AND IN AND LOOK THAT'S TO NOW KEEP THE HANDS
+TO GET IT'S NAILING GOTTA SINCE THE OUR PUTS ...
+```
+
+That is the first-word-of-each-line reading. It is built out of real English
+words by construction, so a high English-trigram score is guaranteed and
+carries no information whatsoever. It is also plainly word salad rather than a
+sentence.
+
+The matched null settles it. Taking the same first-word-of-each-line reading
+from twelve word-shuffled copies of the article, where no message can exist:
+
+```
++27.2 +24.2 +22.1 +21.6 +21.3 +20.4 +20.0 +19.9 +19.2 +18.6 +18.0 +16.8
+max +27.18   mean +20.77
+```
+
+The real reading scores **+19.45, below the null mean**. A first-word null
+cipher over this article is exactly as English-looking as drawing words from it
+at random — which is what it is.
+
+**Both the every-Nth and the acrostic/column families are closed**, and in both
+cases the naive frequency-matched null would have reported a false positive
+(+5.57 and +18.77) that the operation-matched null erases.
