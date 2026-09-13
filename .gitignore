@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+
+# session-generated large/derived artifacts
+solver/strips/
+solver/wf/__pycache__/

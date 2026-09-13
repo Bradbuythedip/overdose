@@ -3,11 +3,11 @@
 Two analyses unlocked by the April-2023 P2PKH snapshot
 (ghcr.io/shlima/fortune : addresses/Bitcoin/2023/04/p2pkh_Rich_Max_100.txt).
 
-Run on a machine that can pull the image; see RUNBOOK_window.md. Needs only that
-file plus address_map.bin -- no blockchain API.
+Run on a machine that can pull the image; see sibling branch's RUNBOOK_window.md.
+Needs only that file plus address_map.bin -- no blockchain API.
 
   python3 apr2023_analysis.py --apr2023 apr2023/p2pkh_Rich_Max_100.txt \
-      --index /tmp/od/address_map.bin --corpus-hits window/resolved_b1_19.5_20.5.tsv
+      --index /tmp/address_map.bin --corpus-hits window/resolved_b1_19.5_20.5.tsv
 
 ANALYSIS 1 -- date the candidates.
   A tier-1 candidate holds ~20 BTC now and is absent from the corpus ending
@@ -22,6 +22,8 @@ ANALYSIS 2 -- was the puzzle already solved and swept?
   in April 2023 but hold NOTHING today -- swept in between. Restricted to
   addresses absent from the pre-2021 corpus, those are "funded in the puzzle
   window, later emptied": exactly the shape a silently-solved puzzle wallet has.
+
+Ported from sibling branch claude/keiser-overdose-puzzle-itkf6t solver/apr2023_analysis.py
 """
 import argparse, hashlib, struct, mmap, sys, os
 
@@ -62,7 +64,7 @@ class Index:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--apr2023', required=True)
-    ap.add_argument('--index', default='/tmp/od/address_map.bin')
+    ap.add_argument('--index', default='/tmp/address_map.bin')
     ap.add_argument('--tier1', default='window/candidates_p2pkh_exact20.txt')
     ap.add_argument('--all-cands', default='window/candidates_all.txt')
     ap.add_argument('--corpus-hits', default='window/resolved_b1_19.5_20.5.tsv',

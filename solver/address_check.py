@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
 """
-FINAL STEP — FR1 + FR3 confirmation, now that candidates are plaintext addresses.
+FR1 + FR3 confirmation for plaintext candidate addresses.
 
-Supersedes the scripthash/Electrum route: we have addresses, so blockstream's
-plain address endpoint does everything. For each address it fetches chain_stats
-(FR3: tx_count == 1 and spent_txo_sum == 0) and the funding transaction
-(FR1: block height + timestamp -> window filter; FR2: value).
+For each address, fetches chain_stats (FR3: tx_count == 1 and spent_txo_sum == 0)
+and the funding transaction (FR1: block height + timestamp -> window filter;
+FR2: value).
 
-Stdlib only. Resumable: re-running skips addresses already in --out.
+Stdlib only. Resumable: re-running skips addresses already in --out, and retries
+any that previously failed (they are not written on failure).
 Polite by default (--sleep); raise --workers only against your own esplora.
+If you see many "no data" lines, blockstream is rate-limiting: re-run with
+--workers 1 --sleep 1.0
 
-  python3 address_check.py --addrs window/candidates_p2pkh_exact20.txt \
+  python3 address_check.py --addrs window/candidates_p2pkh_exact20_67.txt \
                            --out window_resolved.tsv
-  python3 resolve_and_rank.py --from-tsv window_resolved.tsv \
-                           --out /tmp/window_candidates.tsv
+
+Then filter to funded-once / never-spent / before the 4 Mar 2023 announcement:
+
+  awk -F'\t' 'NR==1 || ($4>0 && $4<=781000 && $10=="YES")' \
+      window_resolved.tsv | column -t
+
+NOTE: there is no defensible LOWER bound on funding date — the article encodes a
+key, and that key can be arbitrarily old. Only the upper bound survives.
 """
 import argparse, json, os, sys, threading, queue, time, urllib.request, urllib.error
 
@@ -42,7 +50,13 @@ def main():
     ap.add_argument("--sleep", type=float, default=0.25)
     a = ap.parse_args()
 
-    addrs = [l.strip() for l in open(a.addrs) if l.strip() and not l.startswith("#")]
+    # accept either bare addresses or "address,balance" CSV
+    addrs = []
+    for l in open(a.addrs):
+        l = l.strip()
+        if not l or l.startswith("#"): continue
+        addrs.append(l.split(",")[0].strip())
+
     done = set()
     if os.path.exists(a.out):
         for line in open(a.out):
@@ -51,7 +65,7 @@ def main():
     else:
         with open(a.out, "w") as f:
             f.write("address\tscript_type\tfunding_txid\tblock_height\tblock_time\t"
-                    "value_sats\ttx_count\tfunded_sats\tspent_sats\tfr3_pass\n")
+                    "value_sats\ttx_count\tfunded_sats\tspent_sats\tfr3_pass\tn_outs_to_addr\n")
     todo = [x for x in addrs if x not in done]
     sys.stderr.write(f"checking {len(todo)} addresses\n")
 
@@ -78,7 +92,7 @@ def main():
             txc = cs.get("tx_count", -1)
             funded = cs.get("funded_txo_sum", 0); spent = cs.get("spent_txo_sum", -1)
             fr3 = "YES" if (txc == 1 and spent == 0) else "no"
-            txid = ""; hgt = 0; ts = 0; val = 0
+            txid = ""; hgt = 0; ts = 0; val = 0; n_outs = 0
             txs = get(f"{a.api}/address/{ad}/txs/chain")
             if txs:
                 t0 = txs[-1]                      # oldest = funding tx
@@ -86,11 +100,14 @@ def main():
                 stx = t0.get("status", {})
                 hgt = stx.get("block_height", 0) or 0
                 ts = stx.get("block_time", 0) or 0
+                # SUM, don't max: one tx can pay the same address in several
+                # outputs (e.g. 10 BTC twice = 20 BTC total). max() under-reported.
                 for v in t0.get("vout", []):
                     if v.get("scriptpubkey_address") == ad:
-                        val = max(val, int(v.get("value", 0)))
+                        val += int(v.get("value", 0))
+                        n_outs += 1
             with lock:
-                out.write(f"{ad}\t{kind(ad)}\t{txid}\t{hgt}\t{ts}\t{val}\t{txc}\t{funded}\t{spent}\t{fr3}\n")
+                out.write(f"{ad}\t{kind(ad)}\t{txid}\t{hgt}\t{ts}\t{val}\t{txc}\t{funded}\t{spent}\t{fr3}\t{n_outs}\n")
                 out.flush(); n[0] += 1
                 if n[0] % 20 == 0:
                     sys.stderr.write(f"  {n[0]}/{len(todo)}\n"); sys.stderr.flush()
