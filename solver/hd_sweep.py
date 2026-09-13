@@ -7,14 +7,19 @@ against the full 56.8M-address funded index, but only tried a handful of
 derivation paths (mostly seed[:32] direct, plus BIP44/49/84 receive-0). The
 multimodal sweep even fell back to seed[:32] because bip_utils would not build.
 
-Now the target set is 11 addresses instead of 56.8 million, so we can afford
+Now the target set is ~116 addresses instead of 56.8 million, so we can afford
 to explode the DERIVATION PATH dimension instead of the phrase dimension:
-~90 paths x 4 script types per phrase, versus ~4 before.
+~72 paths x 5 seed schemes x 5 script types per phrase, versus ~4 before.
+
+Use --direct-only to invert that trade for very large phrase corpora: it skips
+HD path expansion (125 phrases/sec vs 6.9) once the path dimension has already
+been covered by a deep run on a curated set.
 
 BIP32 implemented directly on hmac-sha512 + coincurve, so there is no
 dependency that can silently fail and degrade the search.
 
-  python3 hd_sweep.py --phrases candidates_v2.txt --targets targets.txt
+  python3 hd_sweep.py --phrases candidates_v2.txt --targets targets_all116.txt
+  python3 hd_sweep.py --phrases big_corpus.txt --targets targets_all116.txt --direct-only
   python3 hd_sweep.py --selftest        # no network, must print SELFTEST PASS
 """
 import argparse, hashlib, hmac, sys, unicodedata
@@ -249,6 +254,10 @@ def main():
     ap.add_argument("--targets")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--out", default="hd_sweep_hits.txt")
+    ap.add_argument("--direct-only", action="store_true",
+                    help="skip HD path expansion; direct hashes only (~45x faster). "
+                         "Use for very large phrase corpora where the path dimension "
+                         "is already covered by a deep run on a curated set.")
     a = ap.parse_args()
 
     if a.selftest:
@@ -262,10 +271,12 @@ def main():
         if l and not l.startswith("#") and l != "address":
             targets.add(l)
     phrases = [l.rstrip("\n") for l in open(a.phrases) if l.strip()]
-    paths = build_paths()
+    paths = [] if a.direct_only else build_paths()
 
-    sys.stderr.write(f"targets: {len(targets)}\nphrases: {len(phrases):,}\npaths:   {len(paths)}\n")
-    sys.stderr.write(f"~{len(phrases) * (len(paths)*len(seeds_from('x')) + len(direct_keys('x'))) * 5:,} address checks\n\n")
+    per = len(paths) * len(seeds_from("x")) + len(direct_keys("x"))
+    sys.stderr.write(f"targets: {len(targets)}\nphrases: {len(phrases):,}\n"
+                     f"paths:   {len(paths)}{' (DIRECT-ONLY MODE)' if a.direct_only else ''}\n")
+    sys.stderr.write(f"~{len(phrases) * per * 5:,} address checks\n\n")
 
     hits = open(a.out, "w")
     n = 0
