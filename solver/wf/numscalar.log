@@ -1,0 +1,164 @@
+  prefix index loaded into RAM: 454 MB in 0.1s
+== controls ==
+  CONTROL PASS  k=1 uncompressed addr  1EHNa6Q4Jz2uvNExL497mE43ikXhwF6kZm
+  CONTROL PASS  k=1 compressed addr  1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH
+  info: k=1 addrs in current-balance oracle? u=False c=False (a current-balance index; they hold nothing today)
+HIT [ctrl] injected p2pkh p2pkh 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa bal=5438462888 richlist=True priv=-
+  CONTROL PASS  batch checker flags funded p2pkh WITH full-index balance  bal=5438462888 richlist=True
+HIT [ctrl] injected p2sh p2sh 3D2oetdNuZUqQHPJmcMDDHYoqkyNVsFk9r bal=15230293 richlist=False priv=-
+  CONTROL PASS  batch checker flags funded p2sh WITH full-index balance  bal=15230293 richlist=False
+HIT [ctrl] injected p2sh-exact20 p2sh-exact20 3E8svDc3ZJ2jYhYKrx3vasr2b3BQW8sDxV bal=2000000000 richlist=True priv=-
+  CONTROL PASS  batch checker flags funded p2sh-exact20 WITH full-index balance  bal=2000000000 richlist=True
+HIT [ctrl] injected p2wpkh p2wpkh bc1q000cqh4rx9552j7lwvm2gqmzamyshw5trcl7tv bal=186010841 richlist=True priv=-
+  CONTROL PASS  batch checker flags funded p2wpkh WITH full-index balance  bal=186010841 richlist=True
+HIT [ctrl] injected p2tr p2tr bc1p02caf37sw5k40lw93cs5dtu6v2852mxyvp3mxhc4v5zc3njyvutqnfc8g9 bal=2999830402 richlist=True priv=-
+  CONTROL PASS  batch checker flags funded p2tr WITH full-index balance  bal=2999830402 richlist=True
+  CONTROL PASS  batch checker ignores unfunded brainwallet  
+  small-scalar scan k=1..100000: 0 funded, 56s
+  info: no funded scalar in 1..100000; family-A control is two-part (derivation vs known k=1 addresses + injected funded addresses through the checker)
+  CONTROL PASS  index words abandon x11 about  abandon about
+  CONTROL PASS  bip39_valid on index words  
+  CONTROL PASS  family-B derivation bip44  
+  CONTROL PASS  entropy 0 -> abandon..about  
+  CONTROL PASS  old-electrum index pipeline addr0  1FJEEB8ihPMbzs2SkLmr37dHyRFzakqUmo
+  CONTROL PASS  family-E paths include m/44'/0'/0'/0/0  
+  CONTROL PASS  family-E path pipeline bip44 addr  
+CONTROLS ALL PASS (15/15)
+== token lists ==
+  all                (21) [2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  p75                ( 4) [2008, 1, 1, 1]
+  p76                ( 5) [1971, 10, 1, 2011, 1]
+  p77                ( 6) [42, 20000, 100000, 2017, 12000, 51]
+  p78                ( 2) [85, 2]
+  p79                ( 4) [51, 95, 1969, 10]
+  years              ( 5) [2008, 1971, 2011, 2017, 1969]
+  noL1               (18) [2008, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  nonyears           (16) [1, 1, 1, 10, 1, 1, 42, 20000, 100000, 12000, 51, 85, 2, 51, 95, 10]
+  spelled            (23) [2008, 1, 1, 1, 40, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 6, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  spelled_full       (25) [2008, 1, 1, 1, 40, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 6, 2017, 1, 12000, 51, 85, 2, 51, 95, 0, 1969, 10]
+  magnitude          (21) [2008, 1, 1, 1, 1971, 10, 1, 2011, 1000000000, 42, 20000, 100000, 2017, 12000, 51, 85000000000, 2000000000000, 51, 95, 1969, 10]
+  spelled_magnitude  (23) [2008, 1, 1, 1, 40, 1971, 10, 1, 2011, 1000000000, 42, 20000, 100000, 6, 2017, 12000, 51, 85000000000, 2000000000000, 51, 95, 1969, 10]
+  bank_pre           (23) [76841714, 12, 2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  bank_post          (23) [2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10, 76841714, 12]
+  bank_pre_series    (24) [2009, 76841714, 12, 2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  pages_pre          (23) [73, 74, 2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  issue_pre          (22) [24, 2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10]
+  issue_post         (22) [2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10, 24]
+  prize_post         (22) [2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 2017, 12000, 51, 85, 2, 51, 95, 1969, 10, 20]
+  with_pagenums      (28) [73, 74, 75, 2008, 1, 1, 1, 76, 1971, 10, 1, 2011, 1, 77, 42, 20000, 100000, 2017, 12000, 51, 78, 85, 2, 79, 51, 95, 1969, 10]
+  everything         (31) [24, 73, 74, 76841714, 12, 2009, 2008, 1, 1, 1, 40, 1971, 10, 1, 2011, 1, 42, 20000, 100000, 6, 2017, 1, 12000, 51, 85, 2, 51, 95, 0, 1969, 10]
+== A. raw scalars ==
+  A done: 13892 digit strings, 34337 distinct scalars, 77s
+== B. BIP-39 index book-cipher ==
+  bip39 checksum VALID: B/all/base0/drop/fwd/L15@0: wild ability ability ability wait access ability window ability aim wire all apple able all
+  bip39 checksum VALID: B/all/base0/mod/fwd/L15@1: ability ability ability wait access ability window ability aim series staff wire swing all apple
+  bip39 checksum VALID: B/all/base0/mod/rev/L12@7: swing wire staff series aim ability window ability access wait ability ability
+  bip39 checksum VALID: B/all/base0/mod/rev/L15@6: all swing wire staff series aim ability window ability access wait ability ability ability wild
+  bip39 checksum VALID: B/all/base1/drop/fwd/L12@4: wagon abuse abandon win abandon ahead winter alien appear ability alien armed
+  bip39 checksum VALID: B/all/base1/mod/rev/L12@0: abuse voyage armed alien ability appear alien swim winter stadium sentence ahead
+  bip39 checksum VALID: B/noL1/base0/drop/fwd/L12@0: wild wait access ability window ability aim wire all apple able all
+  bip39 checksum VALID: B/nonyears/base1/mod/fwd/L12@0: abandon abandon abandon abuse abandon abandon ahead sentence stadium swim alien appear
+  bip39 checksum VALID: B/spelled/base0/mod/fwd/L12@2: ability ability agree wait access ability window ability aim series staff absorb
+  bip39 checksum VALID: B/spelled/base0/mod/fwd/L12@3: ability agree wait access ability window ability aim series staff absorb wire
+  bip39 checksum VALID: B/spelled/base0/mod/fwd/L12@4: agree wait access ability window ability aim series staff absorb wire swing
+  bip39 checksum VALID: B/spelled/base0/mod/rev/L12@9: absorb staff series aim ability window ability access wait agree ability ability
+  bip39 checksum VALID: B/spelled/base0/mod/rev/L12@10: staff series aim ability window ability access wait agree ability ability ability
+  bip39 checksum VALID: B/spelled_full/base0/drop/fwd/L18@1: ability ability ability agree wait access ability window ability aim absorb wire ability all apple able all armor
+  bip39 checksum VALID: B/spelled_full/base0/drop/rev/L12@1: wage abandon armor all able apple all ability wire absorb aim ability
+  bip39 checksum VALID: B/spelled_full/base0/drop/rev/L12@7: all ability wire absorb aim ability window ability access wait agree ability
+  bip39 checksum VALID: B/spelled_full/base0/drop/rev/L18@2: abandon armor all able apple all ability wire absorb aim ability window ability access wait agree ability ability
+  bip39 checksum VALID: B/spelled_full/base0/mod/rev/L21@2: abandon armor all able apple all swing ability wire absorb staff series aim ability window ability access wait agree ability ability
+  bip39 checksum VALID: B/spelled_full/base1/drop/fwd/L12@9: abandon ahead absent winter abandon alien appear ability alien armed voyage abuse
+  bip39 checksum VALID: B/spelled_full/base1/drop/rev/L15@1: voyage armed alien ability appear alien abandon winter absent ahead abandon win abandon abuse wagon
+  bip39 checksum VALID: B/spelled_full/base1/mod/fwd/L12@4: agent wagon abuse abandon win abandon ahead sentence stadium absent winter abandon
+  bip39 checksum VALID: B/spelled_full/base1/mod/fwd/L12@9: abandon ahead sentence stadium absent winter abandon swim alien appear ability alien
+  bip39 checksum VALID: B/spelled_full/base1/mod/rev/L12@0: abuse voyage zoo armed alien ability appear alien swim abandon winter absent
+  bip39 checksum VALID: B/spelled_full/base1/mod/rev/L18@1: voyage zoo armed alien ability appear alien swim abandon winter absent stadium sentence ahead abandon win abandon abuse
+  bip39 checksum VALID: B/magnitude/base0/drop/fwd/L12@2: ability ability wait access ability window aim wire all all armor wage
+  bip39 checksum VALID: B/magnitude/base0/mod/fwd/L15@3: ability wait access ability window divorce aim series staff wire swing all divorce abandon all
+  bip39 checksum VALID: B/magnitude/base0/mod/rev/L12@0: access wage armor all abandon divorce all swing wire staff series aim
+  bip39 checksum VALID: B/magnitude/base0/mod/rev/L12@8: wire staff series aim divorce window ability access wait ability ability ability
+  bip39 checksum VALID: B/magnitude/base1/drop/fwd/L12@1: abandon abandon abandon wagon abuse abandon win ahead winter alien alien armed
+  bip39 checksum VALID: B/magnitude/base1/mod/fwd/L12@2: abandon abandon wagon abuse abandon win divide ahead sentence stadium winter swim
+  bip39 checksum VALID: B/magnitude/base1/mod/fwd/L12@5: abuse abandon win divide ahead sentence stadium winter swim alien divide zoo
+  bip39 checksum VALID: B/magnitude/base1/mod/rev/L12@1: voyage armed alien zoo divide alien swim winter stadium sentence ahead divide
+  bip39 checksum VALID: B/spelled_magnitude/base0/drop/fwd/L12@5: wait access ability window aim absorb wire all all armor wage access
+  bip39 checksum VALID: B/spelled_magnitude/base0/drop/rev/L12@3: all all wire absorb aim window ability access wait agree ability ability
+  bip39 checksum VALID: B/spelled_magnitude/base0/mod/rev/L12@6: all swing wire absorb staff series aim divorce window ability access wait
+  bip39 checksum VALID: B/spelled_magnitude/base1/drop/rev/L12@4: alien winter absent ahead win abandon abuse wagon agent abandon abandon abandon
+  bip39 checksum VALID: B/spelled_magnitude/base1/mod/fwd/L12@5: wagon abuse abandon win divide ahead sentence stadium absent winter swim alien
+  bip39 checksum VALID: B/spelled_magnitude/base1/mod/fwd/L12@6: abuse abandon win divide ahead sentence stadium absent winter swim alien divide
+  bip39 checksum VALID: B/spelled_magnitude/base1/mod/fwd/L15@5: wagon abuse abandon win divide ahead sentence stadium absent winter swim alien divide zoo alien
+  bip39 checksum VALID: B/spelled_magnitude/base1/mod/rev/L12@11: sentence ahead divide win abandon abuse wagon agent abandon abandon abandon wife
+  bip39 checksum VALID: B/bank_pre/base0/mod/fwd/L12@1: account wild ability ability ability wait access ability window ability aim series
+  bip39 checksum VALID: B/bank_post/base0/mod/fwd/L15@7: window ability aim series staff wire swing all apple able all armor wage access furnace
+  bip39 checksum VALID: B/bank_post/base1/mod/fwd/L12@11: stadium winter swim alien appear ability alien armed voyage abuse funny accident
+  bip39 checksum VALID: B/bank_post/base1/mod/rev/L15@1: funny abuse voyage armed alien ability appear alien swim winter stadium sentence ahead abandon win
+  bip39 checksum VALID: B/bank_pre_series/base0/mod/rev/L18@6: all swing wire staff series aim ability window ability access wait ability ability ability wild account furnace will
+  bip39 checksum VALID: B/bank_pre_series/base1/drop/fwd/L12@0: wild accident wife abandon abandon abandon wagon abuse abandon win abandon ahead
+  bip39 checksum VALID: B/pages_pre/base0/drop/rev/L12@7: wire aim ability window ability access wait ability ability ability wild announce
+  bip39 checksum VALID: B/issue_post/base0/drop/fwd/L18@1: ability ability ability wait access ability window ability aim wire all apple able all armor wage access adapt
+  bip39 checksum VALID: B/with_pagenums/base0/drop/fwd/L12@0: ankle announce annual wild ability ability ability another wait access ability window
+  bip39 checksum VALID: B/with_pagenums/base0/drop/fwd/L12@4: ability ability ability another wait access ability window ability answer aim wire
+  bip39 checksum VALID: B/with_pagenums/base0/drop/fwd/L15@9: access ability window ability answer aim wire all antenna apple able antique all armor wage
+  bip39 checksum VALID: B/with_pagenums/base0/drop/fwd/L21@3: wild ability ability ability another wait access ability window ability answer aim wire all antenna apple able antique all armor wage
+  bip39 checksum VALID: B/with_pagenums/base0/mod/fwd/L12@9: access ability window ability answer aim series staff wire swing all antenna
+  bip39 checksum VALID: B/with_pagenums/base0/mod/fwd/L12@14: aim series staff wire swing all antenna apple able antique all armor
+  bip39 checksum VALID: B/with_pagenums/base0/mod/fwd/L12@15: series staff wire swing all antenna apple able antique all armor wage
+  bip39 checksum VALID: B/with_pagenums/base0/mod/fwd/L18@9: access ability window ability answer aim series staff wire swing all antenna apple able antique all armor wage
+  bip39 checksum VALID: B/with_pagenums/base1/drop/fwd/L12@1: ankle announce wife abandon abandon abandon annual wagon abuse abandon win abandon
+  bip39 checksum VALID: B/with_pagenums/base1/drop/fwd/L12@4: abandon abandon abandon annual wagon abuse abandon win abandon another ahead winter
+  bip39 checksum VALID: B/with_pagenums/base1/mod/fwd/L12@16: stadium winter swim alien answer appear ability antenna alien armed voyage abuse
+  bip39 checksum VALID: B/with_pagenums/base1/mod/fwd/L15@1: ankle announce wife abandon abandon abandon annual wagon abuse abandon win abandon another ahead sentence
+  bip39 checksum VALID: B/with_pagenums/base1/mod/rev/L12@3: alien antenna ability appear answer alien swim winter stadium sentence ahead another
+  bip39 checksum VALID: B/with_pagenums/base1/mod/rev/L15@10: winter stadium sentence ahead another abandon win abandon abuse wagon annual abandon abandon abandon wife
+  bip39 checksum VALID: B/everything/base0/drop/rev/L21@5: able apple all ability wire absorb aim ability window ability access wait agree ability ability ability wild will account announce ankle
+  bip39 checksum VALID: B/everything/base0/mod/fwd/L15@1: ankle announce furnace account will wild ability ability ability agree wait access ability window ability
+  bip39 checksum VALID: B/everything/base0/mod/rev/L15@13: series aim ability window ability access wait agree ability ability ability wild will account furnace
+  bip39 checksum VALID: B/everything/base1/drop/fwd/L15@2: ankle accident wild wife abandon abandon abandon agent wagon abuse abandon win abandon ahead absent
+  bip39 checksum VALID: B/everything/base1/drop/fwd/L21@0: actual animal ankle accident wild wife abandon abandon abandon agent wagon abuse abandon win abandon ahead absent winter abandon alien appear
+  bip39 checksum VALID: B/everything/base1/drop/rev/L12@10: ahead abandon win abandon abuse wagon agent abandon abandon abandon wife wild
+  bip39 checksum VALID: B/everything/base1/drop/rev/L15@11: abandon win abandon abuse wagon agent abandon abandon abandon wife wild accident ankle animal actual
+  B done: 1698 windows, 69 checksum-valid, 649s
+== C. integer as BIP-39 entropy ==
+HIT [B] C/p75/asis/dec/ent128_highbytes pw='' m/86'/0'/0'/0/0 p2tr bc1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqkedrcr bal=330 richlist=False priv=41f41d69260df4cf277826a9b65a3717e4eeddbeedf637f212ca096576479361
+  C done: 341 mnemonics, 759s
+== D. old Electrum index / hex seed ==
+  D done: 502 word windows, 220 hex seeds, 879s
+== E. numbers as HD path components ==
+    E: 6 seeds done, 1s
+    E: 12 seeds done, 4s
+    E: 18 seeds done, 6s
+    E: 24 seeds done, 8s
+    E: 30 seeds done, 11s
+    E: 36 seeds done, 13s
+    E: 42 seeds done, 16s
+    E: 48 seeds done, 17s
+    E: 54 seeds done, 20s
+    E: 60 seeds done, 22s
+    E: 66 seeds done, 25s
+    E: 72 seeds done, 26s
+    E: 78 seeds done, 29s
+    E: 84 seeds done, 32s
+    E: 90 seeds done, 35s
+    E: 96 seeds done, 36s
+    E: 102 seeds done, 40s
+    E: 108 seeds done, 42s
+    E: 114 seeds done, 43s
+    E: 120 seeds done, 46s
+    E: 126 seeds done, 49s
+    E: 132 seeds done, 51s
+    E: 138 seeds done, 52s
+    E: 144 seeds done, 55s
+    E: 150 seeds done, 58s
+    E: 156 seeds done, 61s
+    E: 162 seeds done, 62s
+    E: 168 seeds done, 65s
+  E done: 168 seeds x 489 paths, 944s
+== F. digit strings as brainwallet passphrases (overlap, completeness) ==
+  F done: 154 phrases, 945s
+== summary ==
+  counts: A_digit_strings=13892, A_scalars=34337, B_checksum_valid=69, B_mnemonic_pw_pairs=20390, B_windows=1698, C_mnemonics=341, D_hex_seeds=220, D_word_windows=502, E_paths=489, E_seeds=168, F_phrases=154, addresses_checked=4779524, keys_derived=959948, scalars_out_of_range=353, addresses_checked_total=5279537
+  hits: 1
+  HIT {'family': 'B', 'derivation': "C/p75/asis/dec/ent128_highbytes pw='' m/86'/0'/0'/0/0", 'type': 'p2tr', 'address': 'bc1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqkedrcr', 'priv': '41f41d69260df4cf277826a9b65a3717e4eeddbeedf637f212ca096576479361', 'balance_sats': 330, 'in_richlist': False}
+  elapsed 945s

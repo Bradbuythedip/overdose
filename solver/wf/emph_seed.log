@@ -1,0 +1,117 @@
+Oracle: full 56.8M index ACTIVE (checks both sets)
+=== CONTROLS ===
+HIT CTRL-i/w10/emph/fwd rule=exact @0 L=12 BIP39[abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about] pw='' m/86'/0'/0'/0/0 p2tr bc1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqkedrcr 41f41d69260df4cf277826a9b65a3717e4eeddbeedf637f212ca096576479361
+WIF-VALID CTRL-iii/w10/emph/fwd init_printed L5ctNdE9WxXLCyaYQkFzWuttG5GkFZErcQLAtaL48XY75UawuCUC fa9f224da9544430309286604f84e225183d61ef0455112a2fbfbf3320f3a8c3
+  PASS  (i) BIP-39 vector bolded in p75 -> 1LqBGSKuX5yYUonjxT5qGfpUsXKYYWeabA derived  [("CTRL-i/w10/emph/fwd rule=exact @0 L=12 BIP39[abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about] pw=''", "m/44'/0'/0'/0/0", 'p2pkh_c', '1LqBGSKuX5yYUonjxT5qGfpUsXKYYWeabA')]
+  PASS  (ii) Electrum seed as 12 bold words -> electrum_v2_type=='standard' fired and m/0/0 1NNkttn1YvVGdqBW4PR6zvc3Zx3H5owKRf derived  [("CTRL-ii/w10/emph/fwd norm=letters @30 L=12 ELECTRUM-standard[cycle rocket west magnet parrot shuffle foot correct salt library feed song] pw=''", 'm/0/0', 'p2pkh_c', '1NNkttn1YvVGdqBW4PR6zvc3Zx3H5owKRf')]
+  PASS  (iii) random WIF L5ctNdE9WxXLCyaYQkFzWuttG5GkFZErcQLAtaL48XY75UawuCUC spelled as bold-word initials -> recovered by wif_check with matching priv  [('L5ctNdE9WxXLCyaYQkFzWuttG5GkFZErcQLAtaL48XY75UawuCUC', 'fa9f224da9544430309286604f84e225183d61ef0455112a2fbfbf3320f3a8c3')]
+  PASS  (iv) oracle funded(genesis)  
+  PASS  (v) old-Electrum vector as 12 bold words -> old/0/0 1GghhNbSrxUAyerPXgphtjnTLgsikmYYxG derived  [('CTRL-v/w10/emph/fwd @8 OLDELECTRUM[constant forest adore false green weave long mother lightning wood damn whistle]', 'old/0/0', 'p2pkh_u', '1GghhNbSrxUAyerPXgphtjnTLgsikmYYxG')]
+  tokens p75: 285  emph(w10)=77  bold_nobar(w10)=34  bar=43
+  tokens p76: 274  emph(w10)=61  bold_nobar(w10)=14  bar=47
+  tokens p77: 263  emph(w10)=72  bold_nobar(w10)=34  bar=38
+  tokens p78: 211  emph(w10)=149  bold_nobar(w10)=106  bar=43
+  tokens p79json: 228  emph(w10)=95  bold_nobar(w10)=50  bar=45
+  tokens p79hand: 228  emph(w10)=112  bold_nobar(w10)=67  bar=45
+=== SWEEP (families a,b,d,e) ===
+  all+p79json: 104 sequences, bip39 windows=56880 valid=1416, electrum12/13 windows=81632 valid=394 (all L: 512162/2519), old windows=3796, wif/bip38 valid=0  [227s, addrs so far 1719710]
+  all+p79hand: 104 sequences, bip39 windows=57652 valid=1445, electrum12/13 windows=82596 valid=380 (all L: 518428/2627), old windows=3848, wif/bip38 valid=0  [34s, addrs so far 1943220]
+  all-no79: 104 sequences, bip39 windows=40616 valid=982, electrum12/13 windows=64786 valid=286 (all L: 403092/1945), old windows=2746, wif/bip38 valid=0  [8s, addrs so far 1978230]
+  p75: 104 sequences, bip39 windows=3564 valid=84, electrum12/13 windows=9044 valid=17 (all L: 49984/224), old windows=174, wif/bip38 valid=0  [2s, addrs so far 2010710]
+  p76: 104 sequences, bip39 windows=4012 valid=96, electrum12/13 windows=10138 valid=51 (all L: 57340/245), old windows=300, wif/bip38 valid=0  [2s, addrs so far 2041790]
+  p77: 104 sequences, bip39 windows=4586 valid=108, electrum12/13 windows=9538 valid=52 (all L: 55382/309), old windows=414, wif/bip38 valid=0  [2s, addrs so far 2074270]
+  p78: 104 sequences, bip39 windows=4858 valid=135, electrum12/13 windows=11018 valid=35 (all L: 63766/311), old windows=406, wif/bip38 valid=0  [2s, addrs so far 2099470]
+  p79json: 104 sequences, bip39 windows=3080 valid=91, electrum12/13 windows=8578 valid=49 (all L: 49976/281), old windows=244, wif/bip38 valid=0  [2s, addrs so far 2127890]
+  p79hand: 104 sequences, bip39 windows=3062 valid=93, electrum12/13 windows=8858 valid=42 (all L: 50736/322), old windows=252, wif/bip38 valid=0  [1s, addrs so far 2135030]
+=== OLD ELECTRUM: 2024 unique 12-word windows ===
+  old 1000/2024  163s
+  old 2000/2024  325s
+=== WHOLE-ARTICLE ROWS, mode w10, forward ===
+scope	mode	seq	dir	len	bip39_words	bip39_windows	bip39_valid	el_win12_13	el_valid12_13	el_win_all	el_valid_all	old_windows	wif_bip38_valid
+all+p79json	w10	emph	fwd	454	100	2350	59	2633	11	16900	89	181	0
+all+p79json	w10	bold_nobar	fwd	238	50	1010	26	1357	9	8606	38	41	0
+all+p79json	w10	nonemph	fwd	807	169	4260	107	4739	14	30589	124	302	0
+all+p79json	w10	runfirst	fwd	57	11	12	1	176	0	1001	3	0	0
+all+p79json	w10	runlast	fwd	57	15	50	1	176	1	1001	6	2	0
+all+p79json	w10	before	fwd	57	12	19	2	275	8	1573	9	0	0
+all+p79json	w10	after	fwd	57	8	2	0	182	1	1040	6	0	0
+all+p79json	w10	runfirst_L	fwd	101	26	140	4	527	4	3211	12	10	0
+all+p79json	w10	runlast_L	fwd	101	20	280	10	525	7	3198	19	13	0
+all+p79json	w10	boldrun_first	fwd	31	7	2	0	76	0	351	1	0	0
+all+p79json	w10	boldrun_last	fwd	31	11	5	0	76	0	351	2	0	0
+all+p79json	w10	sent_emph_first	fwd	59	14	25	2	188	2	1079	6	1	0
+all+p79json	w10	sent_emph_last	fwd	59	15	55	3	279	6	1599	23	4	0
+all+p79json	w10	esent_first	fwd	59	11	9	2	190	1	1092	5	1	0
+all+p79json	w10	esent_last	fwd	59	16	62	1	289	0	1664	7	6	0
+all+p79json	w10	bar_all	fwd	216	50	1000	24	1207	6	7631	64	77	0
+all+p79json	w10	orange	fwd	128	28	430	13	683	2	4225	28	33	0
+all+p79json	w10	black	fwd	61	13	32	0	196	2	1131	3	5	0
+all+p79json	w10	white	fwd	27	9	1	0	31	0	130	1	0	0
+all+p79json	w10	under_strike	fwd	15	4	0	0	14	0	20	0	0	0
+all+p79json	w10	sent_first	fwd	88	13	32	0	306	0	1846	6	3	0
+all+p79json	w10	sent_last	fwd	88	24	170	3	459	8	2769	20	15	0
+all+p79hand	w10	emph	fwd	471	108	2520	68	2735	8	17563	97	195	0
+all+p79hand	w10	bold_nobar	fwd	255	58	1180	23	1459	7	9269	60	48	0
+all+p79hand	w10	nonemph	fwd	790	161	4090	101	4637	14	29926	119	288	0
+all+p79hand	w10	runfirst	fwd	65	16	37	1	208	1	1209	6	0	0
+all+p79hand	w10	runlast	fwd	65	19	80	2	208	1	1209	8	5	0
+all+p79hand	w10	before	fwd	65	14	25	2	323	8	1885	15	1	0
+all+p79hand	w10	after	fwd	65	10	5	1	214	1	1248	6	0	0
+all+p79hand	w10	runfirst_L	fwd	110	31	190	4	581	4	3562	14	13	0
+all+p79hand	w10	runlast_L	fwd	110	24	355	12	579	4	3549	19	16	0
+all+p79hand	w10	boldrun_first	fwd	39	12	13	0	108	0	559	4	0	0
+all+p79hand	w10	boldrun_last	fwd	39	15	20	1	108	0	559	2	2	0
+all+p79hand	w10	sent_emph_first	fwd	61	17	44	2	196	2	1131	5	1	0
+all+p79hand	w10	sent_emph_last	fwd	61	15	60	2	291	6	1677	23	6	0
+all+p79hand	w10	esent_first	fwd	61	11	9	2	198	1	1144	6	1	0
+all+p79hand	w10	esent_last	fwd	61	16	72	0	301	1	1742	8	7	0
+all+p79hand	w10	bar_all	fwd	216	50	1000	24	1207	6	7631	64	77	0
+all+p79hand	w10	orange	fwd	128	28	430	13	683	2	4225	28	33	0
+all+p79hand	w10	black	fwd	61	13	32	0	196	2	1131	3	5	0
+all+p79hand	w10	white	fwd	27	9	1	0	31	0	130	1	0	0
+all+p79hand	w10	under_strike	fwd	15	4	0	0	14	0	20	0	0	0
+all+p79hand	w10	sent_first	fwd	88	13	32	0	306	0	1846	6	3	0
+all+p79hand	w10	sent_last	fwd	88	24	170	3	459	8	2769	20	15	0
+all-no79	w10	emph	fwd	359	76	1720	46	2063	2	13195	55	135	0
+all-no79	w10	bold_nobar	fwd	188	39	720	15	1057	4	6656	28	28	0
+all-no79	w10	nonemph	fwd	674	130	3350	83	3955	12	25493	103	238	0
+all-no79	w10	runfirst	fwd	49	10	7	0	144	0	793	3	0	0
+all-no79	w10	runlast	fwd	49	9	15	1	144	1	793	6	0	0
+all-no79	w10	before	fwd	49	11	9	2	150	3	832	3	0	0
+all-no79	w10	after	fwd	48	7	1	0	146	1	806	4	0	0
+all-no79	w10	runfirst_L	fwd	84	22	96	4	425	4	2548	12	7	0
+all-no79	w10	runlast_L	fwd	84	13	155	5	423	4	2535	15	6	0
+all-no79	w10	boldrun_first	fwd	27	6	1	0	60	0	247	0	0	0
+all-no79	w10	boldrun_last	fwd	27	8	1	0	60	0	247	0	0	0
+all-no79	w10	sent_emph_first	fwd	51	13	17	2	156	2	871	4	0	0
+all-no79	w10	sent_emph_last	fwd	51	9	18	1	231	4	1287	20	1	0
+all-no79	w10	esent_first	fwd	51	9	3	1	158	1	884	3	0	0
+all-no79	w10	esent_last	fwd	51	11	26	0	239	0	1339	6	2	0
+all-no79	w10	bar_all	fwd	171	37	660	13	937	3	5876	43	57	0
+all-no79	w10	orange	fwd	87	16	141	6	437	2	2626	18	17	0
+all-no79	w10	black	fwd	57	12	23	0	180	2	1027	3	3	0
+all-no79	w10	white	fwd	27	9	1	0	31	0	130	1	0	0
+all-no79	w10	under_strike	fwd	15	4	0	0	14	0	20	0	0	0
+all-no79	w10	sent_first	fwd	77	11	18	0	262	0	1560	4	1	0
+all-no79	w10	sent_last	fwd	77	19	110	3	391	7	2327	18	10	0
+=== TOTALS ===
+  sequences: 936
+  bip39_windows: 178310
+  bip39_valid: 4450
+  electrum_windows_12_13: 286188
+  electrum_valid_12_13: 1306
+  electrum_windows_all: 1760866
+  electrum_valid_all: 8783
+  old_windows: 12180
+  wif_bip38_valid: 0
+  bip39_unique_valid: 763
+  bip39_seeds: 6104
+  electrum_unique_valid: 1174
+  electrum_seeds: 9392
+  key_windows: 4224392
+  phrases: 7336
+  mini_pass: 6
+  old_unique: 2024
+  addresses_checked: 2155270
+  seconds: 663
+HITS: 0

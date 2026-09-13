@@ -43,6 +43,15 @@ WHAT THIS DOES
       null machinery must rank a planted odd-parity message first.
 
   python3 wf/sand_sentences.py            (from solver/)
+
+RESULT (2026-09-13, logs: sand_sentences.log, sand_sentences_controls.log):
+  14/15 controls pass; the one failure is the englishness_z parity-ranking
+  power control (letter trigrams cannot see sentence order) -- superseded by
+  wf/sand_cohesion.py (word-level cohesion, full-length control passes: the
+  real article's natural order beats every parity reading).
+  1,378,528 addresses (1.72M rich list + 56.8M full index), 0 funded;
+  6,822 key-format windows, 0 checksum-valid. Salted variant
+  (wf/sand_sentences_salt.py): 3,296,160 addresses, 0 funded.
 """
 import os, re, sys, random, hashlib, time
 
@@ -192,26 +201,58 @@ def bip39_prefix(w):
 # --------------------------------------------------------------------- sink --
 class Sink:
     """Every address the pipelines produce passes through here: oracle lookup
-    plus a control-target lookup so a synthetic run can prove reach."""
+    plus a control-target lookup so a synthetic run can prove reach.
+    The 1.72M rich-list set is checked immediately; the 56.8M full index is
+    checked in vectorized batches (index_oracle.contains_spks) -- one
+    searchsorted per batch instead of one memmap binary search per address."""
 
-    def __init__(self, oracle, targets=None, quiet=False):
+    def __init__(self, oracle, targets=None, quiet=False, batch=25000):
         self.O = oracle
         self.targets = dict(targets or {})
         self.quiet = quiet
+        self.batch = batch
+        self.buf = []
         self.n_addr = 0
         self.n_keys = 0
+        self.n_full = 0
         self.hits = []
         self.ctrl = {}
+
+    def _hit(self, tag, addr, priv, path, typ, bal=None):
+        row = (tag, path, typ, addr, priv.hex() if priv else None, bal)
+        self.hits.append(row)
+        if not self.quiet:
+            print("HIT", row, flush=True)
 
     def check(self, tag, addr, priv=None, path=None, typ=None):
         self.n_addr += 1
         if addr in self.targets:
             self.ctrl.setdefault(self.targets[addr], []).append((tag, path, typ, addr))
-        if self.O.funded(addr):
-            row = (tag, path, typ, addr, priv.hex() if priv else None)
-            self.hits.append(row)
-            if not self.quiet:
-                print("HIT", row, flush=True)
+        if addr.startswith("("):
+            return
+        if addr in self.O.addrs:
+            self._hit(tag, addr, priv, path, typ, "richlist")
+            return
+        if self.O.full is not None:
+            self.buf.append((tag, addr, priv, path, typ))
+            if len(self.buf) >= self.batch:
+                self.flush()
+
+    def flush(self):
+        if not self.buf:
+            return
+        import index_oracle as IO
+        spks, rows = [], []
+        for r in self.buf:
+            spk = IO.spk_from_address(r[1])
+            if spk is not None:
+                spks.append(spk)
+                rows.append(r)
+        self.buf = []
+        self.n_full += len(spks)
+        for j, bal in self.O.full.contains_spks(spks):
+            tag, addr, priv, path, typ = rows[j]
+            self._hit(tag, addr, priv, path, typ, bal)
 
     def rows(self, tag, rows):
         for p, t, a, priv in rows:
@@ -440,6 +481,8 @@ def analyze(unitsets, sink, label, do_null=True, print_readings=True, out=sys.st
         for sname, ws in word_sequences(units).items():
             stats["sequences"] += 1
             tag = f"{label}:{us}:{sname}"
+            if label == "REAL":
+                print(f"  ... seq {stats['sequences']:3d} {tag:40} addrs so far {sink.n_addr:,}", flush=True)
             nw = [norm(w) for w in ws]
             nw = [w for w in nw if w]
             # BIP-39 exact
@@ -460,6 +503,7 @@ def analyze(unitsets, sink, label, do_null=True, print_readings=True, out=sys.st
             # old Electrum
             ol = [w for w in nw if w in H.ELECTRUM_OLD_SET]
             stats["eold_windows"] += electrum_old_windows(sink, f"{tag}:old", ol, seen_old)
+    sink.flush()
     stats["keyfmt_found"] = len(kf_found)
     return stats, null_rows, kf_found
 
@@ -591,6 +635,19 @@ def run_controls(oracle):
     # ---- control 6: oracle positive ----
     report("oracle sees genesis coinbase", oracle.funded("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"))
     report("oracle sees a named exact-20 candidate", oracle.funded("1BX2qZ9y1Db8SpRKjeViUhjuadWtL4X29t"))
+    # ---- control 7: known-funded addresses forced through the batched full-index path ----
+    class _Stub:
+        pass
+    st = _Stub()
+    st.addrs, st.full = set(), oracle.full
+    s7 = Sink(st, quiet=True, batch=3)
+    for a in ("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "1BX2qZ9y1Db8SpRKjeViUhjuadWtL4X29t",
+              "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T"):
+        s7.check("ctrl7", a)
+    s7.flush()
+    got = sorted(r[3] for r in s7.hits)
+    report("ctrl7 batched full-index Sink path finds genesis + exact-20 addr, not the swept brainwallet",
+           got == ["1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "1BX2qZ9y1Db8SpRKjeViUhjuadWtL4X29t"], str(got))
     ok = all(r[1] for r in results)
     print(f"CONTROLS {'ALL PASS' if ok else 'SOME FAILED'} ({sum(r[1] for r in results)}/{len(results)})", flush=True)
     return ok, results
@@ -624,7 +681,15 @@ def main():
     oracle = H.Oracle()
     ok, ctrl = run_controls(oracle)
     if not ok:
-        print("CONTROLS FAILED -- nulls below are not admissible", flush=True)
+        failed = [n for n, r in ctrl if not r]
+        print("CONTROLS FAILED:", failed, flush=True)
+        if all("(a)" in n for n in failed):
+            print("  -> only the englishness_z parity RANKING failed its power control (letter trigrams cannot\n"
+                  "     see sentence order); the z-ranks below are NOT admissible. Pipelines (b)-(d) all passed\n"
+                  "     their known-positive controls, so their nulls stand. Word-level coherence test with a\n"
+                  "     passing full-length control: wf/sand_cohesion.py", flush=True)
+        else:
+            print("  -> a derivation pipeline control failed; nulls below are not admissible", flush=True)
 
     print("\n==================== REAL ARTICLE ====================", flush=True)
     sink = Sink(oracle)
@@ -634,7 +699,7 @@ def main():
     for r in null_rows:
         print(f"  {r[0]:22} {r[1]:6} n={r[2]:3d} z={r[3]:+6.1f} null mean={r[4]:+6.1f} max={r[5]:+6.1f} rank {r[6]}/31")
     print("\nSTATS:", stats)
-    print(f"addresses checked: {sink.n_addr:,}   keys derived: {sink.n_keys:,}")
+    print(f"addresses checked: {sink.n_addr:,} (rich-list set: all; full 56.8M index: {sink.n_full:,})   keys derived: {sink.n_keys:,}")
     print("KEYFORMAT FINDS:", kf)
     print("HITS:", len(sink.hits))
     for h in sink.hits:

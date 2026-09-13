@@ -1,0 +1,29 @@
+Oracle: full 56.8M index ACTIVE (checks both sets)
+
+==================== CONTROLS ====================
+
+--- parity null test CTRL1:A:ALL:fwd (30 units) ---
+  [CTRL1:A:ALL:fwd] odd    n= 15 z= +24.6  null mean= +21.3 max= +28.9  rank 6/31
+  [CTRL1:A:ALL:fwd] even   n= 15 z=  +9.9  null mean= +21.9 max= +28.4  rank 31/31
+  [CTRL1:A:ALL:fwd] 3rd@0  n= 10 z= +18.1  null mean= +19.1 max= +25.9  rank 19/31
+  [CTRL1:A:ALL:fwd] 3rd@1  n= 10 z= +17.6  null mean= +18.9 max= +27.0  rank 20/31
+  [CTRL1:A:ALL:fwd] 3rd@2  n= 10 z= +18.9  null mean= +17.2 max= +25.5  rank 9/31
+
+  PASS  ctrl1 sentence splitter -> 30 units, initial words abandon x11 about  
+  PASS  ctrl1 (b) sha256 of odd-sentence reading reaches expected address  brain:sha256:nopunct_lower:CTRL1:A:ALL:fwd:odd
+  PASS  ctrl1 (c) initial words abandon x11 about -> 1LqBGSKuX5yYUonjxT5qGfpUsXKYYWeabA  bip39:CTRL1:A:full:initial:fwd:exact:w0+12|pw=''|abandon abandon abandon abandon abandon abandon abandon aband
+  FAIL  ctrl1 (a) null machinery ranks planted odd-parity message first  real z=+24.6 null mean=+21.3 max=+28.9 rank=6
+  PASS  ctrl1 (a) gibberish even-parity does NOT rank first (specificity)  even z=+9.9 rank=31
+  PASS  ctrl2 (c) 4-letter-prefix path (Abandonment x11, Aboutness) -> bip44 vector  bip39:CTRL2:A:full:initial:fwd:prefix4:w0+12|pw=''|abandon abandon abandon abandon abandon abandon abandon aba
+  PASS  ctrl3 (c) Electrum v2 initial-word window -> ev2_segwit_recv0  electrum_v2:segwit:CTRL3:A:full:initial:fwd:raw:w0+12|pw=''|bitter grass shiver impose acquire brush
+  PASS  ctrl3 (c) Electrum v2 initial-word window -> ev2_segwit_change0  electrum_v2:segwit:CTRL3:A:full:initial:fwd:raw:w0+12|pw=''|bitter grass shiver impose acquire brush
+  PASS  ctrl3 (c) Electrum v2 initial-word window -> ev2_standard_change0  electrum_v2:standard:CTRL3:A:full:initial:fwd:raw:w13+12|pw=''|cycle rocket west magnet parrot shuff
+  PASS  ctrl4 (c) old-Electrum final-word window -> 1FJEEB8ihPMbzs2SkLmr37dHyRFzakqUmo  electrum_old:CTRL4:A:full:final:fwd:old:w0|powerful random nobody notice nothing important anyway lo
+KEYFORMAT wif_u in CTRL5:A:ALL:fwd:full:initial_letters:asis at 0: 5HueCGU8rMjxEXxiPuD5BDku4MkFqeZyd4dZ1jvhTVqvbTLvyTJ
+KEYFORMAT mini in CTRL5:A:ALL:fwd:full:initial_letters:asis at 52: S6c56bnXQiBjk9mqSYE7ykVQ7NzrRy
+  PASS  ctrl5 (d) WIF spelled by unit-initial letters -> checksum + priv 0C28FCA3...  found at [0] addr 1GAehh7TsJAHuUAeKZcXf5CnwuGuGgyX2S
+  PASS  ctrl5 (d) mini key spelled by unit-initial letters -> mini_check + address  1CciesT23BNionJeXrbxmjc7ywfiyM4oLW
+  PASS  oracle sees genesis coinbase  
+  PASS  oracle sees a named exact-20 candidate  
+  PASS  ctrl7 batched full-index Sink path finds genesis + exact-20 addr, not the swept brainwallet  ['1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', '1BX2qZ9y1Db8SpRKjeViUhjuadWtL4X29t']
+CONTROLS SOME FAILED (14/15)
