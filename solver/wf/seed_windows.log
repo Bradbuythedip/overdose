@@ -1,0 +1,7 @@
+A: 27216 windows, 123 pass Electrum seed-version, 12s
+B: 3480 windows, 93 checksum-valid, 26s
+C: 508 old-Electrum windows, 82s
+D: highlights: 4081 electrum windows (23 valid), 150 bip39 windows (2 valid), 3s
+CONTROLS: [('bip39 vector detected by bip39_valid', True), ('bip39 vector bip44 addr', True), ('electrum v2 vector type', True), ('old electrum vector addr', True), ('oracle sees genesis', True)]
+STATS: {'A_windows': 27216, 'A_version_valid': 123, 'B_prose_windows': 1280, 'B_prose_valid': 31, 'B_total_windows': 3480, 'B_total_valid': 93, 'C_windows': 508, 'D_hl_electrum_windows': 4081, 'D_hl_electrum_valid': 23, 'D_hl_bip39_windows': 150, 'D_hl_bip39_valid': 2}
+HITS: 0
