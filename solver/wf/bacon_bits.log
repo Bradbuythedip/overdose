@@ -1,0 +1,83 @@
+=== bold: 1282 bits, 430 set ===
+  checksum-valid mnemonic: gas across ability wrap abandon address wrap acid length abandon abandon adapt
+  checksum-valid mnemonic: acoustic among winter abandon above abandon abandon display abandon lecture abandon cactus
+  checksum-valid mnemonic: achieve hybrid adapt ability maid abandon abandon abandon canyon ability abandon abandon
+  checksum-valid mnemonic: abandon abandon abandon winter abandon abandon abandon scale abandon business abandon airport
+  checksum-valid mnemonic: zoo zoo zoo loop length despair boost useless abandon legal useless divide
+  checksum-valid mnemonic: zoo loop length despair boost useless abandon legal useless divide zoo zoo
+  checksum-valid mnemonic: abandon acid abandon divide way abandon cable abandon abandon among zoo zoo
+  checksum-valid mnemonic: zoo wish acid wrap lend zoo zoo woman zebra scale advance zoo
+  checksum-valid mnemonic: zoo zoo worth way advance zoo youth zoo zoo scatter zoo liberty
+  checksum-valid mnemonic: advance zoo youth zoo zoo scatter zoo liberty zoo that wreck morning
+  checksum-valid mnemonic: zoo youth zoo zoo scatter zoo liberty zoo that wreck morning woman
+  checksum-valid mnemonic: scatter zoo liberty zoo that wreck morning woman zone ketchup zoo zoo
+  checksum-valid mnemonic: abandon abandon ability zoo zoo that thank youth that zebra cable wrap
+  checksum-valid mnemonic: zoo zoo that thank youth that zebra cable wrap abandon abandon abandon
+  checksum-valid mnemonic: that thank youth that zebra cable wrap abandon abandon abandon lab lend
+  checksum-valid mnemonic: abandon lab lend sentence town avocado zoo letter avocado scale abandon abandon
+  checksum-valid mnemonic: abandon lend useless adult abandon about zoo zebra blood zoo zoo zoo
+  checksum-valid mnemonic: zoo zoo useless disorder way abandon disagree gas useless among among zoo
+  checksum-valid mnemonic: useless among among zoo zoo zone abandon business abandon awesome acoustic avoid
+  checksum-valid mnemonic: abandon awesome acoustic avoid avoid abandon acid zoo zoo work absorb length
+  checksum-valid mnemonic: army abandon abandon abandon winter abandon abandon acoustic achieve avoid abandon abandon
+  checksum-valid mnemonic: avoid about way abstract useless abandon above abandon abandon zoo lens abandon
+  checksum-valid mnemonic: abstract useless abandon above abandon abandon zoo lens abandon abandon ability vehicle
+  checksum-valid mnemonic: amount abandon abandon zoo vessel about abandon abandon abandon amazing ability youth
+  checksum-valid mnemonic: abandon abandon amazing ability youth abandon ability wrap abuse abandon blossom abandon
+  checksum-valid mnemonic: winter cable zoo length avocado wire zoo zebra abandon about trend abandon
+  checksum-valid mnemonic: useful zoo wrap abandon abandon act you lend zebra cable zoo view
+  checksum-valid mnemonic: you lend zebra cable zoo view zoo zoo zoo advance zoo zoo
+  checksum-valid mnemonic: view zoo zoo zoo advance zoo zoo worth wreck useful zoo zoo
+  checksum-valid mnemonic: zoo zone asthma acid zoo zebra abandon acid pair avocado wave zoo
+  checksum-valid mnemonic: asthma acid zoo zebra abandon acid pair avocado wave zoo zoo abandon
+  checksum-valid mnemonic: acid zoo zebra abandon acid pair avocado wave zoo zoo abandon artefact
+  checksum-valid mnemonic: artefact zebra zoo zoo zoo wealth zone above zoo zone acid yard
+=== emph: 1282 bits, 443 set ===
+  checksum-valid mnemonic: gas across ability wrap abandon address wrap acid length abandon abandon adapt
+  checksum-valid mnemonic: acoustic among winter abandon above abandon abandon display abandon lecture abandon cactus
+  checksum-valid mnemonic: achieve hybrid adapt ability maid abandon abandon abandon canyon ability abandon abandon
+  checksum-valid mnemonic: abandon abandon abandon winter abandon abandon abandon scale abandon business abandon airport
+  checksum-valid mnemonic: zoo zoo zoo path zoo zoo zebra acid abandon divide way abandon
+  checksum-valid mnemonic: zoo zebra acid abandon divide way abandon cable abandon abandon among zoo
+  checksum-valid mnemonic: zoo wish acid wrap lend zoo zoo woman zebra scale advance zoo
+  checksum-valid mnemonic: zoo zoo worth way advance zoo youth zoo zoo scatter zoo liberty
+  checksum-valid mnemonic: advance zoo youth zoo zoo scatter zoo liberty zoo that wreck morning
+  checksum-valid mnemonic: zoo youth zoo zoo scatter zoo liberty zoo that wreck morning woman
+  checksum-valid mnemonic: scatter zoo liberty zoo that wreck morning woman zone ketchup zoo zoo
+  checksum-valid mnemonic: abandon abandon ability zoo zoo that thank youth that zebra cable wrap
+  checksum-valid mnemonic: zoo zoo that thank youth that zebra cable wrap abandon abandon abandon
+  checksum-valid mnemonic: that thank youth that zebra cable wrap abandon abandon abandon lab lend
+  checksum-valid mnemonic: avocado scale abandon abandon abandon gallery abandon abandon about wrap zoo scale
+  checksum-valid mnemonic: length abandon advance theme abandon lend useless adult abstract zoo zoo zebra
+  checksum-valid mnemonic: useless among among zoo zoo zone abandon business abandon awesome acoustic avoid
+  checksum-valid mnemonic: abandon awesome acoustic avoid avoid abandon acid zoo zoo work absorb length
+  checksum-valid mnemonic: army abandon abandon abandon winter abandon abandon acoustic achieve avoid abandon abandon
+  checksum-valid mnemonic: avoid about way abstract useless abandon above abandon abandon zoo lens abandon
+  checksum-valid mnemonic: abstract useless abandon above abandon abandon zoo lens abandon abandon ability vehicle
+  checksum-valid mnemonic: amount abandon abandon zoo vessel about abandon abandon abandon amazing ability youth
+  checksum-valid mnemonic: abandon abandon amazing ability youth abandon ability wrap abuse abandon blossom abandon
+  checksum-valid mnemonic: abandon abandon avocado scale among zoo scorpion paper avocado way way abandon
+  checksum-valid mnemonic: useful zoo wrap abandon abandon act you lend zebra cable zoo view
+  checksum-valid mnemonic: you lend zebra cable zoo view zoo zoo zoo advance zoo zoo
+  checksum-valid mnemonic: view zoo zoo zoo advance zoo zoo worth wreck useful zoo zoo
+  checksum-valid mnemonic: zoo zone asthma acid zoo zebra abandon acid pair avocado wave zoo
+  checksum-valid mnemonic: asthma acid zoo zebra abandon acid pair avocado wave zoo zoo abandon
+  checksum-valid mnemonic: acid zoo zebra abandon acid pair avocado wave zoo zoo abandon artefact
+  checksum-valid mnemonic: artefact zebra zoo zoo zoo wealth zone above zoo zone acid yard
+
+keys derived 30632, phrases 200, elapsed 6s
+batch-checking 17832 keys against the full 56.8M index...
+  full-index batch 1: 89160 scriptPubKeys checked
+full-index pass done, elapsed 17s
+CONTROLS: bacon_roundtrip=True phrase_path_derives_known_addr=True oracle_genesis=True
+
+top English-trigram z-scores over all Bacon decodes (prose control ~ +70, noise |z|<5):
+  z= +0.00  emph_mirror:pos:b26:ph4:M  ??QAHQAH???QAA?AAAAB??????AAAAAP?AAAB???AAPAB???????C?????????AH??QAAA?MYA?AAPYH???????AAA
+  z= +0.00  emph_mirror:pos:b26:ph4:L  ??BA?BA????BAAHAAAAQ?????PAAAAA?PAAAQ??HAA?AQ??????HI????????HA???BAAA?GDAPAA?D????????AAA
+  z= +0.00  emph_mirror:pos:b26:ph3:M  ??YADYAD???YAAOAAAAA??????AAAAAH?AAAA???AAHQA???????BP????????AD??YAAAPWMAPAAH?D???????QAA
+  z= +0.00  emph_mirror:pos:b26:ph3:L  ??DAYDAY???DAAOAAAAA??????AAAAA??AAAA??PAA?BA??????PQ????????PAY??DAAA?NGA?AA?HY???????BAA
+  z= +0.00  emph_mirror:pos:b26:ph2:M  ???AB?AB????AAHAAAAAP?????QAAAAD?QAAAP??AADYAP??????AX????????AB???AAAH?GAHQAD?B???????YAA
+  z= +0.00  emph_mirror:pos:b26:ph2:L  ??HAQHAQ???HAA?AAAAA??????BAAAAY?BAAA???AAYDA???????A?????????AQ??HAAA??MA?BAYPQ???????DAA
+  z= +0.00  emph_mirror:pos:b26:ph1:M  P??AA?AA????AADQAAAAH?????YAAAAB?YAAAH??QAB?AH??????QL????????QA???AAAD?TADYAB?A????????AA
+  z= +0.00  emph_mirror:pos:b26:ph1:L  ??PAAPAA???PAAYBAAAA??????DAAAAQ?DAAA???BAQHA???????B?????????BA??PAAAYXZAYDAQ?A???????HAA
+HITS: 0
