@@ -54,7 +54,20 @@ glyph-identity bias: across the sibling session's five-page transcription the
 sub-word bold calls select v 12.7%, i 10.5%, l 9.1% against a 0.4%, c 0.5%,
 n 0.6% — a ~30x spread where a real cipher would be roughly uniform.
 
-Whole-word marks only (430 of 1,282) were run through the full harness anyway.
+Whole-word marks only (430 of 1,282) were run through the full harness anyway,
+using the sibling session's vision transcription rather than pixel measurement:
+
+    1,282 bits = 256 Bacon letters = 160 bytes
+    direct Bacon decode, both polarities, both alphabets  -- not English
+    2,054 32-byte key windows at every bit phase          -- 0 hits
+    310 checksum-valid BIP-39 readings of the bits        -- 0 hits
+    20 string products                                    -- 0 hits
+    screened against BOTH the current-balance index and the historical
+    ever-funded index
+
+**Closed.** On the best bold classification available — a careful human-grade
+vision transcription, not the pixel measurement that failed — the Bacon reading
+produces nothing.
 
 ## What these three share
 
