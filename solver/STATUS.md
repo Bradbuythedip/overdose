@@ -43,10 +43,16 @@ date.
 | body text (OCR), direct | 84,687 | 2,964,045 | 0 |
 | transcript + mirror variants, direct | 373,660 | 13,078,100 | 0 |
 | highlight sequences, ~360 paths | 516 | 946,860 | 0 |
-| page furniture / bill serial / photo credit, ~360 paths | 301 | 552,335 | 0 |
-| gap-sequence encodings, ~360 paths | 32 | 58,720 | 0 |
+| page furniture / photo credit | 301 | 552,335 | 0 |
+| gap-sequence encodings | 32 | 58,720 | 0 |
+| banknote: serial + series 2009A + district | 1,252 | 2,297,420 | 0 |
+| BIP-39 checksum-valid mnemonics, 72 paths x 8 passphrases | 186 | 535,680 | 0 |
+| BIP-39 deep index scan (acct 0-2, idx 0-49) | 186 | 1,116,000 | 0 |
+| line/column readings + every-Nth, ~360 paths | 14,247 | 26,143,245 | 0 |
+| multi-agent workflow candidates, ~360 paths | 1,459 | 2,677,370 | 0 |
+| per-block acrostics, ~360 paths | 590 | 1,082,650 | 0 |
 
-Plus ~2.6M from the earlier big-corpus sweep. **Roughly 36M derived addresses,
+Plus ~2.6M from the earlier big-corpus sweep. **Roughly 69M derived addresses,
 zero funded.**
 
 ## What was corrected this session
@@ -55,8 +61,9 @@ zero funded.**
    re-derived through the filter chain. 750 addresses were cut by `T_new` and
    `unmoved` before the exactly-20 test ran, and `T_new` encodes the
    funding-date lower bound that was already discredited — a magazine-printed
-   key can be arbitrarily old. Our 116 candidates cover 116; **846 are
-   unaccounted for**. See `window/funnel_audit.md`.
+   key can be arbitrarily old. See `window/funnel_audit.md`. Of those 962,
+   **870 are now named** (`window/named_exact20_870.txt`) and 92 remain — see
+   `window/exact20_enumerated.md`.
 
 2. **The corpus had no body prose in it at all.** It was built from the
    highlighted/bold catalogue. "A monetary defibrillator to the treasure chest",
@@ -69,6 +76,19 @@ zero funded.**
    only ever been applied to highlighted phrases.
 
 4. **Per-character bold moved from "unconfirmed" to "measured unrecoverable".**
+
+5. **`bip39_check.py` had the same blind spot as the phrase corpus** — it
+   hardcodes 56 BIP-39 words from the highlight catalogue. Over the real
+   1,254-word prose there are 281 BIP-39 words and **186 checksum-valid
+   mnemonics**; all derived, 0 hits.
+
+6. **The bech32 "no candidate exists" claim was overstated**, resting on a
+   62-address sample now known to be ~12% of the real 505.
+
+7. **Two cipher families were closed with statistics rather than with a failed
+   brainwallet sweep** — every-Nth and acrostic/column both produced an
+   apparent signal (z=+5.57, z=+18.77) that an operation-matched null erased.
+   See `window/every_nth_resolved.md`.
 
 ## Why exactly-20 can never discriminate
 
