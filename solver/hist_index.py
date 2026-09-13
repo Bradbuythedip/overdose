@@ -1,27 +1,34 @@
 #!/usr/bin/env python3
 """
-A HISTORICAL address index — addresses that were funded once, not just now.
+An April-2023 RICH-LIST index. Read the limitation below before using it.
 
-THE BLIND SPOT THIS CLOSES
-Every sweep in this project scored against address_map.bin, which holds only
-CURRENTLY-funded addresses. That is fine for an unsolved puzzle and useless for
-a solved one: if anyone cracked this key and swept the 20 BTC at any point in
-the three and a half years since Keiser said "nobody's figured it out yet",
-the address now holds zero, is absent from address_map.bin, and every sweep
-would report 0 hits even when handed the correct private key.
+WHAT IT ACTUALLY ANSWERS
+"Did this address hold a large balance in April 2023?" — nothing more.
 
-So ~72M addresses of "no hit" only ever meant "no hit among coins still
-sitting there".
+WHAT IT WAS BUILT TO ANSWER, AND DOES NOT
+It was written to close the swept-key blind spot: address_map.bin holds only
+CURRENTLY-funded addresses, so a key that was cracked and drained years ago
+reports 0 hits even when handed the correct private key. The intended fix was
+that an April-2023 snapshot would record addresses "funded at that time,
+regardless of what happened since".
 
-The fix: the Pymmdrza/Rich-Address-Wallet dump is an APRIL 2023 snapshot, and
-sampling it showed it contains addresses that now hold zero (median balance of
-its currently-funded members is 1.69 BTC, and the minimum is 0). So it is a
-record of addresses funded at that time, regardless of what happened since. A
-20 BTC prize address funded before April 2023 is in it whether or not the coins
-were later moved.
+That is only half true, and the half that fails is the important one. A rich
+list catches an address that held a balance ON the snapshot date and is empty
+now. It cannot catch an address funded and swept BEFORE that date, because a
+drained address has zero balance and is not on any rich list.
 
-This builds a scripthash set from those addresses so any derivation can be
-tested against "was funded in April 2023" as well as "is funded now".
+THE CONTROL THAT PROVES IT
+The original selftest checked three addresses that were funded at snapshot time
+and confirmed they were present. It never checked a known-SWEPT address, so the
+limitation was invisible. Running that control: 32 canonical brainwallet
+phrases x 2 pubkey forms = 64 addresses, every one demonstrably funded once and
+drained by crackers years ago — 0 of 64 are in this index, and 0 of 64 are in
+address_map.bin either. The two oracles are two instants, not an interval.
+
+So a null from this index means "not rich in April 2023", and a null from both
+means "not holding coins at either of two moments". Neither means "never
+funded". Closing that properly needs every output ever created — a full chain
+scan or an ever-used-address dump — which is not in this tree.
 
   python3 hist_index.py --build
   python3 hist_index.py --check 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
@@ -98,9 +105,29 @@ def selftest(h):
         ok &= got == want
         sys.stderr.write(f"  {a[:26]:26} in historical index: {got} "
                          f"(want {want})\n")
-    # a random unfunded address must be absent
-    junk = hashlib.sha256(b"no such address ever").digest()
-    ok &= not any(x == junk for x in ())
+    # COVERAGE CONTROL. Known-swept brainwallets must be reported ABSENT, and
+    # that absence is the limitation of this index, not a bug. Asserting it
+    # here stops the module from ever being described again as an "ever-funded"
+    # oracle: it is a balance snapshot, and these addresses prove it.
+    import hashlib as _h
+    try:
+        from coincurve import PrivateKey as _PK
+        from hd_sweep import h160 as _h160
+        swept, seen = ["satoshi", "password", "correct horse battery staple"], 0
+        spks = []
+        for p in swept:
+            k = _h.sha256(p.encode()).digest()
+            for comp in (False, True):
+                pub = _PK(k).public_key.format(compressed=comp)
+                spks.append(b"\x76\xa9\x14" + _h160(pub) + b"\x88\xac")
+        seen = len(h.contains_spks(spks))
+        sys.stderr.write(f"  COVERAGE: {len(spks)} known-SWEPT brainwallet "
+                         f"addresses found in this index: {seen} "
+                         f"(expected 0 — this index cannot see swept keys)\n")
+        ok &= seen == 0
+    except Exception as e:            # missing deps must not silently pass
+        sys.stderr.write(f"  COVERAGE control could not run: {e}\n")
+        ok = False
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 

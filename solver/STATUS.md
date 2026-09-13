@@ -33,9 +33,22 @@ Source material available here: seven iPhone photographs of pages 73-79,
 
 ## Derivation search, cumulative
 
-All scored against the **full 56,795,328-address funded index** via the offline
-oracle, so a hit would register regardless of balance, spend history or funding
-date.
+Scored against the **56,795,328-address funded index** and, for later corpora,
+an April-2023 rich list.
+
+**READ THIS BEFORE TRUSTING THE TABLE.** Both oracles are BALANCE SNAPSHOTS, not
+an ever-funded record. `address_map.bin` answers "holds coins today"; the
+rich-list index answers "held a large balance in April 2023". Neither answers
+"was ever funded". Measured control: 32 canonical brainwallet phrases
+(`satoshi`, `password`, `correct horse battery staple`, ...) x 2 pubkey forms =
+64 addresses, every one of which demonstrably held coins once and was drained
+years ago — **0 of 64 appear in either index**, while the genesis control
+appears in both.
+
+So every "0 hits" below means *no address that still holds coins, or held a
+large balance in April 2023*. It does NOT rule out a key that was funded and
+swept before then — which for a magazine-printed key is the most likely history
+of all. See `window/the_oracle_blind_spot.md`.
 
 | corpus | phrases | addresses | hits |
 |---|---|---|---|
