@@ -1,0 +1,9 @@
+Oracle: full 56.8M index ACTIVE (checks both sets)
+CONTROL PASS: planted odd-sentence reading with 'El Salvador ' prefix -> 1L7UUEUcDBFBcRd5bMoXXWUbn8aum1XnQe reached; with 'elsalvador' suffix -> bc1q0hal87aft4nnf9x4vl6mhmltgp53tle46q0med reached
+   via brain+salt:sha256:pre:'El Salvador'' ':nopunct_lower:CTRL:A:ALL:fwd:odd
+  unit set A done: 43,392 salted phrases so far, 1,518,720 addresses
+  unit set B done: 65,952 salted phrases so far, 2,308,320 addresses
+  unit set P done: 94,176 salted phrases so far, 3,296,160 addresses
+STATS: salted phrases 94,176, keys 659,232, addresses checked 3,296,160 (full index 3,296,160)
+HITS: 0
+elapsed 405s

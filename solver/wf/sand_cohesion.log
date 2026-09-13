@@ -1,0 +1,97 @@
+
+--- CONTROL: p75/p79 interleaved (odd = p75 verbatim, even = p79 verbatim) (20 units) ---
+  natural  n= 20 cohesion=0.0421  z vs unit-shuffled null= +1.2
+  odd      n= 10 cohesion=0.0321  z vs unit-shuffled null= +0.3
+  even     n= 10 cohesion=0.0857  z vs unit-shuffled null= +5.0
+  3rd@0    n=  7 cohesion=0.0000  z vs unit-shuffled null= -2.5
+  3rd@1    n=  7 cohesion=0.0136  z vs unit-shuffled null= -1.3
+  3rd@2    n=  6 cohesion=0.0000  z vs unit-shuffled null= -2.5
+  null (unit-shuffled, step 1): mean=0.0284 sd=0.0115 max=0.0491
+  CONTROL FAIL: planted parities must beat the natural reading and the null (odd z=+0.3, even z=+5.0, natural z=+1.2)
+
+--- CONTROL: first-half/second-half interleaved (odd = sentences 1-44, even = 45-87) (87 units) ---
+  natural  n= 87 cohesion=0.0210  z vs unit-shuffled null= -0.7
+  odd      n= 44 cohesion=0.0472  z vs unit-shuffled null= +3.5
+  even     n= 43 cohesion=0.0680  z vs unit-shuffled null= +6.8
+  3rd@0    n= 29 cohesion=0.0073  z vs unit-shuffled null= -2.9
+  3rd@1    n= 29 cohesion=0.0275  z vs unit-shuffled null= +0.3
+  3rd@2    n= 29 cohesion=0.0173  z vs unit-shuffled null= -1.3
+  null (unit-shuffled, step 1): mean=0.0256 sd=0.0062 max=0.0456
+  FULL-LENGTH CONTROL PASS: odd z=+3.5, even z=+6.8, natural z=-0.7 (small-n p75/p79 control above is reported but not relied on)
+
+--- REAL article, unit set A (87 sentences) (87 units) ---
+  natural  n= 87 cohesion=0.0568  z vs unit-shuffled null= +6.3
+  odd      n= 44 cohesion=0.0428  z vs unit-shuffled null= +3.8
+  even     n= 43 cohesion=0.0229  z vs unit-shuffled null= +0.1
+  3rd@0    n= 29 cohesion=0.0483  z vs unit-shuffled null= +4.8
+  3rd@1    n= 29 cohesion=0.0237  z vs unit-shuffled null= +0.3
+  3rd@2    n= 29 cohesion=0.0325  z vs unit-shuffled null= +1.9
+  null (unit-shuffled, step 1): mean=0.0222 sd=0.0055 max=0.0365
+  NATURAL-ORDER CONTROL PASS: natural reading z=+6.3
+
+--- REAL article, unit set B (94 units) ---
+  natural  n= 94 cohesion=0.0519  z vs unit-shuffled null= +4.6
+  odd      n= 47 cohesion=0.0323  z vs unit-shuffled null= +1.5
+  even     n= 47 cohesion=0.0341  z vs unit-shuffled null= +1.8
+  3rd@0    n= 32 cohesion=0.0256  z vs unit-shuffled null= +0.4
+  3rd@1    n= 31 cohesion=0.0307  z vs unit-shuffled null= +1.2
+  3rd@2    n= 31 cohesion=0.0376  z vs unit-shuffled null= +2.3
+  null (unit-shuffled, step 1): mean=0.0232 sd=0.0062 max=0.0443
+
+--- REAL article, unit set P (20 units) ---
+  natural  n= 20 cohesion=0.0738  z vs unit-shuffled null= +0.6
+  odd      n= 10 cohesion=0.0522  z vs unit-shuffled null= -0.8
+  even     n= 10 cohesion=0.1079  z vs unit-shuffled null= +2.8
+  3rd@0    n=  7 cohesion=0.0569  z vs unit-shuffled null= -0.5
+  3rd@1    n=  7 cohesion=0.0994  z vs unit-shuffled null= +2.3
+  3rd@2    n=  6 cohesion=0.0869  z vs unit-shuffled null= +1.4
+  null (unit-shuffled, step 1): mean=0.0644 sd=0.0155 max=0.1019
+
+--- REAL p75, unit set A (27 units) ---
+  natural  n= 27 cohesion=0.0387  z vs unit-shuffled null= +1.5
+  odd      n= 14 cohesion=0.0402  z vs unit-shuffled null= +1.6
+  even     n= 13 cohesion=0.0000  z vs unit-shuffled null= -2.5
+  3rd@0    n=  9 cohesion=0.0540  z vs unit-shuffled null= +3.0
+  3rd@1    n=  9 cohesion=0.0000  z vs unit-shuffled null= -2.5
+  3rd@2    n=  9 cohesion=0.0370  z vs unit-shuffled null= +1.3
+  null (unit-shuffled, step 1): mean=0.0242 sd=0.0099 max=0.0452
+
+--- REAL p76, unit set A (21 units) ---
+  natural  n= 21 cohesion=0.0565  z vs unit-shuffled null= +2.6
+  odd      n= 11 cohesion=0.0161  z vs unit-shuffled null= -0.3
+  even     n= 10 cohesion=0.0333  z vs unit-shuffled null= +1.0
+  3rd@0    n=  7 cohesion=0.0000  z vs unit-shuffled null= -1.4
+  3rd@1    n=  7 cohesion=0.0000  z vs unit-shuffled null= -1.4
+  3rd@2    n=  7 cohesion=0.0214  z vs unit-shuffled null= +0.1
+  null (unit-shuffled, step 1): mean=0.0199 sd=0.0139 max=0.0457
+
+--- REAL p77, unit set A (16 units) ---
+  natural  n= 16 cohesion=0.0472  z vs unit-shuffled null= +1.7
+  odd      n=  8 cohesion=0.0375  z vs unit-shuffled null= +1.0
+  even     n=  8 cohesion=0.0000  z vs unit-shuffled null= -1.8
+  3rd@0    n=  6 cohesion=0.0348  z vs unit-shuffled null= +0.8
+  3rd@1    n=  5 cohesion=0.0786  z vs unit-shuffled null= +4.0
+  3rd@2    n=  5 cohesion=0.0000  z vs unit-shuffled null= -1.8
+  null (unit-shuffled, step 1): mean=0.0241 sd=0.0136 max=0.0533
+
+--- REAL p78, unit set A (13 units) ---
+  natural  n= 13 cohesion=0.0646  z vs unit-shuffled null= -0.4
+  odd      n=  7 cohesion=0.0927  z vs unit-shuffled null= +0.4
+  even     n=  6 cohesion=0.0718  z vs unit-shuffled null= -0.2
+  3rd@0    n=  5 cohesion=0.0361  z vs unit-shuffled null= -1.2
+  3rd@1    n=  4 cohesion=0.0497  z vs unit-shuffled null= -0.8
+  3rd@2    n=  4 cohesion=0.0631  z vs unit-shuffled null= -0.5
+  null (unit-shuffled, step 1): mean=0.0790 sd=0.0348 max=0.1423
+
+--- REAL p79, unit set A (10 units) ---
+  natural  n= 10 cohesion=0.0857  z vs unit-shuffled null= +1.1
+  odd      n=  5 cohesion=0.0688  z vs unit-shuffled null= +0.4
+  even     n=  5 cohesion=0.0250  z vs unit-shuffled null= -1.5
+  3rd@0    n=  4 cohesion=0.0837  z vs unit-shuffled null= +1.0
+  3rd@1    n=  3 cohesion=0.0722  z vs unit-shuffled null= +0.5
+  3rd@2    n=  3 cohesion=0.0000  z vs unit-shuffled null= -2.6
+  null (unit-shuffled, step 1): mean=0.0603 sd=0.0236 max=0.1129
+
+VERDICT:
+  best parity reading of the real article: 3rd@0 z=+4.8 vs natural z=+6.3
+  every parity reading is less coherent than the natural reading -> no alternate-sentence message
