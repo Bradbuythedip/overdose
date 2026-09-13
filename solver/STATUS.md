@@ -12,7 +12,7 @@ Max Keiser, 4 Mar 2023 ([tweet](https://x.com/maxkeiser/status/16320688981694504
 
 One follow-up clue, 5 Mar 2023
 ([tweet](https://x.com/maxkeiser/status/1632391507008278528)): **mirror
-writing**, quoting Della Sala & Cubelli's paper on the phenomenon (PMC2117809).
+writing**, quoting G D Schott's paper on the phenomenon (PMC2117809).
 
 Source material available here: seven iPhone photographs of pages 73-79,
 1792-1870 px wide, ~4.4 MP each.
