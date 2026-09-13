@@ -2,10 +2,20 @@
 """
 Exhaustive candidate set for the $100 note in the Overdose artwork.
 
-The note is identified as: serial CL76841714A, series 2009A, district mark L12
-(L = 12th Federal Reserve district, San Francisco). Earlier passes tested
-"CL76841714A" and "L12" alone; the series year was not known then, and the
-combinations of the three fields were never enumerated.
+The note is identified as: serial CL76841714A, district mark L12 (L = 12th
+Federal Reserve district, San Francisco). Earlier passes tested "CL76841714A"
+and "L12" alone; the combinations of the fields were never enumerated.
+
+SERIES YEAR — CORRECTED. This file previously asserted "series 2009A". That was
+unsourced and it is wrong, and the error propagated: an outside analysis used it
+to report a real anomaly, that the serial's first letter C cannot belong to a
+2009A note. Examined at 600 dpi on the 400 dpi scan, the photographed note shows
+no blue 3-D security ribbon, no large colour-shifting 100, no bell-in-inkwell,
+and a classic scalloped Treasury seal with engraved numerals — all four are
+present on a 2009A note and none is present here, so this is a pre-2013 design.
+A first letter of C is consistent with that. There is no series contradiction;
+there was a mislabelling. The district check is unaffected and still passes.
+SERIES is kept below only as a passphrase candidate, not as an identification.
 
 Worth doing carefully because the note is the one object in the article that
 Keiser demonstrably MIRRORED: on page 73 the bill is printed fully reversed,
