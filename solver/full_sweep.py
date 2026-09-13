@@ -158,11 +158,21 @@ def main():
     ap.add_argument("--batch", type=int, default=20000,
                     help="scriptPubKeys per vectorized index query")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--hist", action="store_true",
+                    help="score against the HISTORICAL ever-funded index instead "
+                         "of current balances — finds a key whose coins were "
+                         "already swept, which the current-balance index cannot")
     a = ap.parse_args()
 
     oracle = Oracle(verbose=True)
     if not oracle.calibrate():
         sys.exit("oracle calibration failed")
+    if a.hist:
+        from hist_index import HistIndex
+        hist = HistIndex()
+        sys.stderr.write(f"HISTORICAL MODE: scoring against {len(hist):,} "
+                         f"addresses funded as of Apr 2023\n")
+        oracle = hist
 
     if a.selftest:
         sys.exit(0 if selftest(oracle) else 1)
