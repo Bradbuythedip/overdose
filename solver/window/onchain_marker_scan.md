@@ -98,3 +98,41 @@ on a different field and takes the plain string, not hex:
 ```
 https://api.blockchair.com/bitcoin/outputs?q=type(nulldata),script_bin(~keiser)
 ```
+
+## Extension: input scripts + blocks 782k-829k (2026-09-13, second pass)
+
+A workflow agent running the same keyword search independently covered more
+ground than the scan above: blocks 0-829,999 (not 0-781,999) and BOTH
+`data/out/` and `data/in/`. It re-ran the *keyword* search over that wider
+corpus but did not check the 116 candidate addresses there. Closing that gap.
+
+Fetched `out/0782`-`out/0829` plus all `in/0000`-`in/0829`:
+**878 files, 103 MB, 2,207,023 lines** — input scripts across all of chain
+history, plus output scripts through Feb 2024.
+
+Validation first, again — two controls, both required before believing a null:
+
+- *data source*: genesis coinbase scriptSig `The Times 03/Jan/2009 Chancellor
+  on brink of second bailout for banks` present in `in/0000.txt`; no `404: Not
+  Found` bodies anywhere in the fetch.
+- *search method*: `grep -Fof` over a control file finds a string known to be
+  present (`https://www.linkedin.com/company/faciltech`, out/0800) and
+  correctly misses one known to be outside the fetched range (the Phemex
+  puzzle address, which lives in out/0000-0781).
+
+| query | hits |
+|---|---|
+| all 116 candidate addresses | **0** |
+| `overdose` / `george sand` / `toxic maxi` | 0 |
+| `keiser` | 1 — 2013 IRC banter, "Max Keiser said someone should make Keisercoin" |
+| `bitcoin magazine` | 1 — jgarzik in IRC, 2013 |
+| `20 btc` | 2 — gmaxwell/phantomcircuit on a friend's TradeHill loss |
+| `puzzle` | 78 — all inscribed #bitcoin-wizards IRC logs on proof-of-work puzzles |
+
+Every hit is inscribed 2013-14 Bitcoin dev IRC history. Nothing authored by
+Keiser, nothing referencing the column.
+
+**The on-chain-marker hypothesis is now closed against roughly double the
+original coverage**, including input scripts, which no earlier pass examined.
+The residual gap is unchanged and structural: strings under 20 characters are
+not in this index at all.
