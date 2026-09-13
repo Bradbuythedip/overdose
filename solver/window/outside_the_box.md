@@ -61,3 +61,35 @@ Whole-word marks only (430 of 1,282) were run through the full harness anyway.
 Each was worth testing precisely because it does **not** assume a
 cryptographer. That remains the right instinct for Keiser. But the article has
 now absorbed the showman readings as thoroughly as the cryptographic ones.
+
+## 4. Self-referential book cipher
+
+The article's numbers used as indices into the article's OWN words, letters and
+lines — the Schott paper was tried as the key text, but never the article
+against itself.
+
+24 numbers: 2008, 1, 1, 1, 1971, 10, 1, 2011, 1, 42, 20, 000, 100, 000, 2017,
+12, 000, 51, 85, 2, 51, 95, 1969, 10.
+
+The word-index reading is nonsense: *"certainty IS IS IS Full not IS explain IS
+in It BITCOIN The BITCOIN the reaction BITCOIN the of TOXIC the Wall scammer"*.
+48 products across word/letter/line indices, base 0 and 1, forward and
+reversed, four hash functions, both indices. **0 hits.**
+
+## 5. "The numbers don't lie" taken literally
+
+That phrase is orange-highlighted on p78, so it is worth reading as an
+instruction rather than as rhetoric.
+
+The article's entire digit stream, in order, is 56 digits:
+
+```
+20081111971101201114220000100000201712000518525195196910
+```
+
+That settles it by length alone. A 256-bit key needs **78 decimal digits or 64
+hex characters**; this is 56 digits = 184 bits. It cannot be a private key
+directly, whatever the phrase suggests. Tested anyway as a decimal integer, as
+hex left- and right-padded, and hashed in every form: **0 hits.**
+
+The phrase is rhetoric.
