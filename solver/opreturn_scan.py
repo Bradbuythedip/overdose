@@ -12,6 +12,14 @@ ASCII, and is resumable.
 
   python3 opreturn_scan.py --txids cand_txids.tsv --out opreturn_hits.tsv
 
+With an Alchemy / Bitcoin Core RPC endpoint (faster, not rate-limited):
+
+  python3 opreturn_scan.py --txids cand_txids.tsv --out opreturn_hits.tsv \
+      --rpc https://bitcoin-mainnet.g.alchemy.com/v2/KEY --sleep 0
+
+NOTE: Bitcoin Core RPC is txid/block-keyed and has NO address index, so it can
+serve this scanner but cannot serve address_check.py or trace_funding.py.
+
 Also usable as a keyword hunt: --grep keiser,overdose,bukele will flag any
 payload containing those strings (case-insensitive) even if it decodes messily.
 """
@@ -35,6 +43,54 @@ def get(url, tries=6, timeout=30):
         except Exception:
             time.sleep(min(2 ** a, 30))
     return None
+
+
+def rpc(url, method, params, tries=6, timeout=45):
+    """Bitcoin Core JSON-RPC call (Alchemy etc). Returns .result or None."""
+    body = json.dumps({"jsonrpc": "2.0", "id": 1,
+                       "method": method, "params": params}).encode()
+    for a in range(tries):
+        try:
+            req = urllib.request.Request(
+                url, data=body,
+                headers={"Content-Type": "application/json",
+                         "User-Agent": "overdose-solver/1.0"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                j = json.loads(r.read())
+            if j.get("error"):
+                return None                       # tx genuinely not found
+            return j.get("result")
+        except urllib.error.HTTPError as e:
+            if e.code in (400, 404):
+                return None
+            time.sleep(min(2 ** a, 30))
+        except Exception:
+            time.sleep(min(2 ** a, 30))
+    return None
+
+
+def normalize_tx(tx):
+    """Normalize Bitcoin Core RPC tx shape to the blockstream shape we parse.
+
+    Core:        vout[].scriptPubKey.{type:"nulldata", asm, hex}
+    blockstream: vout[].{scriptpubkey_type:"op_return", scriptpubkey_asm}
+    """
+    if not tx or "vout" not in tx:
+        return tx
+    if tx["vout"] and "scriptpubkey_type" in tx["vout"][0]:
+        return tx                                  # already blockstream shape
+    out = []
+    for v in tx.get("vout", []) or []:
+        spk = v.get("scriptPubKey", {}) or {}
+        t = spk.get("type", "")
+        out.append({
+            "value": v.get("value", 0),
+            "scriptpubkey_type": "op_return" if t == "nulldata" else t,
+            "scriptpubkey_asm": spk.get("asm", ""),
+            "scriptpubkey": spk.get("hex", ""),
+            "scriptpubkey_address": spk.get("address", ""),
+        })
+    return {"txid": tx.get("txid", ""), "vout": out}
 
 
 def decode_payload(hexstr):
@@ -75,8 +131,12 @@ def main():
                     help="file with txid in a column (address<TAB>txid, or bare txid)")
     ap.add_argument("--out", default="opreturn_hits.tsv")
     ap.add_argument("--api", default=API)
+    ap.add_argument("--rpc", default="",
+                    help="Bitcoin Core JSON-RPC URL (e.g. Alchemy). Much faster than "
+                         "blockstream and not rate-limited; use --sleep 0 with it.")
     ap.add_argument("--sleep", type=float, default=0.8,
-                    help="blockstream rate-limits hard; 0.8s is safe for a few hundred")
+                    help="blockstream rate-limits hard; 0.8s is safe for a few hundred. "
+                         "Set 0 when using --rpc.")
     ap.add_argument("--grep", default="",
                     help="comma-separated keywords to flag inside payloads")
     a = ap.parse_args()
@@ -116,14 +176,19 @@ def main():
             f.write("address\ttxid\tn_opreturn\tasm\tpayload_hex\tascii\tutf8\tkeyword_hit\n")
 
     todo = [(ad, tx) for ad, tx in todo if tx not in done]
-    sys.stderr.write(f"scanning {len(todo)} unique transactions "
-                     f"(sleep={a.sleep}s, ~{len(todo)*a.sleep/60:.1f} min)\n\n")
+    src = f"RPC {a.rpc.split('/v2/')[0]}" if a.rpc else f"REST {a.api}"
+    sys.stderr.write(f"scanning {len(todo)} unique transactions via {src} "
+                     f"(sleep={a.sleep}s, ~{len(todo)*max(a.sleep,0.05)/60:.1f} min)\n\n")
 
     out = open(a.out, "a")
     found = failed = 0
     for i, (addr, txid) in enumerate(todo, 1):
-        time.sleep(a.sleep)
-        tx = get(f"{a.api}/tx/{txid}")
+        if a.sleep:
+            time.sleep(a.sleep)
+        if a.rpc:
+            tx = normalize_tx(rpc(a.rpc, "getrawtransaction", [txid, True]))
+        else:
+            tx = get(f"{a.api}/tx/{txid}")
         if tx is None or "vout" not in tx:
             failed += 1
             sys.stderr.write(f"  [{i}/{len(todo)}] {txid[:12]} FETCH FAILED\n")
