@@ -81,11 +81,25 @@ def group_lines(boxes, tol):
     return [sorted(l, key=lambda b: b[0]) for l in lines if len(l) >= 8]
 
 
-def bic_1_vs_2(v, iters=80):
+def bic_1_vs_2(v, iters=80, sd_floor=None):
     """BIC of a 1-component vs a 2-component Gaussian fit (EM).
 
     Returns (bic1 - bic2, mu_lo, mu_hi, weight_hi). Positive means the
     two-component model is preferred.
+
+    `sd_floor` stops a component collapsing onto a single repeated value, and
+    it MUST scale with the data. It was originally hard-coded to 0.35, which
+    suited raw pixel gaps and was then silently carried over to quantities
+    normalised into units of ~1.0 with sd around 0.18 — a floor twice the whole
+    spread of the data. That does not merely weaken the fit, it inverts the
+    answer: both components are pinned so wide that EM converges to one mean
+    and the two-component log-likelihood lands BELOW the one-component fit, so
+    a genuinely bimodal sample is reported as unimodal with a large negative
+    margin. Default is now a fraction of the sample's own spread.
+
+    A single EM run from the quartiles also gets stuck inside a dominant peak
+    when the second population is small, so several initialisations are tried
+    and the best likelihood kept.
     """
     v = np.asarray(v, dtype=float)
     n = len(v)
@@ -95,27 +109,37 @@ def bic_1_vs_2(v, iters=80):
     ll1 = float(np.sum(-0.5 * ((v - v.mean()) / s) ** 2 - math.log(s * math.sqrt(2 * math.pi))))
     bic1 = 2 * math.log(n) - 2 * ll1
 
-    lo, hi = np.percentile(v, 25), np.percentile(v, 75)
-    mu = np.array([lo, hi], dtype=float)
-    sd = np.array([s, s], dtype=float)
-    w = np.array([0.5, 0.5])
-    for _ in range(iters):
-        p = np.stack([w[k] * np.exp(-0.5 * ((v - mu[k]) / sd[k]) ** 2)
-                      / (sd[k] * math.sqrt(2 * math.pi)) for k in range(2)])
-        tot = p.sum(axis=0) + 1e-300
-        r = p / tot
-        nk = r.sum(axis=1) + 1e-12
-        w = nk / n
-        mu = (r * v).sum(axis=1) / nk
-        sd = np.sqrt((r * (v - mu[:, None]) ** 2).sum(axis=1) / nk)
-        sd = np.maximum(sd, 0.35)          # sub-pixel floor: gaps are integers
-    ll2 = float(np.sum(np.log(tot)))
+    floor = sd_floor if sd_floor is not None else max(0.02 * s, 1e-9)
+    best = None
+    for q in ((25, 75), (10, 90), (5, 60), (40, 97), (50, 99)):
+        mu = np.array([np.percentile(v, q[0]), np.percentile(v, q[1])], float)
+        if mu[1] - mu[0] < 1e-12:
+            continue
+        sd = np.array([s, s], dtype=float)
+        w = np.array([0.5, 0.5])
+        tot = None
+        for _ in range(iters):
+            p = np.stack([w[k] * np.exp(-0.5 * ((v - mu[k]) / sd[k]) ** 2)
+                          / (sd[k] * math.sqrt(2 * math.pi)) for k in range(2)])
+            tot = p.sum(axis=0) + 1e-300
+            r = p / tot
+            nk = r.sum(axis=1) + 1e-12
+            w = nk / n
+            mu = (r * v).sum(axis=1) / nk
+            sd = np.maximum(np.sqrt((r * (v - mu[:, None]) ** 2).sum(axis=1) / nk),
+                            floor)
+        ll = float(np.sum(np.log(tot)))
+        if best is None or ll > best[0]:
+            best = (ll, mu.copy(), w.copy())
+    if best is None:
+        return -1e9, 0, 0, 0
+    ll2, mu, w = best
     bic2 = 5 * math.log(n) - 2 * ll2
     o = np.argsort(mu)
     return bic1 - bic2, float(mu[o[0]]), float(mu[o[1]]), float(w[o[1]])
 
 
-def null_margin(n, mean, sd, step=1.0, trials=300, seed=7):
+def null_margin(n, mean, sd, step=1.0, trials=300, seed=7, sd_floor=None):
     """Largest BIC margin a UNIMODAL sample of the same shape produces.
 
     This is the operation-matched null. Anything the real data scores below
@@ -135,7 +159,7 @@ def null_margin(n, mean, sd, step=1.0, trials=300, seed=7):
     out = []
     for _ in range(trials):
         v = np.round(rng.normal(mean, sd, n) / step) * step
-        out.append(bic_1_vs_2(v)[0])
+        out.append(bic_1_vs_2(v, sd_floor=sd_floor)[0])
     return float(np.percentile(out, 95))
 
 
