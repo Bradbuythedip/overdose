@@ -28,7 +28,7 @@ Source material available here: seven iPhone photographs of pages 73-79,
 | inter-word spacing cipher | 0 hits, and the measurement is *sound* | `gap_measure.py`; monospace grid verified (residual 0.11-0.14), 291 gaps of >=2 spaces, sequence is 2s and 3s and maps to no plaintext |
 | mirror-writing image transforms | 0 hidden addresses | 35 vision scans, 7 pages x 5 transforms |
 | on-chain markers (OP_RETURN / inscriptions) | 0 hits | 2.2M lines of embedded chain text, blocks 0-829,999, **including input scripts**; validated with data-source and search-method positive controls |
-| bech32 / Taproot puzzle wallet | none exists | 0 addresses with exactly 20 BTC unmoved in either class — so the @NachoKeysBTC `bc1q3e...6gvskf` claim is unsupported by chain data |
+| bech32 / Taproot puzzle wallet | **earlier claim was overstated** | that rested on a 62-address bech32 sample now known to be ~12% complete; the real bech32 exactly-20 count is 505. Re-tested properly: the `bc1q3e…6gvskf` pattern matches none of the 505, and none of 435,312 bech32 addresses in a rich list reaching ~4 BTC — evidence, not disproof, since that dump is an Apr-2023 snapshot. See `window/exact20_enumerated.md` |
 | derivation from article text | 0 funded hits | see below |
 
 ## Derivation search, cumulative
@@ -94,10 +94,12 @@ transaction-level detail or address enumeration has to run elsewhere.
    ~215 dpi against 300-2400 dpi print, and the bold/regular stroke delta in a
    10 pt typewriter face is under one pixel at that sampling rate.
    `bold_extract.py` runs on better scans unchanged.
-2. **Enumerating the 846 unaccounted exactly-20 addresses**, which needs an
-   address-indexed source from a networked machine.
-   `window/exact20_scripthashes.txt` holds all 962 scripthashes so any candidate
-   list can be tested against the true pool offline and instantly.
+2. ~~Enumerating the 846 unaccounted exactly-20 addresses~~ — **largely done**.
+   A GitHub-hosted address dump is reachable over the git proxy, which the
+   "needs network" framing had wrongly ruled out. 870 of the 962 are now named
+   in `window/named_exact20_870.txt` (754 new); 92 remain. The chain-side
+   candidate list for `address_check.py` / `trace_funding.py` / the OP_RETURN
+   scan is now 870 addresses rather than 116.
 
 ## Standing methodological rule
 
