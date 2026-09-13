@@ -4,7 +4,7 @@
 User relayed Keiser's explicit clue:
 - Tweet [1632391507008278528](https://x.com/maxkeiser/status/1632391507008278528) (5 Mar 2023)
   quoting the paper "Mirror writing: neurological reflections on an unusual
-  phenomenon" (Della Sala & Cubelli 2007, PMC2117809).
+  phenomenon" (G D Schott 2007, PMC2117809).
 - @NachoKeysBTC (Jun 2026) claimed possible BIP-84 address `bc1q3e...6gvskf`.
 
 ## Method
