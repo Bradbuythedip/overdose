@@ -1,0 +1,1382 @@
+{
+ "pages": [
+  {
+   "page": 75,
+   "lines": [
+    {
+     "line_no": 1,
+     "text": "BITCOIN IS TOXIC AF",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "Display headline in a separate heavy stencil face, not the body typewriter face and not in a highlight bar. It is absent from the body-text layer of the supplied images entirely, so no weight judgment is made."
+    },
+    {
+     "line_no": 2,
+     "text": "Here's the bitter truth. Bitcoin was not a reaction",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular. Note lines 2-3 are set ~8% larger than the rest of the body (o=30-31px wide vs 27-29px), so they were calibrated against their own scale: every glyph lands on the regular curve (e=479-505, a=495, o=453-462, t=389-396). Word stroke widths 6.56-7.39, regular band is 6.3-7.4."
+    },
+    {
+     "line_no": 3,
+     "text": "to the Global Financial Crisis of 2008. It caused it.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular. 'it.' measures 7.78 at word level, above the regular ceiling, but that is entirely the full stop: the period is a dense blob with a high distance transform. The 'it' ligature itself is 742 ink = regular i+t at this line's scale."
+    },
+    {
+     "line_no": 4,
+     "text": "Really?          Yes.",
+     "bold_words": [
+      "Yes."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "Display size, x-height 38px vs 31px body (linear scale 1.23, area 1.51). 'Yes.' is BOLD: s=1191 ink vs 737 predicted regular / 1099 predicted bold; the e has almost closed counters; the period is 384 vs 214 regular. 'Really?' is REGULAR by the whole-word rule and I disagree with flagging it uncertain - it is decisively mixed: the two l's differ visibly, first l = 30px/542 ink (regular) and second l = 37px/821 ink (bold), while R and e sit at regular weight (e=732 vs 669 predicted regular, 1099 predicted bold) and a, y, ? run heavy."
+    },
+    {
+     "line_no": 5,
+     "text": "The markets sensed Bitcoin was coming and started to crash.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 10 words, stroke widths 6.32-6.92."
+    },
+    {
+     "line_no": 6,
+     "text": "Markets are like that. They discount stuff in advance. Markets are",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CORRECTION to the previous reading, which called this run regular. 'They discount stuff in advance.' carries a continuous underline AND is heavily weighted: with the underline rows (538-542) excluded the five words measure 9.50/8.29/8.78/8.32/8.62 against 6.47-6.96 for 'Markets are like that.' and the trailing 'Markets are'. But it is not whole-word bold - each word mixes the two weights exactly. They = T816 h797 e727 (all bold) but y clearly thin, matching the y of 'easy' on line 33 stroke for stroke at 7x. discount = d741 i557 u708 bold, s489 c329 o378 n395 t324 regular. stuff = u699 f653 f654 bold, s475 t324 regular. in = i529 bold, n388 regular. advance. = d748 v632 e697 bold, a435 a418 n365 c298 regular. So: no whole-word bold. The earlier note's claim that these words measure at regular level is wrong; only some of their letters do."
+    },
+    {
+     "line_no": 7,
+     "text": "the central nervous system of the global economy. They are the sum of",
+     "bold_words": [],
+     "bar_words": [
+      "They",
+      "are",
+      "the",
+      "sum",
+      "of"
+     ],
+     "uncertain_words": [],
+     "note": "'They are the sum of' is inside an ORANGE highlight bar wrapping onto line 8. The eight visible words are all regular (6.37-7.09). Useful control: 'global' here = 6.56 regular, against 'global' = 9.25 bold on line 10."
+    },
+    {
+     "line_no": 8,
+     "text": "all our neuroses. The cypherpunks were publishing the white paper",
+     "bold_words": [],
+     "bar_words": [
+      "all",
+      "our",
+      "neuroses."
+     ],
+     "uncertain_words": [],
+     "note": "'all our neuroses.' is the tail of the orange bar begun on line 7. The seven visible words are all regular (6.40-7.00)."
+    },
+    {
+     "line_no": 9,
+     "text": "around that time \u2014 after years of trying \u2014 and a collective panic",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "No whole-word bold, confirming the previous reading. 'collective' (word 9.17) and 'panic' (8.33) are emphasized but mixed: collective = l582 l574 e723 iv1213 e738 bold, but c357 o396 c335 t339 regular; panic = a437 n402 c340 all regular against bold a=698 n=714 c=605. The two em dashes measure 8.63/8.92 - that is a shape artifact of a solid horizontal bar, not weight; ignore dashes."
+    },
+    {
+     "line_no": 10,
+     "text": "arose in the global unconscious of money printers, banking",
+     "bold_words": [
+      "global",
+      "unconscious"
+     ],
+     "bar_words": [
+      "money",
+      "printers,",
+      "banking"
+     ],
+     "uncertain_words": [],
+     "note": "Confirmed. These are the only two genuine whole-word bolds in the upper half of the page, and the round letters prove it: global = g928 l543 o+b1307 a704 l588, with a=704 matching bold a=698 and o inside the merged pair at 575. unconscious = u727 n729 c612 o566 n725 s734 c611 i561 o584 u724 s734 - every glyph bold including all four round letters. 'money printers, banking' is in a BLACK bar wrapping to line 11. 'arose in the' and 'of' regular."
+    },
+    {
+     "line_no": 11,
+     "text": "terrorists, stock traders,   central bank arsonists, Wall Street",
+     "bold_words": [],
+     "bar_words": [
+      "terrorists,",
+      "stock",
+      "traders,",
+      "central",
+      "bank",
+      "arsonists,"
+     ],
+     "uncertain_words": [],
+     "note": "Black bar ends after 'arsonists,'. Only 'Wall Street' is visible outside it (6.80 / 6.88) = regular. The bar's edge clips the W."
+    },
+    {
+     "line_no": 12,
+     "text": "and Jamie Dimon. The Bitcoin rabbit hole was opening \u2014 the black hole",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "No whole-word bold - I confirm the previous verdict but on different evidence. 'the black hole' is visibly much heavier than the preceding text and its words measure 9.44 / 8.14 / 9.43, yet each is mixed: the = h824 e739 bold but t339 regular; black = b731 l578 bold, k600, but a438 c335 regular (bold a=698, c=605); hole = h833 l574 e736 bold but o387 regular. Compare the fully bold 'hole' on line 30 where o=575. The em dash at 8.90 is a shape artifact."
+    },
+    {
+     "line_no": 13,
+     "text": "of the Cosmic Now \u2014 and it had fiat markets in its sight.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "No whole-word bold. 'of the Cosmic Now' is emphasized (8.34/9.43/7.98/9.36 vs 6.32-7.04 for the rest of the line) but every word mixes: of = f660 bold, o387 regular; the = h820 e731 bold, t337 regular; Cosmic = m886 i550 bold, C329 o377 s485 c342 regular; Now = N917 w780 bold, o376 regular. 'and it had fiat markets in its sight.' uniformly regular."
+    },
+    {
+     "line_no": 14,
+     "text": "In fact, all the chaos you see around you these days is caused by",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 14 words, 6.45-7.11."
+    },
+    {
+     "line_no": 15,
+     "text": "Bitcoin. And nothing could be better. Nocoiners and shitcoiners,",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "No whole-word bold. 'Nocoiners and shitcoiners,' is the start of an emphasized run (7.89/7.85/8.49 vs 6.48-6.98 earlier in the line) but each word mixes: Nocoiners = i554 e754 bold, N444 o385 c331 o388 n399 r367 s493 regular; and = d742 bold, a445 n401 regular; shitcoiners, = h835 i571 e740 bold, c347 o389 n394 r361 s477 s502 t regular."
+    },
+    {
+     "line_no": 16,
+     "text": "and even some Bitcoiners, consider this view toxic. Everybody's",
+     "bold_words": [
+      "view"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "'view' is the only whole-word bold: v634 i561 e742 w795 against regular v377 i295 e443 w489 - every glyph 1.6-1.9x. The previous reading got this right. All neighbours are mixed: and = d754 only; even = e723 v632 e741 bold but n396 exactly regular; some = m909 e735 bold, s480 o389 regular; Bitcoiners, = B803 i536 e742 bold, c342 o388 n402 r353 regular; consider = i561 d748 e741 bold, c337 o383 n385 s478 r361 regular; this = h815 i545 bold, t324 s476 regular; toxic. = i558 and the period (243, bold-weight) but t340 o383 x521 c339 regular. 'Everybody's' is fully regular (v=377, e=438) - proof the heavy v and e elsewhere are not a fixed glyph property."
+    },
+    {
+     "line_no": 17,
+     "text": "complaining about \"Toxic Bitcoin Maximalists\" these days.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "No whole-word bold, confirming the previous reading. The quoted phrase is emphasized (8.49/8.09/8.11) but mixed: \"Toxic = T797 i570 bold, o389 x555 c340 regular; Bitcoin = B819 i570 bold, c338 o382 n408 regular; Maximalists\" = i558 m879 l594 i556 bold, M555 a445 x545 a441 s485 t345 s473 regular. 'complaining', 'about', 'these', 'days.' uniformly regular."
+    },
+    {
+     "line_no": 18,
+     "text": "Look, toxicity is Layer 1 of the protocol.",
+     "bold_words": [
+      "protocol."
+     ],
+     "bar_words": [
+      "Layer",
+      "1"
+     ],
+     "uncertain_words": [],
+     "note": "'Layer 1' is inside an ORANGE bar whose right edge also clips the o of the following 'of', leaving only the f visible; I count 'of' as ordinary regular text, not bar text. 'protocol.' is underlined and, with the underline row (1766) excluded, genuinely whole-word BOLD - crucially the round letters are bold too: p663 r619 o591 t590 o576 c605 o559 l552 (regular equivalents 485/362/375/335/375/340/375/373). Its full stop, oddly, is a regular-weight period (142, vs 243 for the bold period after 'true.' on line 31). 'Look, toxicity is' and 'the' regular."
+    },
+    {
+     "line_no": 19,
+     "text": "Fact:          It's Layer 1 for every great thing",
+     "bold_words": [],
+     "bar_words": [
+      "Fact:",
+      "It's",
+      "Layer",
+      "1",
+      "for",
+      "every",
+      "great",
+      "thing"
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside ORANGE highlight bars (two: 'Fact:' and the rest). Nothing is visible in the text layer; weight not judged."
+    },
+    {
+     "line_no": 20,
+     "text": "     that's ever been invented or discovered.",
+     "bold_words": [],
+     "bar_words": [
+      "that's",
+      "ever",
+      "been",
+      "invented",
+      "or",
+      "discovered."
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside an ORANGE highlight bar. Weight not judged."
+    },
+    {
+     "line_no": 21,
+     "text": "It's only the language of the shameless opportunists trying",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 9 words, 6.47-7.14."
+    },
+    {
+     "line_no": 22,
+     "text": "to cash in by riding Bitcoins coattails that give it a bad name.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 13 words, 6.28-7.13."
+    },
+    {
+     "line_no": 23,
+     "text": "Vitalik Buterin came up with the \"Maximalist\" epithet.",
+     "bold_words": [],
+     "bar_words": [
+      "\"Maximalist\""
+     ],
+     "uncertain_words": [],
+     "note": "'\"Maximalist\"' with its quote marks is inside an ORANGE bar. I downgrade 'Vitalik Buterin' from uncertain to plainly REGULAR: both words are emphasized (8.63/8.85) but each contains letters at exact regular values - Vitalik = V726 l553 i557 bold-ish, but a446 regular and k563 far below bold k=808; Buterin = B825 u727 e722 i558 bold, but t335 (inside the merged ut=1062, which is exactly bold-u 727 + regular-t 335), r363 and n412 regular. 'came up with the' and 'epithet.' regular."
+    },
+    {
+     "line_no": 24,
+     "text": "Now he's slinging proof of stake at the mEthereum lab.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 10 words, 6.54-7.14."
+    },
+    {
+     "line_no": 25,
+     "text": "Don't fall for shitcoinery.",
+     "bold_words": [],
+     "bar_words": [
+      "Don't",
+      "fall",
+      "for",
+      "shitcoinery."
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside a BLACK highlight bar. Weight not judged."
+    },
+    {
+     "line_no": 26,
+     "text": "Keep your dignity.",
+     "bold_words": [],
+     "bar_words": [
+      "Keep",
+      "your",
+      "dignity."
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside an ORANGE highlight bar. Weight not judged."
+    },
+    {
+     "line_no": 27,
+     "text": "Go Bitcoin Toxic Maximalist,",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "No whole-word bold, agreeing with the previous reading. Display size, area scale 1.46 measured from glyph widths. Scaled to that size the round letters all land on the regular curve - o 544/556/543 vs 548 predicted regular (925 bold), a 635/631 vs 642, c 481/498 vs 496, n 574 vs 581, s 704 vs 712, t 485 vs 489, x 788/783 vs 778 - while i (798/786/806/804 vs 431 regular, 810 bold), l (815) and m (1279) are bold. Same per-character mixing as the body text, so no word is uniformly heavy."
+    },
+    {
+     "line_no": 28,
+     "text": "the Layer 1 of the whole Satoshi experience.",
+     "bold_words": [],
+     "bar_words": [
+      "Layer",
+      "1"
+     ],
+     "uncertain_words": [],
+     "note": "'Layer 1' inside an ORANGE bar (spanning x571-865). The six visible words are all regular (6.45-7.04)."
+    },
+    {
+     "line_no": 29,
+     "text": "You wouldn't be digging blindly with your bare",
+     "bold_words": [
+      "You",
+      "wouldn't",
+      "be",
+      "digging",
+      "blindly",
+      "with",
+      "your",
+      "bare"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "WHOLE LINE BOLD - reference sample. Word stroke widths 9.64-10.12, and every glyph is bold including all round forms: bare = b730 a698 r646 e751; your = y783 o585 u740 r628; wouldn't = w790 o584 u738 l575 d767 n736 '296 t588."
+    },
+    {
+     "line_no": 30,
+     "text": "hands in the muck of Bitcoin's rabbit hole if this",
+     "bold_words": [
+      "hands",
+      "in",
+      "the",
+      "muck",
+      "of",
+      "Bitcoin's",
+      "rabbit",
+      "hole",
+      "if",
+      "this"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "WHOLE LINE BOLD - second reference sample. 9.22-9.95, no light glyph anywhere: hands = h802 a698 n714 d753 s725; muck = m896 u730 c626 k808; hole = h828 o575 l561 e723; of = o559 f666."
+    },
+    {
+     "line_no": 31,
+     "text": "weren't true. Anything worth hearing is hard to listen",
+     "bold_words": [
+      "weren't",
+      "true."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "The bold run ends after 'true.'. weren't = w775 e742 r626 e741 n726 '294 t588, true. = t589 r626 u737 e728 and a bold full stop at 243. 'Anything worth hearing is hard to listen' uniformly regular (6.39-7.07)."
+    },
+    {
+     "line_no": 32,
+     "text": "to. Nice, pleasant words from con men and shitcoiners",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 9 words, 6.42-7.29. 'shitcoiners' here is fully light, unlike the mixed 'shitcoiners,' on line 15."
+    },
+    {
+     "line_no": 33,
+     "text": "are easy listening for the gullible and unloved.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "All regular; 8 words, 6.55-7.03. Used together with line 32 as the regular calibration reference. End of page 75."
+    }
+   ]
+  },
+  {
+   "page": 76,
+   "lines": [
+    {
+     "line_no": 1,
+     "text": "Get some toxicity. Get some bitcoin. Open your heart to",
+     "bold_words": [],
+     "bar_words": [
+      "Get",
+      "some",
+      "toxicity.",
+      "Get",
+      "some",
+      "bitcoin.",
+      "Open",
+      "your",
+      "heart",
+      "to"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED bar. Entire line sits in an ORANGE highlight bar (verified in the colour-layer image /tmp/s400/col_p76.png, where the bar renders as a grey block). Orange thresholds to white in the bilevel scan400 mask, so this line is absent from p76_mask.png entirely. Weight not judged."
+    },
+    {
+     "line_no": 2,
+     "text": "Bitcoin. It's the freaking UTXO ghetto up in here, y'all.",
+     "bold_words": [
+      "UTXO",
+      "ghetto",
+      "up",
+      "in",
+      "here,"
+     ],
+     "bar_words": [
+      "Bitcoin."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'Bitcoin.' is the tail of the orange bar (bar ends immediately after it). The rest is the mask's first ink band (y 3-60). Per-character stroke widths: UTXO 7.83/8.60/8.78/9.38, ghetto 8.06-10.39, up 8.85/8.92, in 8.10/8.44, here, 8.11/10.80/9.91/10.72 \u2014 every glyph in the bold cluster (>=7.3). 'It's' 4.6-5.1, 'the' 4.3-5.5, 'freaking' 4.3-5.8, \"y'all.\" 4.9-5.4 \u2014 regular cluster. Visually unambiguous at 1.3x."
+    },
+    {
+     "line_no": 3,
+     "text": "It's funkier than a whole parallel universe full of nothing",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular. Every character 4.15-6.31; word means 4.53-5.25. No bold."
+    },
+    {
+     "line_no": 4,
+     "text": "but George Clinton and James Brown clones. It's Martin Luther",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular, and I DROP the previous agent's 'uncertain' flag on 'George' \u2014 it is decisively mixed, not borderline. 'George': G=7.73 e=10.55 (blob, counter filled) o=6.30 r=5.81 g=4.27 e=10.44 \u2014 the o/r/g are plainly thin outlines at 2.6x zoom. 'Clinton': C=4.13 l=7.57 i=8.50 n=4.78 t=5.12 o=5.88 n=4.74 \u2014 mixed. Both REGULAR per the whole-word rule. All other words 3.9-6.3."
+    },
+    {
+     "line_no": 5,
+     "text": "nailing the Vatican with ultimatums. It's the sound of skin being",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular; I DROP the 'uncertain' flag on 'being' \u2014 it is decisively mixed. b=8.82 e=10.31 i=8.10 heavy, but n=4.75 g=4.23 are unmistakably thin at 3x zoom. REGULAR. Everything else 4.0-6.1. (The 10.21 on 'ultimatums.' is the full stop, a solid blob \u2014 punctuation always measures high and is not evidence of weight.)"
+    },
+    {
+     "line_no": 6,
+     "text": "ripped off live central bankers tied to a burning stake.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [
+      "ripped"
+     ],
+     "note": "CORRECTION IN REASONING, same verdict. Word-level thickness of 'ripped' is 8.23, squarely inside the bold cluster, and at 4x zoom it reads bold \u2014 so this is the strongest partial on the page. But component-level measurement is decisive: the leading 'r' is 30px wide with thickness 5.48, IDENTICAL to the regular 'r' in 'funkier' (30px, 5.48), whereas every bold 'r' on this page is 33-34px at 9.9 ('here,' 9.91, 'President' 9.94). The other five glyphs are 8.66-11.04. So 5 of 6 letters bold, one measurably regular: left UNCERTAIN, not bold. 'central' (e=10.63, l=8.07 heavy; c/n/t/r/a 4.58-5.54) and 'bankers' (b=8.37, e=10.72 heavy; a/n/k/r/s 4.74-6.13) are mixed -> REGULAR; the heavy 'e's are ink-filled counters, visibly solid blobs. 'off live tied to a burning' 4.5-6.1."
+    },
+    {
+     "line_no": 7,
+     "text": "Gotta be this way. Forty years of dumb post-1971 fiat money",
+     "bold_words": [],
+     "bar_words": [
+      "Gotta",
+      "be",
+      "this",
+      "way.",
+      "Forty",
+      "years",
+      "of",
+      "dumb",
+      "post-1971",
+      "fiat",
+      "money"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED bar. Solid dark bar with knocked-out white text, visible in the colour layer; wholly absent from the bilevel mask (no ink band between y=449 and y=614). Weight not judged."
+    },
+    {
+     "line_no": 8,
+     "text": "nonsense (and 10 years of watching Peter Schiff miss buying bitcoin",
+     "bold_words": [],
+     "bar_words": [
+      "nonsense"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'nonsense' is a black chip with knocked-out white text -> [BAR]. NOTE ON WORD COUNT: the rest is printed as '(and 10years of watching Peter Schiff miss buying bitcoin' \u2014 '10years' is set as ONE token with no space, so this line has 10 printed words after the chip, not 11. Verified at 1.8x zoom; all of it regular, with a thin full-width strikethrough rule crossing the line that must not be mistaken for weight."
+    },
+    {
+     "line_no": 9,
+     "text": "since I started honey-badgering him to buy some at $1 back in 2011)",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 3.88-6.24. (The 8.37 component inside 'honey-badgering' is the hyphen, a solid bar, not a letter.)"
+    },
+    {
+     "line_no": 10,
+     "text": "have dulled shitcoiners' and nocoiners' minds.",
+     "bold_words": [
+      "shitcoiners'"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. \"shitcoiners'\" every glyph 8.18-11.38 \u2014 whole-word bold. \"nocoiners'\": n=4.80 o=5.82 c=5.20 o=5.88 i=8.30 n=5.12 e=10.60 r=5.80 s=6.23 \u2014 only 2 letters heavy out of 9, REGULAR. Good internal control: 'dulled' contains d/u/l/l/e/d (the very letters the artifact favours) and measures 4.41-5.71 throughout."
+    },
+    {
+     "line_no": 11,
+     "text": "The collective unconscious, controlled now by psychotic",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.10-6.35 (the 8.94 is the comma)."
+    },
+    {
+     "line_no": 12,
+     "text": "cats, plays \"Friends\" reruns all day in our heads.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular. Letters 4.17-6.35; the high components in '\"Friends\"' (8.18/8.44/11.74/9.62) are the two pairs of straight quote marks, which are solid blobs like all punctuation here \u2014 the letters F-r-i-e-n-d-s measure 4.22-6.14."
+    },
+    {
+     "line_no": 13,
+     "text": "Our imaginations and inventiveness have been euthanized",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.06-6.20."
+    },
+    {
+     "line_no": 14,
+     "text": "by the rancid catnip of fiat money.   Fortunately, bitcoin",
+     "bold_words": [],
+     "bar_words": [
+      "by",
+      "the",
+      "rancid",
+      "catnip",
+      "of",
+      "fiat",
+      "money."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'by the rancid catnip of fiat money.' is inside an ORANGE bar (seen in the colour layer, dropped by the bilevel mask). 'Fortunately, bitcoin' is outside it: 4.64-5.89 throughout \u2014 regular."
+    },
+    {
+     "line_no": 15,
+     "text": "puts an end to the paper chase Manhattan Bank money",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 3.79-6.20."
+    },
+    {
+     "line_no": 16,
+     "text": "laundering lobotomy. It's a stun gun to the genitals.",
+     "bold_words": [],
+     "bar_words": [
+      "It's",
+      "a",
+      "stun",
+      "gun",
+      "to",
+      "the",
+      "genitals."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. \"It's a stun gun to the genitals.\" is a solid black bar with knocked-out white text. 'laundering lobotomy.' is outside it: 4.35-6.23 \u2014 regular."
+    },
+    {
+     "line_no": 17,
+     "text": "A monetary defibrillator to the treasure chest.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.05-6.18 (11.08 is the final full stop). The isolated 'A' measures 4.70, matching the regular 'A' family on the page."
+    },
+    {
+     "line_no": 18,
+     "text": "Don't believe me?",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.51-6.01 (the 7.51 component is the apostrophe)."
+    },
+    {
+     "line_no": 19,
+     "text": "Have you seen the president of El Salvador",
+     "bold_words": [
+      "El"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED 'El' bold (E=7.63, l=8.19). I DROP the previous agent's 'uncertain' flag on 'Salvador': S=5.18 a=4.84 lv=8.55 (merged pair) a=5.07 d=8.64 o=5.88 r=5.54 \u2014 five of eight glyphs are plainly thin at 3x zoom, so it is decisively mixed, not borderline. REGULAR. Lowercase 'president' 4.63-6.30, regular."
+    },
+    {
+     "line_no": 20,
+     "text": "trolling the International Monetary Fund (IMF) on Twitter?",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 3.80-6.12. '(IMF)' here measures I=4.45 M=3.83 F=4.55 \u2014 flatly regular, versus 7.92/7.96/7.49 for the bold 'IMF' on line 26. Strong internal control on the method."
+    },
+    {
+     "line_no": 21,
+     "text": "He's taunting them, telling them he's \"buying the dip.\"",
+     "bold_words": [],
+     "bar_words": [
+      "\"buying",
+      "the",
+      "dip.\""
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. '\"buying the dip.\"' is inside an ORANGE bar (colour layer). Preceding text 4.10-6.24 \u2014 regular (high components are apostrophes and the comma)."
+    },
+    {
+     "line_no": 22,
+     "text": "I tweeted President Nayib Bukele when he announced",
+     "bold_words": [
+      "President",
+      "Nayib",
+      "Bukele"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED whole-word bold on all three. President 8.35-10.80 every glyph; Nayib 7.51-9.33; Bukele 7.16-10.77 (the leading B at 7.16 is the lowest, but a regular capital B on this page measures 3.90-3.98 in 'Bank'/'Brown', so it is unambiguously bold). 'I tweeted' 4.44-5.88 and 'when he announced' 4.10-6.34 \u2014 regular."
+    },
+    {
+     "line_no": 23,
+     "text": "he was going to tap his nation's volcanoes to mine",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.11-6.30 (the 7.82 in \"nation's\" is the apostrophe)."
+    },
+    {
+     "line_no": 24,
+     "text": "$1 billion in bitcoin \u2014 that he should sell",
+     "bold_words": [],
+     "bar_words": [
+      "$1",
+      "billion"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. '$1 billion' is a solid black bar with knocked-out white text. Remainder 4.07-6.35 \u2014 regular. The em dash measures 7.63 but is a solid punctuation rule, not a word."
+    },
+    {
+     "line_no": 25,
+     "text": "billions worth of future bitcoin earnings",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.25-6.39."
+    },
+    {
+     "line_no": 26,
+     "text": "collateralized \"Volcano Bonds\" to pay off the IMF",
+     "bold_words": [
+      "IMF"
+     ],
+     "bar_words": [
+      "\"Volcano",
+      "Bonds\""
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. '\"Volcano Bonds\"' is a solid black bar. 'IMF' is whole-word bold (7.92/7.96/7.49 vs 3.83-4.55 for the regular '(IMF)' on line 20). 'collateralized to pay off the' 4.19-6.43 \u2014 regular."
+    },
+    {
+     "line_no": 27,
+     "text": "loan and get rid of those leeches. I tagged Mike",
+     "bold_words": [
+      "loan"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED 'loan' whole-word bold (8.29/9.04/8.42/8.85), continuing the bold 'IMF loan' across the line break. I DROP the 'uncertain' flag on 'Mike': M=3.80 (as thin as any capital on the page) i=8.24 k=5.88 e=11.01 (filled blob) \u2014 decisively mixed, REGULAR. 'and get rid of those leeches. I tagged' 4.24-6.39."
+    },
+    {
+     "line_no": 28,
+     "text": "Novogratz in the tweet, figuring he could sell a",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular; I DROP the 'uncertain' flag. 'Novogratz': N=7.58 o=6.03 v=9.68 o=6.27 g=4.50 r=5.53 a=4.90 tz=11.69(merged, the z is a blob) \u2014 only N, v and z are heavy while o/o/g/r/a/t are visibly thin at 3x zoom. REGULAR. Rest of line 4.24-6.39."
+    },
+    {
+     "line_no": 29,
+     "text": "bunch to his Wall Street crony pals, but so far he",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED all regular, 4.00-6.27 (9.17 is the comma in 'pals,')."
+    },
+    {
+     "line_no": 30,
+     "text": "hasn't moved on it. I don't really trust that guy.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular; I DROP both 'uncertain' flags ('really', 'guy.') \u2014 the whole tail is the single-glyph artifact and none of it is close to whole-word bold. Per glyph: don't = d 8.81 only (o/n/t 5.03-5.94); really = e 11.22 and ll 8.12 only (r 5.45, a 4.93, y 6.48); trust = u 9.06 only (t/r/s/t 5.19-6.02); that = h 7.87 only (t/a/t 5.05-5.16); guy. = u 8.91 only (g 4.37, y+stop 6.83). Verified at 1.75x against 'moved' (5.34-5.90) on the same line. All REGULAR."
+    },
+    {
+     "line_no": 31,
+     "text": "Maybe because he's a shitcoiner at heart.",
+     "bold_words": [],
+     "bar_words": [
+      "shitcoiner",
+      "at",
+      "heart."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'shitcoiner at heart.' is inside an ORANGE bar (colour layer). 'Maybe because he's a' is set in a LARGER point size than the body, so every glyph is uniformly elevated (5.06-7.47, word means 5.74-6.38) with no internal contrast \u2014 that is size, not weight. All four words REGULAR."
+    }
+   ]
+  },
+  {
+   "page": 78,
+   "lines": [
+    {
+     "line_no": 1,
+     "text": "We've never had an economy and a money",
+     "bold_words": [
+      "We've",
+      "never",
+      "had",
+      "an",
+      "economy",
+      "and",
+      "a",
+      "money"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Opening paragraph (lines 1-5) uniformly in the heavy weight. Per-word normalised stroke width (2*mean distance-transform / glyph height, x-height glyphs only) = 0.149-0.178; page-wide bold band is 0.157-0.167 and the regular band is 0.113-0.119. Cross-checked against the colour photo (lines 1-3 visible at top)."
+    },
+    {
+     "line_no": 2,
+     "text": "that incentivizes love before until bitcoin.",
+     "bold_words": [
+      "that",
+      "incentivizes",
+      "love",
+      "before",
+      "until",
+      "bitcoin."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED bold. Word ratios 0.152-0.178."
+    },
+    {
+     "line_no": 3,
+     "text": "Love opens up the collective unconscious and",
+     "bold_words": [
+      "Love",
+      "opens",
+      "up",
+      "the",
+      "collective",
+      "unconscious",
+      "and"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED bold. Word ratios 0.155-0.188."
+    },
+    {
+     "line_no": 4,
+     "text": "our joint inner cosmic being. The economy of",
+     "bold_words": [
+      "our",
+      "joint",
+      "inner",
+      "cosmic",
+      "being.",
+      "The",
+      "economy",
+      "of"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED bold. Word ratios 0.144-0.167; the lowest ('of' 0.144) is still far above the regular band (~0.117). Bold 'T'/'h' stems here measure sw 4.56/4.47 vs 3.38/3.17 for the regular 'The' on line 9."
+    },
+    {
+     "line_no": 5,
+     "text": "love is infinitely more efficient than hate and war.",
+     "bold_words": [
+      "love",
+      "is",
+      "infinitely",
+      "more",
+      "efficient",
+      "than",
+      "hate",
+      "and",
+      "war."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED bold. Word ratios 0.150-0.170. End of opening paragraph."
+    },
+    {
+     "line_no": 6,
+     "text": "I listen to these eggheads \u2014 Michael Saylor, Nic Carter,",
+     "bold_words": [
+      "Michael",
+      "Saylor,",
+      "Nic",
+      "Carter,"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Clean split: 'listen/to/these/eggheads' = 0.117-0.121 (regular); 'Michael/Saylor,/Nic/Carter,' = 0.146-0.156 (bold). The lone 'I' has no x-height glyph to measure but reads regular and sits inside the regular run. Em-dash not counted as a word."
+    },
+    {
+     "line_no": 7,
+     "text": "Marty Bent \u2014     who spend their days pouring over spreadsheets",
+     "bold_words": [
+      "Marty",
+      "Bent"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'Marty' 0.134 / 'Bent' 0.140 vs 0.095-0.116 for 'who spend their days pouring over spreadsheets' (these figures include ascenders so they run low, but the split is unambiguous and visually obvious)."
+    },
+    {
+     "line_no": 8,
+     "text": "and gallons of iced espresso. The numbers don't lie.",
+     "bold_words": [],
+     "bar_words": [
+      "The",
+      "numbers",
+      "don't",
+      "lie"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'and gallons of iced espresso.' all regular (0.096-0.114). Orange bar covers 'The numbers don't lie'; the closing period sits just outside the bar (verified in IMG_6249)."
+    },
+    {
+     "line_no": 9,
+     "text": "The energy industry in its current form is gargantuanly wasteful",
+     "bold_words": [],
+     "bar_words": [
+      "gargantuanly",
+      "wasteful"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'The energy industry in its current form is' all regular (0.112-0.127). 'gargantuanly wasteful' is white reversed type in a BLACK bar."
+    },
+    {
+     "line_no": 10,
+     "text": "and requires money printing and wars to keep it going \u2014 all in",
+     "bold_words": [],
+     "bar_words": [
+      "money",
+      "printing",
+      "wars",
+      "to",
+      "keep",
+      "it",
+      "going"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Whole line is blanked from the bilevel mask, so read from IMG_6249 at 2x. Two BLACK bars: 'money printing' and 'wars to keep it going'. Plain words 'and requires', 'and', '\u2014 all in' are visually identical to the regular body weight of lines 9 and 11."
+    },
+    {
+     "line_no": 11,
+     "text": "the service of an uber class of banksters who profit from war, poverty",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Every word 0.113-0.119 \u2014 this line is the page's regular-weight reference."
+    },
+    {
+     "line_no": 12,
+     "text": "and misery with their fiat money Ponzi schemes. America left $85",
+     "bold_words": [
+      "fiat",
+      "money",
+      "Ponzi",
+      "schemes."
+     ],
+     "bar_words": [
+      "America",
+      "left",
+      "$85"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED, with one correction to method: using a per-line x-height reference (so the 'fi' ligature and 't' in 'fiat' are not penalised), the split is 'and/misery/with/their' = 0.101/0.113/0.105/0.105 vs 'fiat/money/Ponzi/schemes.' = 0.152/0.155/0.158/0.163. 'fiat' is genuinely bold, not partially bold. Orange bar starts at 'America'."
+    },
+    {
+     "line_no": 13,
+     "text": "BILLION worth of hate toys in Afghanistan, for example, for a war",
+     "bold_words": [],
+     "bar_words": [
+      "BILLION",
+      "worth",
+      "of",
+      "hate",
+      "toys",
+      "in",
+      "Afghanistan,"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Orange bar runs from 'BILLION' through 'Afghanistan,' (comma inside). 'for example, for a war' regular."
+    },
+    {
+     "line_no": 14,
+     "text": "that some estimate cost $2 trillion fiat cuck-bucks.",
+     "bold_words": [],
+     "bar_words": [
+      "$2",
+      "trillion",
+      "fiat",
+      "cuck-bucks."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'that some estimate cost' regular. Orange bar from '$2' to the final period (period inside the bar)."
+    },
+    {
+     "line_no": 15,
+     "text": "BITCOIN FIXES ALL THIS by replacing oil-dripping,",
+     "bold_words": [
+      "BITCOIN",
+      "FIXES",
+      "ALL",
+      "THIS",
+      "by",
+      "replacing",
+      "oil-dripping,"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED bold throughout. Caps needed a separate check because cap-height dilutes the ratio metric: absolute stroke width of the caps is 4.00-4.82 px (mean ~4.4) versus 4.5 for bold body caps and 3.2-3.4 for regular body caps. The lowercase tail 'replacing / oil-dripping,' measures 0.156/0.157, squarely in the bold band. No weight step anywhere in the line."
+    },
+    {
+     "line_no": 16,
+     "text": "corpse-ridden, poppy-harvesting fiat money with perfect bitcoin.",
+     "bold_words": [
+      "corpse-ridden,",
+      "poppy-harvesting",
+      "fiat",
+      "money",
+      "with",
+      "perfect",
+      "bitcoin."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED uniform bold, 0.151-0.170."
+    },
+    {
+     "line_no": 17,
+     "text": "Remove the war incentive, and you remove the hate incentive.",
+     "bold_words": [
+      "Remove",
+      "the",
+      "war",
+      "incentive,",
+      "and",
+      "you",
+      "remove",
+      "the",
+      "hate",
+      "incentive."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED uniform bold, 0.154-0.171. Used as the page's bold reference line."
+    },
+    {
+     "line_no": 18,
+     "text": "Bitcoin fills the gap with love; our most natural tendency if given a chance.",
+     "bold_words": [
+      "Bitcoin",
+      "fills",
+      "the",
+      "gap",
+      "with",
+      "love;",
+      "our",
+      "most",
+      "natural",
+      "tendency",
+      "if",
+      "given",
+      "a",
+      "chance."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED uniform bold, 0.151-0.187."
+    },
+    {
+     "line_no": 19,
+     "text": "The warmongers will start mining bitcoin for sure.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [
+      "The",
+      "will",
+      "mining",
+      "bitcoin",
+      "sure."
+     ],
+     "note": "CORRECTED \u2014 previous agent marked all 8 words bold; I read NO word on this line as bold. Two findings. (1) The line is homogeneous: every glyph that repeats across words has the same ink area \u2014 e '1212/1233/1219' (The/warmongers/sure.), n '688/707,705/700' (warmongers/mining/bitcoin), r '635,645/640/612/607' (warmongers/start/for/sure.), i '930/940,951/933' (will/mining/bitcoin), o '675/666', s '844/831/827', w '1331/1320', m '1548/1522', a '796/781', g '973/955'. A side-by-side montage of the three e's, three n's, three r's and three i's shows them pixel-for-pixel alike. So the 'The/will/mining/bitcoin/sure. are heavy, warmongers/start/for are light' impression is purely the narrow-stem-letter artifact: in this display face the stem letters (T h e w m i l u b f) print fat and the round letters (a c o n r s t g) print thin, WITHIN single words \u2014 'warmongers' has fat w/m/e and thin a/r/o/n/g/s, 'mining' has fat m/i/i and thin n/n/g. (2) The line's weight register is NOT the body bold. Scaling 'bitcoin' from bold line 16 to the same x-height and overlaying makes line 19's c/o/n/t visibly thinner. Numerically line 19's n = sw 4.2 at h39; scaled from the regular body n (3.55 at h31) predicts 4.47, scaled from the bold body n (4.83) predicts 6.08. Same for o (4.23 actual vs 4.65 regular-predicted / 6.83 bold-predicted), a, c, r, s. Whole-line x-height ratio is 0.123 versus 0.117 regular and 0.157-0.167 bold. I therefore record all 8 words as REGULAR. The five stem-heavy words are flagged uncertain because they read as bold to the eye and because this display face's relative letter weights match neither body face exactly (its 'e' counter is filled shut) \u2014 but whatever the answer is, it must be the SAME for all 8 words."
+    },
+    {
+     "line_no": 20,
+     "text": "It's a fact baked into the game-theorized Bitcoin protocol,",
+     "bold_words": [
+      "It's",
+      "a",
+      "fact",
+      "baked",
+      "into"
+     ],
+     "bar_words": [
+      "the",
+      "game-theorized",
+      "Bitcoin",
+      "protocol"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'It's a fact baked into' measures 0.145-0.159 (bold band) and is set at body size, not at line 19's display size. Orange bar covers 'the game-theorized Bitcoin protocol'; the trailing comma is outside the bar."
+    },
+    {
+     "line_no": 21,
+     "text": "observable by anyone choosing to see it,",
+     "bold_words": [
+      "observable",
+      "by",
+      "anyone",
+      "choosing",
+      "to",
+      "see",
+      "it,"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED uniform bold, 0.147-0.165."
+    },
+    {
+     "line_no": 22,
+     "text": "right there in the Genesis Block.",
+     "bold_words": [
+      "right",
+      "there",
+      "in",
+      "the",
+      "Genesis",
+      "Block."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED uniform bold, 0.148-0.167. Last body line."
+    },
+    {
+     "line_no": 23,
+     "text": "The economy of love is infinitely more efficient than hate and war.",
+     "bold_words": [],
+     "bar_words": [
+      "The",
+      "economy",
+      "of",
+      "love",
+      "is",
+      "infinitely",
+      "more",
+      "efficient",
+      "than",
+      "hate",
+      "and",
+      "war."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED [BAR]. Pull-quote in white reversed type inside the hand-drawn black scribble blob at the foot of the page; blanked from the bilevel mask, read from IMG_6249. It is set on FOUR tilted sub-lines (the previous agent said five). Weight not judged. Surrounding hand-lettered 'FUCK ALL' and the X marks are artwork, not article text."
+    }
+   ]
+  },
+  {
+   "page": 79,
+   "lines": [
+    {
+     "line_no": 1,
+     "text": "To wrap this up, as we move from a war and violence",
+     "bold_words": [],
+     "bar_words": [
+      "war",
+      "and",
+      "violence"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Bar is BLACK with knockout white text. Non-bar run measured per character: min stroke width 2.37-3.08, flat -> all regular."
+    },
+    {
+     "line_no": 2,
+     "text": "economy to a peace and love economy, the efficiencies",
+     "bold_words": [],
+     "bar_words": [
+      "economy"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'economy' is the continuation of the BLACK bar. Everything after it 2.49-3.30 -> regular."
+    },
+    {
+     "line_no": 3,
+     "text": "of love \u2014 because bitcoin is infinitely more efficient",
+     "bold_words": [],
+     "bar_words": [
+      "infinitely",
+      "more",
+      "efficient"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED against the colour scan: orange bar begins exactly at 'infinitely'. 'of love \u2014 because bitcoin is' 2.64-3.06 -> regular."
+    },
+    {
+     "line_no": 4,
+     "text": "to transact and store wealth in than fiat, shitcoins",
+     "bold_words": [],
+     "bar_words": [
+      "to",
+      "transact",
+      "and",
+      "store",
+      "wealth",
+      "in",
+      "than",
+      "fiat,",
+      "shitcoins"
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside the orange bar. Weight not judged."
+    },
+    {
+     "line_no": 5,
+     "text": "or gold \u2014 the overall energy consumption, even while",
+     "bold_words": [],
+     "bar_words": [
+      "or",
+      "gold"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Bar ends after 'gold'. Tail measured off the colour scan (this row is blanked in the bilevel mask): per-char min 3.14-3.35 against a 3.1-3.6 regular baseline -> all regular."
+    },
+    {
+     "line_no": 6,
+     "text": "Bitcoin makes its 51% attack on global energy supply,",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED, no bar. Measured off the colour scan: per-word min 3.02-3.42, identical to the regular baseline -> whole line regular."
+    },
+    {
+     "line_no": 7,
+     "text": "drops by 95% or more. That's right, Bitcoin will take",
+     "bold_words": [],
+     "bar_words": [
+      "That's",
+      "right,",
+      "Bitcoin",
+      "will",
+      "take"
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Orange bar starts at \"That's\" (verified at 8x: the grey bar edge falls between the period of 'more.' and the T). 'drops by 95% or more.' 2.96-3.62 -> regular."
+    },
+    {
+     "line_no": 8,
+     "text": "all the energy. In so doing, our energy consumption",
+     "bold_words": [],
+     "bar_words": [
+      "all",
+      "the",
+      "energy."
+     ],
+     "uncertain_words": [],
+     "note": "CONFIRMED as regular, but only after correcting my own first impression. At 5x 'doing,' READS bold; per-character measurement kills it: d=4.7 i=4.8 but o=3.3 n=3.4 g=2.9, i.e. the open letters sit on the 3.1-3.6 regular baseline. Same for 'In'(3.3) 'so'(3.5) 'our'(3.4) 'energy'(3.1) 'consumption'(3.0). No bold on this line."
+    },
+    {
+     "line_no": 9,
+     "text": "drops to near zero because our natural tendency toward",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular, and this is the most seductive false positive on the page: 'zero because' looks plainly black next to 'drops to near'. Per character, 'zero' is z=5.7 e=4.7 but r=2.7 o=2.8, and 'because' is b=4.4 e=5.3 but c=2.8; genuinely bold 'because' on line 11 runs c=4.7, e=5.4. The darkness is ink density plus the distressed-face letter artifact, not weight. All nine words min 2.48-2.85 -> regular."
+    },
+    {
+     "line_no": 10,
+     "text": "love and peace gets monetized for the first time in",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular. Word-level averages split into two apparent clusters (love/peace/monetized/the/time 4.4-4.7 vs and/gets/for/first/in 3.6-4.0) which is what an earlier reader would call bold \u2014 but that split is entirely driven by how many e/l/i/v/m the word contains. Per-character minima are 2.56-3.02 for every word, i.e. every open letter is at baseline. Whole line REGULAR."
+    },
+    {
+     "line_no": 11,
+     "text": "our existence. Poverty disappears because the fear",
+     "bold_words": [
+      "Poverty",
+      "disappears",
+      "because",
+      "the",
+      "fear"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED, and the bold run starts exactly at 'Poverty'. Per-character minima: our 2.84, existence. 2.89 (its x=3.5 s=3.4 t=2.9 n=2.9 c=2.9 are all at baseline) versus Poverty 4.48, disappears 4.42, because 4.42, the 4.48, fear 4.30 \u2014 every glyph elevated, round letters included."
+    },
+    {
+     "line_no": 12,
+     "text": "of being poor disappears because Bitcoin allows us",
+     "bold_words": [
+      "of",
+      "being",
+      "poor",
+      "disappears",
+      "because",
+      "Bitcoin",
+      "allows",
+      "us"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Every word min 4.22-4.80. The only sub-4 glyph on the line is the capital B of 'Bitcoin' (3.74); capitals read low throughout this face (cf. the bold 'Bitcoin' on lines 17 and 24 at 3.76 and 3.66), and the remaining letters of that word run 4.4-4.8."
+    },
+    {
+     "line_no": 13,
+     "text": "to fully express ourselves individually in a cyber",
+     "bold_words": [
+      "to",
+      "fully",
+      "express",
+      "ourselves",
+      "individually",
+      "in",
+      "a",
+      "cyber"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Entire line bold; per-word minima 4.31-4.74, including the isolated 'a' at 4.33."
+    },
+    {
+     "line_no": 14,
+     "text": "sea of billions of souls all looking to connect and",
+     "bold_words": [
+      "sea",
+      "of",
+      "billions",
+      "of",
+      "souls",
+      "all",
+      "looking",
+      "to",
+      "connect"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Bold run ends at 'connect' (min 4.42); the final 'and' is min 2.69 \u2014 a clean 1.6x step down, visible unaided at 3x."
+    },
+    {
+     "line_no": 15,
+     "text": "express love for each other and the cost for this explosion",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Clean regular face: all 39 characters fall in 2.49-3.39 with no letter-identity spread at all. Used as the regular reference for this block."
+    },
+    {
+     "line_no": 16,
+     "text": "of peace is the same as a smile \u2014 virtually nothing.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. All characters 2.46-3.42 -> whole line regular."
+    },
+    {
+     "line_no": 17,
+     "text": "Yes, for some, the Bitcoin rabbit hole ends up",
+     "bold_words": [
+      "Bitcoin",
+      "rabbit",
+      "hole"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. 'Yes,'2.83 'for'2.94 'some,'2.87 'the'2.53 and 'ends'2.54 'up'2.97 against Bitcoin (B 3.76, rest 4.4-4.9), rabbit 4.41, hole 4.23."
+    },
+    {
+     "line_no": 18,
+     "text": "in John and Yoko's hotel room in Amsterdam",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. All characters 2.35-3.40 -> regular."
+    },
+    {
+     "line_no": 19,
+     "text": "during their 1969 bed-in.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular (2.45-3.30; the lone 4.2 is the hyphen, a solid horizontal bar)."
+    },
+    {
+     "line_no": 20,
+     "text": "Everyone will live their own experience in the rabbit hole.",
+     "bold_words": [],
+     "bar_words": [
+      "Everyone",
+      "will",
+      "live",
+      "their",
+      "own",
+      "experience",
+      "in",
+      "the",
+      "rabbit",
+      "hole."
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside an orange bar, final period included. Weight not judged. (This row is blanked in the bilevel mask; extent verified on the colour scan.)"
+    },
+    {
+     "line_no": 21,
+     "text": "We are getting our souls back and our minds.",
+     "bold_words": [],
+     "bar_words": [
+      "We",
+      "are",
+      "getting",
+      "our",
+      "souls",
+      "back",
+      "and",
+      "our",
+      "minds."
+     ],
+     "uncertain_words": [],
+     "note": "Entire line inside an orange bar. Verified at 2x on the colour scan: the bar terminates immediately after the 's' of 'minds' and the final period sits on white paper just outside it. The word is treated as [BAR]; the stray period is not a word."
+    },
+    {
+     "line_no": 22,
+     "text": "Stacy and I have been living in here for 10 years.",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED regular \u2014 I checked this one hardest because it reads as 'have been living in here' bold at any zoom. Per-character the line is purely letter-driven: every e is 6.2-6.5, every i 5.5-5.7, h 5.3-5.5, b 5.5, l 5.2, d 5.4, v 6.2 \u2014 while every a is 3.2-3.5, every n 3.5-3.7, every r 3.7-3.9, s 3.97, t 3.44, c 3.47, y 3.87, g 3.02, o 3.49. Decisive test: I split the merged 'av' of 'have' and measured its 'a' alone at 3.40, versus 3.41 for the 'a' of 'and' and 3.48 for the 'a' of 'Stacy'. For contrast, the genuinely bold line 25 has n=4.6-4.7 and a=4.4-4.9. Whole line REGULAR. Note this line is set ~12% larger than lines 24-25, which is why its regular strokes still out-measure them."
+    },
+    {
+     "line_no": 23,
+     "text": "We've seen some shit. Happy to share it all with you",
+     "bold_words": [
+      "We've",
+      "seen",
+      "some",
+      "shit."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. \"We've seen some shit.\" has every glyph elevated including the open ones (s 5.1-5.2, n 5.1, o 4.7, m 4.8). 'Happy to share it all with you' shows the same-line artifact split \u2014 H 2.75, t 2.79, a 2.62, r 2.92, o 3.10, y 3.35, s 3.54 at baseline against h 4.4-4.5, l 4.2-4.5, e 5.2, w 5.4, u 4.7 \u2014 so all seven words are REGULAR. 'it' 3.77 and 'with' 3.79 versus the same words bold on line 25 at 4.84 and 4.82."
+    },
+    {
+     "line_no": 24,
+     "text": "\u2014 the agony and ecstasy \u2014 as Bitcoin conquers fear",
+     "bold_words": [
+      "as",
+      "Bitcoin",
+      "conquers",
+      "fear"
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Bold begins at 'as' (4.22). '\u2014 the agony and ecstasy \u2014' is clean regular with no artifact whatsoever (2.39-3.42); both em dashes measure as regular rules (3.77, 3.64)."
+    },
+    {
+     "line_no": 25,
+     "text": "and hate and replaces it with peace and love.",
+     "bold_words": [
+      "and",
+      "hate",
+      "and",
+      "replaces",
+      "it",
+      "with",
+      "peace",
+      "and",
+      "love."
+     ],
+     "bar_words": [],
+     "uncertain_words": [],
+     "note": "CONFIRMED. Entire line bold; per-character 4.42-6.31 with no letter below 4.4, including every a, n, o, c, s, t, r. Used as the bold reference for this block."
+    },
+    {
+     "line_no": 26,
+     "text": "MAX KEISER",
+     "bold_words": [],
+     "bar_words": [],
+     "uncertain_words": [
+      "MAX",
+      "KEISER"
+     ],
+     "note": "Hand-drawn marker signature, not typeset \u2014 no typeface weight assignable. Page furniture excluded from this reading: the 'OVERDOSE' running head, the vertical 'Bitcoin Magazine | El Salvador' sidebar, and the folio '79'."
+    }
+   ]
+  }
+ ]
+}
