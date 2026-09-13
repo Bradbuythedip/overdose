@@ -186,6 +186,10 @@ def selftest():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pages", nargs="+")
+    ap.add_argument("--bits", help="consume an externally-produced bold bit "
+                    "string (e.g. from a vision transcription) instead of "
+                    "measuring it from pixels — pixel measurement is not "
+                    "reliable enough at this resolution, see word_bold.py")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
@@ -194,8 +198,14 @@ def main():
     if a.selftest:
         return
 
-    allbits, per_page = [], {}
-    for p in a.pages:
+    if a.bits:
+        bits = "".join(c for c in open(a.bits).read() if c in "01")
+        sys.stderr.write(f"  external bit string: {len(bits)} bits\n")
+        allbits, per_page = [bits], {"external": bits}
+        a.pages = []
+    else:
+        allbits, per_page = [], {}
+    for p in (a.pages or []):
         ws = measure_page(p)
         classify(ws)
         bits = "".join("1" if w["bold"] else "0" for w in ws)
