@@ -104,3 +104,41 @@ Both were caught only because the reported statistics were implausible
 (`bars=98%` of the page). Worth recording as the same lesson as the `seq -w`
 incident: an implausible intermediate is the only thing standing between a
 silent bug and a confident wrong answer.
+
+## Companion result: gaps ARE measurable, and carry nothing
+
+The same machinery applied to inter-word spacing gives the opposite
+measurability verdict, which is worth stating because it isolates *why* the
+bold cipher failed.
+
+One character cell is ~30 px at this scale, so a two-cell gap differs from a
+one-cell gap by ~30 px — orders of magnitude above the noise floor that killed
+stroke-width discrimination (sub-pixel). `gap_measure.py` confirms the
+typewriter grid holds on every text page:
+
+| page | glyphs | grid quantization residual |
+|---|---|---|
+| p75 | 1393 | 0.139 |
+| p76 | 1278 | 0.114 |
+| p78 | 1009 | 0.121 |
+
+(median of \|cells − round(cells)\|; anything under 0.15 means advances land on
+a fixed pitch, so the monospace assumption is verified rather than assumed)
+
+So the article's visible wide gaps — "Really?␣␣␣␣Yes.", "Fact:␣␣␣␣It's Layer 1",
+"at XRP.␣␣␣␣Get ready", "Marty Bent —␣␣␣who spend" — can be measured exactly
+rather than eyeballed. 291 gaps of ≥ 2 spaces across the five text pages.
+
+The sequence carries no signal. Mapped to letters (1=a, 2=b, …) it begins
+`edbibbgcccdgfgbcdojeccbelbbccieecfccfbbddccdhdmfccceb…` and is dominated by
+2s and 3s throughout — ordinary typographic rhythm in a ransom-note layout, not
+a designed sequence. All 32 derived candidate encodings (digit strings,
+per-page subsets, letter mappings, each reversed) swept against the full funded
+index: 58,720 addresses, 0 hits.
+
+Two caveats recorded rather than buried: gaps measured *inside* the black
+highlight bars are unreliable, because knocked-out white-on-black text fragments
+under segmentation (p76 "line 6" alone produced 11 spurious gaps); and the
+page-edge tear and the rotated "Bitcoin Magazine | El Salvador" sidebar had to
+be excluded explicitly, since they were being grouped into text lines and read
+as 23-32 cell gaps.
