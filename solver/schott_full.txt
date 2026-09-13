@@ -1,0 +1,1224 @@
+REVIEW
+Mirror writing: neurological reflections on an unusual
+phenomenon
+G D Schott
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+J Neurol Neurosurg Psychiatry 2007;78:5–13. doi: 10.1136/jnnp.2006.094870
+Mirror writing is an unusual script, in which the writing runs in
+the opposite direction to normal, with individual letters
+reversed, so that it is most easily read using a mirror. This
+writing is seen in healthy individuals; it is also associated with
+various focal lesions that most commonly involve the left
+hemisphere, as well as with certain diffuse cerebral disorders.
+Mirror writing is nearly always undertaken with the left hand,
+and left-handers, and those whose languages are written
+leftwards, have an unusual facility for this writing. Concerning
+possible underlying processes, the implications of using the left
+hand when writing are considered first. Motor pathways that
+may be important, the surrogate model of bimanual mirror
+movements and the contribution of the corpus callosum are then
+discussed. The reasons why left-handed writing is mirrored, and
+the factors that tend to inhibit mirroring, are outlined. After
+commenting on mirrored motor and visual engrams, the
+possibility that the right hemisphere may play an important part
+is entertained, and Leonardo da Vinci’s unique, habitual mirror
+writing proves to be of unexpected relevance. Further
+investigations, ranging from epidemiological to functional
+imaging studies, may provide valuable insights into mirror
+writing.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . .
+Correspondence to:
+National Hospital for
+Neurology and
+Neurosurgery, Queen
+Square, London WC1N
+3BG, UK;
+geoffrey.schott@uclh.nhs.uk
+Received 4 April 2006
+Revised 18 June 2006
+Accepted 27 August 2006
+Published Online
+First August
+. . . . . . . . . . . . . . . . . . . . . . . .
+I gave an account of an epileptic girl who used
+to write with the left hand, in reverse order, and
+with the forms of the letters reversed as well—
+and [she wrote] fluently, too—in such a way
+that what she wrote could only be read when
+placed before a mirror …. But a few years ago
+… I observed a centurion who, having lost his
+right arm in action, wrote all his letters with the
+left hand, with order and form similarly
+reversed, with the highest degree of fluency
+… one who wished to read his writing had to
+hold it to a mirror.1
+Three hundred years ago, Lentilius described the
+first known cases of pathologically acquired mirror
+writing, but mirror writing had been observed a
+long
+time
+earlier.
+For
+example,
+in
+1568,
+in
+describing the reversed letters of Leonardo da
+Vinci’s script, Vasari2 reported ‘‘whoever is not
+practiced in reading them cannot understand
+them, since they are not to be read save with a
+mirror’’. This review considers mirror writing from
+the neurological perspective. Firstly, the various
+circumstances in which mirror writing occurs are
+surveyed, then possible underlying processes are
+considered and finally it is proposed that mirror
+writing is a topic that warrants further study, and
+some suggestions for such studies are outlined.
+THE PHENOMENON OF MIRROR WRITING
+The nature of mirror writing
+The term ‘‘mirror writing’’ (Spiegelschrift) was
+introduced by Buchwald3 to describe ‘‘that variety
+of script which runs in an opposite direction to the
+normal,
+the
+individual
+letters
+being
+also
+reversed’’.4 Mirror writing is unusual as it is
+sometimes executed by entirely normal people,
+and at other times is only seen in the wake of a
+variety of neurological disorders.4 5 Sometimes
+mirror writing is undertaken deliberately and at
+other times inadvertently; sometimes the writer
+notices the mirrored form, yet at other times it
+escapes attention. Mirroring can variously affect
+spontaneous,
+copied
+and
+dictated
+writing.
+Particularly when produced spontaneously, mirror
+writing is a highly heterogeneous phenomenon:
+the mirroring may range from as small an item as a
+single reversed letter, through numerous reversed
+letters but not words, to thousands of pages of
+mirrored script; the place in the word in which a
+mirror letter occurs is variable, and numerals may
+or may not be reversed too. This heterogeneity
+raises the issue of whether mirror writing com-
+prises a single entity. Thus, reversing a single letter
+in an otherwise normal script, whether by healthy
+people or by those with disease, may be a different
+phenomenon compared with more extensive mir-
+roring, and although mirror writing in general is
+considered here, emphasis is placed on the more
+marked and pervasive forms of this writing.
+Usually, the line of mirror writing flows from
+right to left, but sometimes—as in Chinese script—
+normal leftwards hieroglyphs can be reversed, but
+not the rightwards ordering of the vertically
+written lines,6 and mixtures of orientations of
+letters, words and lines of writing may be seen.
+Other unusual reports of mirror writing include
+mirror writing in concordant identical twins and in
+three generations of people7; familial, upside-down
+mirror writing8; inverted mirror writing4; and
+acquired mirror writing with either hand.9
+The prevalence of mirror writing has recently
+been investigated using a newspaper survey, and
+the anecdotal report indicating a surprisingly high
+prevalence of 1 in 6500 Australians suggests that
+further epidemiological studies are warranted.7
+Very occasionally mirror writing is accompanied
+by mirror reading. Although consistent mirror
+reading is exceptionally uncommon,10 rare cases
+5
+www.jnnp.com
+
+of mirror reading (ie, reading of mirrored letters) and reversed
+reading (ie, reading letters or words backwards) have been
+reported11—either of normally written letters, or mirror-written
+letters or both. Such associated mirror reading may be
+congenital or acquired, and when acquired there is often a
+variety
+of
+other
+visuospatial
+disturbances
+and
+left–right
+confusion.12 13
+When does mirror writing occur?
+Mirror writing is seen in normal and pathological circum-
+stances. Developing Critchley’s classification,5 tables l and 2
+summarise the various occasions when mirror writing typically
+occurs.
+Mirror writing in healthy people
+Table 1 summarises the occasions when mirror writing occurs
+in healthy people.
+Normal children often go through a stage of mirroring of at
+least certain letters, especially reversible letters such as b and d,
+during the scribbling period and early stages of learning to
+write,10 mainly between the ages of 3 and 7 years.14 The child
+often does not appreciate the mirror form of writing because he
+or she cannot read it. Eighty years ago in English elementary
+schools, about 0.48% of children mirror wrote when they used
+their left hand.15 Beeley’s16 report during the same period that
+only 0.04% of American elementary school children mirror
+wrote is likely to be an underestimate, as it was based solely on
+teachers noting children who were seen to mirror write.
+Although it is unclear whether these early observations remain
+valid today, when educational approaches and social circum-
+stances have changed so much, even recently, left-handed
+children were sometimes forced to use their right hand for
+writing.17 18
+With more or less effort, normal adults are able to produce
+some mirror writing at will, including when asked to do so in
+experimental conditions. Mirror writing can be produced for
+fun, when writing with both hands simultaneously, or when
+writing on one’s own forehead or the under-surface of a board.5
+Certain writers, notably Lewis Carroll, have produced mirror
+writing for entertainment.19 Rarely, mirror writing is said to
+occur
+under
+ill-defined
+conditions
+of
+transiently
+altered
+cerebral function, such as hypnosis and anaesthesia20; spiritu-
+alist mediums are said to be able to mirror write during
+trances—an anecdotal observation that may relate to the
+similarly anecdotal report that mediums tend to be left
+handed.21
+Mirror writing can be learnt for occupational purposes. In the
+past, mirror writing was seen in several occupations such as
+telegraphy.
+Particularly
+etchers
+and
+lithographers,
+most
+famously William Blake,22 acquire the skill of mirror writing
+so that the inscribed plate when printed results in normal
+script.
+Otherwise normal right-handed adults can show transient
+mirror writing when, from necessity, they write with their
+unaccustomed hand. This may occur when the usual hand
+cannot be used as a result of some peripheral injury, and left-
+handed mirror writing, often for a few letters, sometimes
+emerges for a brief transitional period.23
+The ability to mirror write is probably more common than
+generally realised, as perhaps many potential mirror writers—
+who are generally left handed—suppress their sinistrality and
+mirror writing.24 Suppression has often been instigated by
+others,17 25 particularly in the past when sinistrality was
+considered perverse and often pathological. However, writers
+themselves have often suppressed their own left-handed
+mirror-writing tendency. This has been partly because mirror
+writing was considered peculiar, and partly because it is
+obviously difficult for others to read. The facility for mirror
+writing may remain latent, however, as revealed in the mirror-
+written letter produced just 4 days after the individual realised
+that she could mirror write (fig 1).17 Normal people,24 26 as well
+as some patients with acquired mirror writing,27 28 have
+sometimes commented on the surprising ease with which they
+can mirror write, and these people are usually originally
+ambidextrous or left handed.
+Habitual mirror writers are exceptionally rare, and perhaps
+the only recognised example is Leonardo da Vinci, whose mirror
+writing is discussed later.
+Mirror writing in pathological conditions
+The range of pathological conditions associated with mirror
+writing in children and adults shows that neither a specific
+location nor a particular aetiology underlies the phenomenon
+(table 2).
+Mirror writing in children with ‘‘mental retardation’’,
+learning disabilities or dyslexia
+Over a century ago it was observed that ‘‘imbeciles’’ and
+children with learning disabilities often mirror wrote, and
+many of these children were left handed.25 29 30 Compared with
+the 0.48% of normal elementary school children who mirror
+wrote, the frequency was 8% among children with learning
+disabilities; among the children with learning disabilities, 30%
+of left-handed children mirror wrote, compared with about 2%
+of the right-handed children.15 There is a paucity of clinical
+details of the conditions experienced by these children. For
+instance, the extent and nature of mental impairment were
+often not characterised other than by terms such as ‘‘very ‘low
+grade’ feeble minded’’,15 and it is difficult to evaluate those
+early reports now.
+Later, it was observed that certain children with selective
+difficulties
+in
+reading
+often
+had
+commensurate
+writing
+difficulties; again, mirror writing and left handedness were
+common,31–33 but many of these children with developmental
+Table 1
+The occurrence of mirror writing in healthy people
+Children
+when learning to write
+Adults
+writing for curiosity, for fun or experimentally
+during transiently altered cerebral function—eg, hypnosis or anaesthesia
+after peripheral damage to the preferred right hand
+habitually, probably only by Leonardo da Vinci
+learnt for occupational purposes by telegraphers, etchers, lithographers,
+etc
+undertaken in classical times
+in reversed writing before transfer to paper
+inscriptions on monuments and artefacts
+as a component of boustrophedon script*
+*Script written in boustrophedon (Greek ‘‘as the ox turns’’) comprises
+alternate lines written rightwards and leftwards, mirrored.
+Table 2
+The occurrence of pathological mirror writing
+In children with ‘‘mental retardation’’, learning difficulties or dyslexia
+In focal brain disease
+usually involving the left hemisphere (eg, stroke, focal trauma and
+abscess)
+extremely rarely in lesions of the right hemisphere
+In diffuse brain disease
+head injury
+degenerative brain disease (essential tremor, Parkinson’s disease and
+spinocerebellar degeneration)
+rarely in adults with learning disabilities
+elderly people and people with dementia
+6
+Schott
+www.jnnp.com
+
+dyslexia (which had previously been termed congenital word
+blindness) had normal or indeed superior abilities in other
+cognitive domains. However, whether people with dyslexia
+have an increased mirror-writing tendency remains controver-
+sial, and has been both confirmed34 and refuted.35–37
+Mirror writing in adults with focal brain disease
+In 1878, Buchwald3 described three patients with hemiplegia
+who, when writing with their left hand, did so in mirror form.
+A few years later, a series of patients who mirror wrote after
+stroke was reported,38 and subsequently further cases have been
+reported. Unfortunately, however, in most instances, the
+clinical details, investigations and neuropsychological data are
+scanty or non-existent.
+The most frequent circumstance in which acquired mirror
+writing occurs in adults is after stroke affecting various
+peripheral and deep locations in the left hemisphere.28 39–43
+Adequate studies are lacking and it is unclear how often such
+patients mirror write, but the phenomenon has been thought to
+be uncommon: in a brief report of 50 patients with hemiplegia,
+only one was found to mirror write, and that right-handed
+patient with right-sided hemiplegia had dyslexia.44 One of the
+largest series of acquired mirror writing carried out with the left
+hand comprised 13 right-handed patients with left-sided
+cerebral lesions who had undergone neurosurgery: 4 with
+penetrating head injury, 3 with cerebral abscess and 6 with an
+intracranial haematoma.45 Cases after surgery for a left parietal
+tumour have also been described.46 47
+The mirror writing associated with a precipitating neurological
+event such as stroke is usually transient, lasting a few days or
+weeks, and is often fragmentary and confined to a few letters,
+words or sentences. Sometimes there is dysphasia, dysarthria,
+and directional and spatial confusion,13 or other accompanying
+features reflecting the associated deficits, and a case of left-sided
+alien hand phenomenon associated with ispsilateral, left-handed
+mirror writing has also been described.48
+An unusual case of mirror writing has been reported in
+which a right-handed Chinese patient produced sponta-
+neous mirror writing with the left hand, following a left basal
+ganglia haematoma with resultant right hemiplegia and
+aphasia.6 Ten months later the CT [computed tomography]
+scan showed low density at the site of the previous
+haematoma, and the patient showed a severe dysarthria,
+and occasional reversal of spoken digits during spontaneous
+speech and after repetition. When writing with his left hand,
+he spontaneously mirror wrote, reversing the Chinese
+characters but not the normal right-to-left ordering of the
+vertical lines of writing. There was then a phase of a
+combination of conventional and occasional mirrored words
+when writing with the left hand, but after two years, when the
+right arm remained paretic and left-handed writing was still
+being undertaken, he no longer mirror wrote nor reversed
+the order of spoken digits. Figure 2 illustrates the evolution of
+this mirror writing.
+It is evident that the location of these left-sided lesions
+associated with mirror writing is extremely variable, and have
+variously
+included
+deep
+and
+superficial
+structures—for
+instance, the basal ganglia6 together with posterior temporal
+region11; multiple areas in the parietal cortex39; temporal,
+temporoparietal, and frontotemporoparietal cortex45; occipito-
+parietal cortex, the striatum and internal capsule43; and
+thalamus.28 Thus, although interruption of motor pathways or
+other networks may be relevant, any specific focal lesion in the
+left hemisphere is probably not directly responsible for mirror
+writing.
+Mirror writing after bifrontal vascular damage has been
+described,49 and at least two cases associated with a right
+hemisphere lesion have been reported:
+Chan and Ross described a right-handed Chinese man who
+normally wrote in Mandarin Chinese and who developed a
+left hemiplegia complicated by other features including lack
+of spontaneous speech and incontinence.50 A CT scan
+showed an infarct affecting the right anterior cingulate
+gyrus, anterior supplementary motor area, and posterior
+medial prefrontal cortex, with minimal involvement of the
+corpus callosum. Two weeks after the stroke, he had
+Figure 1
+A letter written 4 days after the author discovered her ability to
+write mirror script with her left hand. Reprinted with permission from
+Smetacek.
+17
+A
+B
+C
+D
+Figure 2
+Mirror writing with the left hand by the right-handed Chinese
+patient who sustained a left basal ganglia haematoma. The Chinese script
+normally runs vertically and right to left, with individual characters written
+from left to right. (A) Normal script (in translation ‘‘Veterans General
+Hospital Taichung Neurology Section Lee San’’); (B) mirror writing, at onset
+of illness; (C) normal script intermixed with few mirror-written words
+(indicated by *), 10 months after onset of illness; (D) normal script, 2 years
+after onset of illness. Reproduced from Chia and Kinsbourne.
+6
+Mirror writing
+7
+www.jnnp.com
+
+impairment of bimanual tasks that required non-mirror
+movements and, whilst his writing with his right hand was
+normal, when writing with his left hand he did so in mirror
+fashion from right to left, and both characters and Arabic
+numerals were mirrored. When reassessed 8 months later,
+all these mirror phenomena had resolved.
+A further case of a right-handed Japanese patient who mirror
+wrote with his left hand after a right middle cerebral artery
+territory infarct has also been described.28 The mirror writing of
+this patient (case 28) was exceptionally well formed, and the
+patient believed he had always had a facility for mirror writing,
+raising the possibility that he may originally have been left
+handed.
+Mirror writing in adults with diffuse brain disease
+Mirror writing very rarely follows head injury, and can be
+transient51 or persistent.9
+Perhaps the most remarkable case is the patient reported by
+Streifler and Hofman.52 These authors described a woman
+who had sustained an ‘apparently slight brain concussion’ as
+a result of a road traffic accident. She was right handed, but
+there was evidence to suggest she was originally left handed.
+She was born in Poland and learnt to speak Polish as an
+infant, but the first script she learnt was Hebrew, and
+following her later emigration to Israel, Hebrew became her
+main everyday language. After the accident she was able to
+write and copy correctly in Latin script. Hebrew, however,
+was written in mirror script and in the reversed direction,
+from left to right, and she had difficulty in reading Hebrew
+script unless it was presented in mirror form. She also
+displayed other impairments including dyscalculia, a variety
+of difficulties in reading, memory disturbances, and spatial
+and temporal confusion. The authors suggested the clinical
+features were reminiscent of an incomplete parietal lobe
+syndrome. The diffuse nature of the cerebral injury, lack of
+neurological signs and the few investigations undertaken
+preclude localization of the cerebral lesion(s). In respect of
+the discussion below, however, the salient features are the
+selective mirror phenomena associated with Hebrew script
+with sparing of Latin script.
+More recently, Tashiro et al28 observed the high incidence of
+mirror writing in patients with certain diffuse degenerative
+brain diseases, namely, essential tremor, Parkinson’s disease
+and spinocerebellar degeneration, with some patients produ-
+cing fragmented reversals—termed by the authors as ‘‘partial’’
+mirror writing. The authors also commented that left-handed-
+ness was reportedly more common than expected in patients
+with essential tremor. Apart from their first patient, whose
+mirror writing may have been spontaneous, the left-handed
+writing in the other patients was ‘‘induced’’.
+Although we have little information on mirror writing in
+elderly people, left-handed mirror writing may be more
+common in those of advanced age, especially in the presence
+of cognitive impairment.53 54
+The occurrence of an unusual facility for mirror writing
+There are two groups of people who seem to have a particular
+facility for mirror writing: innate left handers and those whose
+languages are written leftwards.
+Innate left handers
+The propensity for mirror writing among left-handed school
+children was noted by Ireland25 more than a century ago, and
+others have confirmed this. For reasons discussed earlier, the
+left-handed tendency and accompanying mirror writing then
+become suppressed, only to re-emerge when this suppression is
+overcome. An example is provided by Smetacek’s17 patient
+referred to earlier. It has been repeatedly observed that it is
+those who are left-handed, ambidextrous or who somehow
+believe they are inherently left-handed, who retain their
+unusual left-handed mirror writing facility—a facility, or
+advantage, that has been both confirmed55 56 and refuted57 58
+in experimental studies in normal people.
+Those whose languages are written leftwards
+As is evident from the reports cited above, many individual cases
+of acquired mirror writing are reported in Chinese and Japanese
+people.
+There
+is
+also
+further
+confirmation
+of
+the
+high
+prevalence of left-handed mirror writing among groups of
+diverse people, but all of whose languages are written (and
+read) leftwards.59 These groups include normal Hebrew-speak-
+ing American16 and Chinese43 school children, cognitively
+impaired Chinese school children,43 Chinese and Japanese39–43
+patients who have had stroke involving the left hemisphere,
+healthy elderly Chinese53 and elderly Japanese people with
+dementia.54
+Although further numerical details are provided elsewhere,59
+the different groups, studied in different circumstances and in
+different eras, do not allow the overall prevalence to be
+estimated. Furthermore, these findings need to be interpreted
+with some caution, as the definition of leftwards direction of
+language is complex, and variables include the directions of the
+vertical and horizontal lines of script, letters and hieroglyphs,
+and changes in direction of written language over time.
+Nevertheless,
+these
+observations
+have
+implications
+when
+considering the mechanisms that are discussed in the following
+section.
+MECHANISMS
+Acknowledging
+that
+sometimes
+mirror
+writing
+in
+young
+children is carried out with the right hand,30 and that there
+are very rare instances of acquired right-handed mirror writing
+in adults,60 61 nevertheless, mirror writing is otherwise nearly
+always carried out with the left hand. This fact must surely be
+pivotal, and raises two questions: (1) what is the link between
+mirror writing and the left hand? and (2) what leads to the
+mirrored form of that writing?
+As a preface, mirror writing is considered here to be a motor
+phenomenon rather than a cognitive phenomenon. As is
+evident from the data summarised above, mirror writing may
+occur
+in
+association
+with
+immaturity,
+ageing,
+dementia,
+learning disabilities and various ill-defined forms of cognitive
+impairment, dyslexia and some acquired instances of confusion
+and disorientation; yet, clearly, none of these conditions is
+sufficient or necessary for mirror writing to occur. Rather, it is
+suggested that they represent epiphenomena and provide the
+circumstances in which left handedness and left-handed mirror
+writing persist or emerge. As discussed later, the right hemi-
+sphere may perhaps sometimes be enlisted in the production of
+mirror writing, but it is argued that this would be through
+effects mediated by motor processes rather than by cognitive
+processes.
+The left hand and mirror writing
+At least in the most common cases of acquired mirror writing,
+those due to damage to the left hemisphere with right
+hemiplegia, the subject is ‘‘forced’’ to use the unaccustomed
+left hand for writing. The same situation arises in those who
+need to switch to their left hand after peripheral damage to
+their right hand, and in those who choose (rather than have) to
+write with their left hand in the setting of diffuse brain
+8
+Schott
+www.jnnp.com
+
+dysfunction, or similarly when writing with the left hand for
+fun or in the laboratory. Hardly surprisingly, innate left handers
+accomplish their customary left-handed writing quite readily.
+Thus, the reason for using the left hand when writing is
+immaterial: it is the circumstances in which left-handed
+writing
+persists,
+develops
+or
+returns
+that
+leads
+to
+the
+persistence, development or return of mirror writing.
+Accepting the importance of the left hand, what motor
+processes generate that writing? Mirror writing in normal
+people is likely to involve normal motor processes; however, in
+those who switch from right-handed to left-handed writing, as
+in those who are forced to use their non-dominant right hand,18
+presumably unaccustomed motor and other cortical processes
+are engaged. No experimental data are available on the
+processes specifically subserving mirror writing, and we are
+therefore dependent on speculative possibilities suggested by
+other motor phenomena.
+Bimanual mirror movements
+Perhaps the most relevant surrogate model is the phenomenon
+of bimanual associated movements of the upper limbs,62 which
+has several features in common with mirror writing (table 3).
+Furthermore, at least one patient simultaneously acquired
+mirror writing together with bimanual mirror movements.50
+By analogy with mirror movements in general, and con-
+genital mirror movements in particular, mirror writing with the
+left hand may implicate various motor processes which may be
+pertinent to mirror movements. Recently summarised by
+Farmer and Carr,63 these include:
+Transcallosal pathways
+It seems likely that motor commands and responses are
+inherently bilateral, but in certain circumstances the normal
+suppression of ipsilateral motor pathways from the contral-
+ateral cortex via transcallosal pathways may be impaired. This
+has been suggested as a mechanism for the mirror movements
+that
+are
+seen
+in
+the
+immaturity
+of
+childhood
+and
+in
+pathological conditions such as Kallmann’s syndrome. Mirror
+writing has been associated with frontal damage that involved
+the corpus callosum,50 and some other acquired cases also may
+have involved the corpus callosum, the role of which is
+discussed later.
+Ipsilateral pathways
+Ipsilateral corticospinal pathways are thought to be implicated
+in
+many
+conditions
+associated
+with
+mirror
+movements,
+including
+craniocervical
+junction
+abnormalities
+such
+as
+Klippel–Feil syndrome, Kallmann’s syndrome and congenital
+mirror movements. These ipsilateral pathways are likely to be
+implicated in motor recovery after stroke,64 65 and could ‘‘drive’’
+the left hand when mirror writing.
+Aberrant motor control at the cortical level
+In contrast with normal people, bilateral activation of motor
+cortices after unilateral hand movements is another possible
+mechanism subserving mirror movements, such as those seen
+in congenital cases, Kallmann’s syndrome and other examples
+of mirror movements. Similarly, bilateral activation of motor
+cortices could be enlisted in mirror writing.
+Other motor pathways that may subserve mirror writing,
+particularly in those in whom it occurs in the setting of diffuse
+brain disease, immaturity or ageing, include thalamocortical28 66
+and other extrapyramidal pathways. The latter pathways have
+been implicated in mirror dystonia67 and mirror movements in
+Parkinson’s disease.68
+The role of the corpus callosum?
+As the initiation of movements is generally thought to be
+generated bilaterally,69 those movements of the unwanted side
+will normally be suppressed,70 and one relevant mechanism
+may comprise transcallosal deactivation of contralateral crossed
+pathways.71 72 Apart from mirror writing associated with
+callosal damage due to stroke and possibly head injury, it is
+also possible that left-handed mirror writing normally dis-
+appears during childhood maturation, as a result of inhibition
+associated with callosal myelination which takes place at
+around the same time. Conversely, age-related declining
+callosal inhibition73 might account for the reappearance of
+mirror writing with dementing processes and ageing.
+The controversial issues surrounding dyslexia have been
+discussed earlier. In dyslexia, stuttering, in addition to left
+handedness and mirror writing, may occur,33 and, among a
+variety of different possible underlying mechanisms, dysfunc-
+tion of the corpus callosum has been postulated.74 Thus,
+Webster74 found that when performing bimanual letter writing,
+both right-handed and left-handed people who stuttered made
+more mirror reversals with the non-dominant hand compared
+with fluent speakers, and their writing was of poorer quality
+and slower. He suggested that there was an impairment of
+‘‘callosal gating’’ between the two hemispheres, in particular
+the two supplementary motor areas (see below).
+Arguing against the involvement of the corpus callosum is
+the fact that congenital abnormalities of the corpus callosum,
+and callosotomy in either left handers75 or right handers,76 are
+not associated with mirror writing.
+Table 3
+Mirror writing compared with bimanual mirror movements
+Mirror writing
+Bimanual mirror movements
+Nearly always affects left hand
+Involves both hands; may be asymmetric
+Voluntary
+Voluntary or (particularly in congenital mirror movements)
+involuntary
+Only affects writing
+Affects non-specific hand movements
+More common in left handers, and those
+whose languages are written leftwards
+No relationship to handedness or direction of language
+Suppressible
+Completely or partially insuppressible
+Often present in childhood, usually
+disappearing before teenage years
+Often present in childhood, usually disappearing before teenage
+years
+Sometimes seen in normal adults in
+various specific circumstances
+Occasionally seen in normal adults—for example, on effort; with
+bimanual activities
+Present in pathological processes: focal
+(usually left hemisphere) disease,
+especially stroke; diffuse cerebral
+disease; ?ageing
+Present in pathological processes: usually congenital (corpus
+callosal disorders, Klippel–Feil and other craniocervical junction
+abnormalities); occasionally after stroke; in Parkinson’s disease
+Inheritance: rarely familial
+Inheritance: rarely familial
+Mirror writing
+9
+www.jnnp.com
+
+The mirrored form of writing
+To most observers, mirror writing seems not only curious but
+also difficult to read. More than a century ago, however, Vogt,77
+and soon others,78 viewed it as the natural script of the left
+hander, and this view remains compelling. The evidence that
+mirror writing is the natural script of the left hander arises from
+everyday observations that abductive movements are generally
+more natural, and also more accurate,79 than adductive move-
+ments. Writing with a pen held in the left hand will therefore
+be more readily undertaken leftwards; the script, too, would
+then be reversed compared with the conventional rightward-
+directed script—that is, mirrored.
+Thus, mirror writing with the left hand is not a bizarre form
+of writing at all, but predictable, and presumably a form of
+writing that is normally suppressed or superseded by conven-
+tional writing in order to be read.
+Factors that suppress mirror writing
+Factors which tend to suppress or conflict with mirror writing
+can be of various types.
+Motor influences
+Sometimes, an apparent conflict between movements subser-
+ving mirrored and conventional writing can be demonstrated.
+Examples have included a patient’s difficulty with left-handed
+writing in the conventional form after a stroke80; a patient’s
+mirror-writing left hand ‘‘leading’’ the right hand, dominant
+but impaired as a result of hemiplegia, resulting in normal
+script27; and a patient’s use of their half-paralysed right hand to
+form correct rightwards writing with the mirror-writing left
+hand.81
+Visual influences
+Normally, mirroring would be corrected by the conventional
+appearance of writing. Children often seem neither to perceive
+mirror differences in letters82 nor to notice their mirror writing.
+Curiously, adults who mirror write with their left hand after a
+stroke, and others too, often do not notice their mirror writing.
+Presumably, correcting visual influences either do not obtain or
+are insufficient to override the mirrored form.
+Motor and visual interactions
+In addition to conflicting motor and visual influences on
+mirrored and conventional writing, there are conflicts between
+the motor and visual influences themselves. More than a
+century ago, such an interaction was suggested to be pertinent
+in adults.78 In children, there is a tendency for very young, left-
+handed school children to scan from right to left,83 and
+oculomotor control when reading, at least in the early stages,
+may be a right-hemisphere specialisation.84 A right-hemisphere
+bias to the control of eye movements when reading would
+favour leftwards reading and hence writing, and consequent
+conflict with the rightwards direction of writing (and reading)
+of Western languages—leading to the view that confusions are
+especially likely to occur when eye movements are controlled by
+one hemisphere and hand movements by the other.85
+Cultural factors
+Linked to these visual influences is the role of written language.
+The evidence that those whose languages are written leftwards
+have an increased tendency to mirror write has been discussed
+above, but the implication from this observation is that learning
+and practice of leftwards writing entrains, and is entrained by,
+the eye and the hand in a leftwards direction, and thus
+potentially the mirrored form of writing when the left hand is
+used.
+Spatial and orientational factors
+Left-handed mirror writing occurs when healthy people write in
+unusual spatial situations, and also pathologically in the
+presence of acquired directional and spatial confusion. In these
+circumstances, presumably normal spatial and orientating
+correcting influences are thwarted and mirror writing emerges.
+However, proposed interactions between motor control of the
+contralateral
+hand
+with
+spatial
+and
+attentional
+systems
+subserving action in the contralateral space86 may be more
+simply explained by the mechanical factors involved when
+writing with the left hand in either hemispace.
+Mirrored writing: a non-specific mirrored motor
+phenomenon
+Supporting the view that mirroring is itself not abnormal is that
+mirroring with the left hand is far from specific to writing. For
+example, mirror writing can occur even when Chinese ‘‘illegal’’
+pseudocharacters are written.58 Furthermore, those who retain
+normal cerebral function but, after injury, have to undertake
+left-handed tasks, such as using a screwdriver or turning a door
+knob, sometimes do so in mirror fashion,23 and people who
+have had limbs amputated occasionally experience phantom
+mirror movements of their missing limbs.87 These examples
+show that mirroring seems to be an unselective feature of
+dextrous left-handed movements—that is, mirror writing may
+simply represent a specific example of a mirror movement, both
+perhaps enlisting the same motor processes that were discussed
+earlier.
+Mirroring processes at the cortical level?
+If abductive, leftwards hand movements generated through
+various motor pathways are characteristic of writing move-
+ments with the left hand, are there also motor and visual
+processes in the hemispheres that are specifically concerned
+with mirroring? When discussing mirror writing, the term
+‘‘engram’’ has often been used; this term, meaning those neural
+changes that constitute stored memories, is perhaps now
+outdated, but will be retained here as the traditional shorthand
+for those ill-understood memory processes thought to be
+applicable to mirror writing.
+Mirrored motor engrams
+Brain88 envisaged
+The fact that learning to write includes an unconscious
+education in mirror-writing, especially with the left hand,
+implies the establishment, probably in the right hemisphere,
+of graphic motor-schemas which are the mirror-images of
+those which underlie normal writing in the left hemisphere.
+This ability to ‘‘educate’’ the opposite hand in a mirror task
+had been previously demonstrated—for example, in a maze-
+tracing task89—but the evidence for mirror image motor
+engrams for writing remains inconclusive. If, however, such
+engrams exist, the mirroring would usually have to be
+suppressed, and it has been suggested that the right supple-
+mentary motor area may be responsible for this normal
+suppression.50 This suggestion recalls the involvement of the
+supplementary motor areas and the interconnecting callosal
+pathways, envisaged in the context of stuttering discussed
+earlier.74
+Mirrored visual engrams
+Orton90 invoked the concept of visual engrams to explain why
+many mirror writers were left-handed children with dyslexia
+and a variety of other perceptual difficulties. There had been
+earlier speculation that there might be mirrored images in the
+brain, ‘‘like the negative of a photograph’’,25 and Orton and
+10
+Schott
+www.jnnp.com
+
+later others postulated that visual engrams for writing are not
+only stored in both hemispheres but are also in mirror
+form.12 58 90
+Evidence in animals91 and humans92 suggests that visual
+images are transferred across the corpus callosum in mirror
+image form. More recently, the concept of ‘‘mirror general-
+isation’’ as an intrinsic property of the primate visual system
+has been proposed, and there is evidence for specific interhemi-
+spheric point-to-point pathways that might be relevant to
+activation of mirrored forms.93 However, Corballis and Beale94
+tersely comment ‘‘Orton’s theory is wrong’’. They rightly point
+out that by implying that the dominant hemisphere would
+record events with the correct orientation and the non-
+dominant hemisphere would record them in reversed orienta-
+tion, the conclusion follows that whenever the dominant
+hemisphere was inactivated, mirror phenomena would neces-
+sarily emerge—and this clearly does not occur.
+Thus, although visual factors are doubtless of considerable
+importance, particularly when children learn to read, and in the
+context of direction of written language, mirrored visual
+engrams have not been established as being inherent in mirror
+writing.
+Mirrored and non-mirrored forms of writing
+When writing with the unaccustomed left hand, right-handers’
+writing is often poorer than their usual writing. By comparison,
+when innate left handers or ambidextrous people who write
+with their right hand switch to left-handed writing, their
+writing is often immediately well formed and easily elicited.
+Furthermore, their conventional and mirrored scripts are
+often,19 24 26 78 but not always,95 remarkably similar except for
+the mirroring. This suggests that left handers may have
+intrinsically different patterns of cerebral organisation and
+facility for using different motor pathways, at least with respect
+to writing.
+The role of the right hemisphere?
+Even allowing for the contribution of ipsilateral pathways, left-
+handed writing is likely to be predominantly mediated by
+motor processes subserved by the contralateral right hemi-
+sphere. Additional supporting evidence comes from those
+people discussed earlier who have an enhanced facility for
+left-handed mirror writing—innate left handers and those
+whose languages are written leftwards.
+Thus, recent data from functional imaging studies show that,
+in parallel with their greater bilateral or right-hemisphere
+language activation compared with right handers,96 not only do
+left handers show the expected right hemisphere activation
+when writing with their left hand, but also ‘‘converted’’ left
+handers when writing with their right hand show unusual
+symmetrical functional activation.97
+In those whose languages are written leftwards, the possible
+influence of the right hemisphere in control of leftward-
+directed
+eye
+movements
+has
+been
+referred
+to
+earlier.
+Importantly, however, the languages involved are both pho-
+netic (Hebrew) and ideographic (Japanese and Chinese),98
+indicating that it is the leftwards direction in which they are
+written, and hence the link with right-hemispheric control of
+movement, rather than the structural or visuospatial aspects of
+the languages, which is important.
+Leonardo da Vinci: his mirror writing and his right
+hemisphere
+Intriguingly, aside from interest in arguably the world’s most
+famous polymath, Leonardo da Vinci’s writing provides an
+unusual and unlikely source of information on mirror writing,
+and probably represents the only known instance of truly
+habitual mirror writing.99 100 An example is shown in fig 3. From
+the background evidence listed in table 4, we can conclude that,
+as predicted, the innate left hander, unrestrained by external
+factors, indeed writes in mirror fashion.
+Furthermore, it may be conjectured that after his stroke,
+Leonardo’s preserved mirror writing ability, documented by the
+visiting Cardinal’s Secretary de’ Beatis, indeed resided in
+Leonardo’s right hemisphere. Whether this conclusion can be
+extended to other mirror writers is obviously unknown.
+CONCLUSIONS
+Mirror writing is nearly always undertaken with the left hand,
+and occurs in healthy people and after disease whenever the left
+hand is called into action—just as Lentilius noted 300 years
+ago.1 But mirror writing remains remarkably little explored, and
+even epidemiological information about its occurrence in the
+Figure 3
+Leonardo da Vinci: examples of mirror writing, mirror numbers
+and conventional numbers. Arundel MS 263, f 280, verso. Reproduced
+with permission from the British Library.
+Table 4
+Leonardo da Vinci’s mirror writing: the
+background
+His left handedness: the evidence
+l
+contemporary written accounts
+l
+direction of shading on certain pictures
+l
+examples of right-justified margins of text
+His writing: its nature
+l
+thousands of pages of writing extant
+l
+nearly, but not all, in mirror script
+l
+numerals variably mirrored
+His left-handed mirror writing: its characteristics
+l
+dated from age 21 years or earlier, thus probably innate
+l
+written for himself and not for others
+l
+suppression by cultural and educational influences absent
+His probable stroke: the witnessed features
+l
+occurrence before the age of 65 years
+l
+paralysis of the right arm
+l
+unimpaired speech
+l
+unimpaired left-handed painting and mirror writing
+Mirror writing
+11
+www.jnnp.com
+
+normal population remains sparse. The potential value of such
+investigations is exemplified by surely the most extraordinary,
+albeit incidental, observations on mirror writing that were
+recorded by Conklin101 when studying the Mindoro tribes in the
+Philippines. He reported that the direction of their writing was
+in columns directed away from the body, and was bottom to top
+and left to right when written with the right hand, and in
+columns from right to left and in inverted mirror style when
+written by left handers, remarkably showing the links between
+handedness, direction of writing and mirror writing.
+The time now seems opportune for further studies of mirror
+writing. These might range from detailed population studies,
+assessing the prevalence, patterns of inheritance and features of
+mirror writing in the healthy population and in various disease
+states, to a variety of experimental investigations. Such
+investigations might include functional imaging studies of
+mirror and conventional writing in left handers and right
+handers, in normal people and in those with different
+pathologies, and in those whose languages are written right-
+wards and leftwards. But mirror writing itself could also be
+used as a tool to provide insights into organisation and
+reorganisation of the nervous system with respect to motor
+processes, writing and handedness, exploiting Allen’s26 pres-
+cient observations a hundred years ago:
+mirror writing is often a symptom of nerve disease; but the
+disease need not be the cause of the existence of the faculty,
+but only the cause of its discovery.
+ACKNOWLEDGEMENTS
+I thank Mr Roy Hyde for translating the quotation of Lentilius from
+Latin.
+Competing interests: None.
+REFERENCES
+1 Lentilius R. Miscellanea medico-practica tripartita quorum partibus prioribus
+continentur historiae, discursus, consilia, epistolae… Part II. Ulm: GW Kuhn,
+1698:586.
+2 Vasari G. Lives of the most eminent painters, sculptors and architects
+[Translated by de Vere, G du C]. Vol 4. London: Philip Lee Warner,
+1913:99.
+3 Buchwald. Spiegelschrift bei Hirnkranken. Berl Klin Wochenschr 1878;5:6–8.
+4 Critchley M. Mirror-writing. London: Kegan Paul, 1928.
+5 Critchley M. The significance of mirror writing. Proc R Soc Med
+1926;25:397–404.
+6 Chia L-G, Kinsbourne M. Mirror-writing and reversed repetition of digits in a
+right-handed patient with left basal ganglia haematoma. J Neurol Neurosurg
+Psychiatry 1987;50:786–8.
+7 Mathewson I. Mirror writing ability is genetic and probably transmitted as a
+sex-linked dominant trait: it is hypothesised that mirror writers have bilateral
+language centres with a callosal interconnection. Med Hypotheses
+2004;62:733–9.
+8 Brainin M, Donner K. Spiegelschrift, ‘‘Umkehrschrift’’ und
+‘‘Umkehrspiegelschrift’’ in einer ambidexter Familie. Nervenarzt
+1981;52:278–82.
+9 Gottfried JA, Sancar F, Chatterjee A. Acquired mirror writing and reading:
+evidence for reflected graphemic representations. Neuropsychologia
+2003;41:96–107.
+10 Hildreth G. The development and training of hand dominance: IV.
+Developmental problems associated with handedness. J Genet Psychol
+1950;76:39–100.
+11 Lambon-Ralph MA, Jarvis C, Ellis AW. Life in a mirrored world: report of a case
+showing mirror reversal in reading and writing and for non-verbal materials.
+Neurocase 1997;3:249–58.
+12 Wade JB, Hart RP. Mirror phenomena in language and nonverbal activities—a
+case report. J Clin Exp Neuropsychol 1991;13:299–308.
+13 Heilman KM, Howell G, Valenstein E, et al. Mirror-reading and writing in
+association with right-left spatial disorientation. J Neurol Neurosurg Psychiatry
+1980;43:774–80.
+14 Cornell J. Spontaneous mirror-writing in children. Can J Psychol
+1985;39:174–9.
+15 Gordon H. Left-handedness and mirror writing, especially among defective
+children. Brain 1921;43:313–68.
+16 Beeley AL. An experimental study in left-handedness. With practical
+suggestions for schoolroom tests. Chicago: University of Chicago Press,
+1918:43–52.
+17 Smetacek V. Mirror-script and left-handeness. Nature 1992;355:118–19.
+18 Nakada T, Fujii Y, Kwee IL. Coerced training of the nondominant hand resulting
+in cortical reorganization: a high-field functional magnetic resonance imaging
+study. J Neurosurg 2004;101:310–13.
+19 Schott GD. Mirror writing: Allen’s self observations, Lewis Carroll’s ‘‘looking-
+glass’’ letters, and Leonardo da Vinci’s maps. Lancet 1999;354:2158–61.
+20 Fuller JK. The psychology and physiology of mirror-writing. Publ Psychol
+1916;2:199–265.
+21 Harrington A. Medicine, mind, and the double brain. A study in nineteenth-
+century thought. Princeton: Princeton University Press, 1987:146.
+22 Ackroyd P. Blake. London: Sinclair-Stevenson, 1995:56.
+23 Schott GD. Mirror movements of the left arm following peripheral damage to the
+preferred right arm. J Neurol Neurosurg Psychiatry 1980;43:768–73.
+24 Hughes E. Mirror-writing. Lancet 1908;i:188.
+25 Ireland WW. On mirror-writing and its relation to left-handedness and cerebral
+disease. Brain 1882;4:361–7.
+26 Allen FJ. Mirror writing. Brain 1896;19:385–7.
+27 Caraman Z, Pendefunda G. Consideratii asupra scrierii ‘‘in oglinda’’.
+Particularitati intilnite in unele cazuri. Neurol Psihiatr Neurochir 1965;10:1–9.
+28 Tashiro K, Matsumoto A, Hamada T, et al. The aetiology of mirror writing: a
+new hypothesis. J Neurol Neurosurg Psychiatry 1987;50:1572–8.
+29 Fildes LG. Experiments on the problem of mirror-writing. Br J Psychol
+1923;14:55–67.
+30 Clark MM. Left-handedness. Laterality characteristics and their educational
+implications. London: University of London Press, 1957:96.
+31 Critchley M. Some defects of reading and writing in children: their association
+with word-blindness and mirror-writing. J State Med 1927;35:217–23.
+32 Critchley M. Doyne Memorial Lecture, 1961. Inborn reading disorders of
+central origin. Trans Ophthal Soc UK 1961;81:459–80.
+33 Orton ST. ‘‘Word-blindness’’ in school children. Arch Neurol Psychiatry
+1925;14:581–615.
+34 Terepocki M, Kruk RS, Willows DM. The incidence and nature of letter
+orientation errors in reading disability. J Learn Disabil 2002;35:214–33.
+35 Carmichael L, Cashman H. A study of mirror-writing in relation to handedness
+and perceptual and motor habits. J Gen Psychol 1932;6:296–329.
+36 He´caen H, de Ajuriaguerra J. Left-handedness [Translated by Ponder E]. New
+York: Grune & Stratton, 1964:32.
+37 Shaywitz SE. Dyslexia. Sci Am 1996;275:98–104.
+38 Fraenkel M. Spiegelschrift und Fehlhandlungen der linken Hand bei
+Rechtsgela¨hmten (Apraxie). Arch Psychiatr Nervenkr 1908;43:1275–311.
+39 Muramoto O, Morihiro S, Toyokura, Y. Mirror writing in a case of cerebral
+infarction—report of a case and a consideration of its pathogenesis. No To
+Shinkei 1978;30:1093–9.
+40 Sato K. A clinical study on aphasic agraphia of cerebral vascular disease-origin
+in reference to mirror writing and perseveratory paragraphia. Tohoku Igaku
+Zasshi 1979;92:26–42.
+41 Sunohara N, Saku A, Kinoshita M, et al. A case of mirror writing due to a focal
+cerebral lesion. Rinsho Shinkeigaku 1978;18:525–31.
+42 Wang X, Cai X. Agraphia in aphasic patients. Chin Med J 1986;99:333–7.
+43 Wang X. Mirror writing of Chinese characters in children and neurologic
+patients. Chin Med J 1992;105:306–11.
+44 Paradowski W, Ginzburg M. Mirror writing and hemiplegia. Percept Motor
+Skills 1971;32:617–18.
+45 Oblu N, Sandulescu G, Iovu C. ‘‘Scrisul in oglinda’’ in unele sindroame
+neurochirurgicale. Stud Cercet Neurol 1967;12:187–95.
+46 Fox JC, Holmes G. Optic nystagmus and its value in the localization of cerebral
+lesions. Brain 1926;49:333–71.
+47 Durwen HF, Linke DB. Tempora¨res Spiegelschreiben und Spiegellesen als
+Desinhibitionspha¨nomene?—eine Fallstudie. Neuropsychologia
+1988;26:483–90.
+48 Hanakita J, Nishi S. Left alien hand sign and mirror writing after left anterior
+cerebral artery infarction. Surg Neurol 1991;35:290–3.
+49 Shimamura N, Sekiya T, Ohkuma H, et al. A case report of mirror writing with
+low perfusion of bilateral anterior cerebral arteries. No To Shinkei
+2001;53:567–70.
+50 Chan J-L, Ross, eds. Left-handed mirror writing following right anterior cerebral
+artery infarction: evidence for nonmirror transformation of motor programs by
+right supplementary motor area. Neurology 1988;38:59–63.
+51 Morı´s G, Quirce R, Berciano J, et al. Escritura con letras en espejo bimanual: a
+propo´sito de un caso postrauma´tico. Neurologı´a 1997;12:418–20.
+52 Streifler M, Hofman S. Sinistrad mirror writing and reading after brain
+concussion in a bi-systemic (oriento-occidental) polyglot. Cortex
+1976;12:356–64.
+53 Wang X, Cai X, Chen H. Mirror writing in the elderly. Chin Med J
+1998;111:641–3.
+54 Kuzuya M, Yamamoto T, Kuzuya F. Mirror-writing in the aged. Nippon Ronen
+Igakkai Zasshi 1991;28:499–503.
+55 Tankle RS, Heilman KM. Mirror writing in right-handers and in left-handers.
+Brain Lang 1983;19:115–23.
+56 Tucha O, Aschenbrenner S, Lange KW. Mirror writing and handedness. Brain
+Lang 2002;73:432–41.
+57 Vaid J, Stiles-Davis J. Mirror writing: an advantage for the left-handed? Brain
+Lang 1989;37:616–27.
+58 Yang M-J. Mirror writing in right-handers and in left-handers: a study using
+Chinese characters. Neuropsychologia 1997;35:1491–8.
+12
+Schott
+www.jnnp.com
+
+59 Schott GD, Schott JM. Mirror writing, left-handedness, and leftward scripts.
+Arch Neurol 2004;61:1849–51.
+60 Hadano K, Hamanaka T, Ohigashi Y. On a case of mirror writing with the right
+hand. No To Shinkei 1979;31:1155–60.
+61 Nakano M, Endo T, Tanaka S. A second Leonardo da Vinci? Brain Cogn
+2003;53:9–14.
+62 Schott GD, Wyke M. Obligatory bimanual associated movements. J Neurol Sci
+1977;33:301–12.
+63 Farmer SF, Carr LJ. Diseases of the vertebral column. In: Asbury AK,
+McKhan GM, McDonald WI, et al, eds. Diseases of the nervous system.Vol
+1.3rd edn. Cambridge: Cambridge University Press, 2002:727–41.
+64 Netz J, Lammers T, Ho¨mberg V. Reorganization of motor output in the non-
+affected hemisphere after stroke. Brain 1997;120:1579–86.
+65 Fujii Y, Nakada T. Cortical reorganization in patients with subcortical
+hemiparesis: neural mechanisms of functional recovery and prognostic
+implication. J Neurosurg 2003;98:64–73.
+66 Merello M, Carpintiero S, Cammarota A, et al. Bilateral mirror writing
+movements (mirror dystonia) in a patient with writer’s cramp: functional
+correlates. Mov Disord 2006;21:683–9.
+67 Jedynak PC, Trenchant C, de Beyl DZ. Prospective clinical study of writer’s
+cramp. Mov Disord 2001;16:494–9.
+68 Espay AJ, Li J-Y, Johnston L, et al. Mirror movements in parkinsonism:
+evaluation of a new clinical sign. J Neurol Neurosurg Psychiatry
+2005;76:1355–9.
+69 Rothwell J. Control of human voluntary movement, 2nd edn. London: Chapman
+& Hall, 1994:370–5.
+70 Swinnen SP, Wenderoth N. Two hands, one brain: cognitive neuroscience of
+bimanual skill. Trends Cogn Sci 2004;8:18–25.
+71 Ara´nyi Z, Ro¨sler KM. Effort-induced mirror movements. A study of transcallosal
+inhibition in humans. Exp Brain Res 2002;145:76–82.
+72 Boroojerdi B, Diefenbach K, Ferbert A. Transcallosal inhibition in cortical and
+subcortical cerebral vascular lesions. J Neurol Sci 1996;144:160–70.
+73 Gazzaniga MS. Forty-five years of split-brain research and still going strong.
+Nat Rev Neurosci 2005;6:653–9.
+74 Webster WG. Neural mechanisms underlying stuttering: evidence from
+bimanual handwriting performance. Brain Lang 1988;33:226–44.
+75 Gur RE, Gur RC, Sussman NM, et al. Hemispheric control of the writing hand:
+the effect of callosotomy in a left-hander. Neurology 1984;34:904–8.
+76 Gazzaniga MS. The bisected brain. New York: Appleton-Century-Crofts,
+1970:118.
+77 Vogt MC. L’e´criture conside´re´e au point de vue physiologique. Rev Sci 2nd Ser
+1880;18:1221–32.
+78 Elder W. Aphasia and the cerebral speech mechanism. London: HK Lewis,
+1897:214–23.
+79 Brown JS, Knauft EB, Rosenbaum G. The accuracy of positioning reactions as a
+function of their direction and extent. Am J Psychol 1948;61:167–82.
+80 Rodrı´guez R. Hand motor patterns after the correction of left-nondominant-
+hand mirror writing. Neuropsychologia 1991;29:1191–203.
+81 Rodrı´guez R, Aguilar M, Gonza´lez G. Left non-dominant hand mirror writing.
+Brain Lang 1989;37:122–44.
+82 Davidson HP. A study of the confusing letters B, D, P, and Q. J Genet Psychol
+1935;47:458–68.
+83 Lebrun Y. Looking with one’s mind’s eye. Eur J Disord Commun
+1995;30:279–302.
+84 Skoyles JR. Mirror script. Nature 1992;357:25–6.
+85 Corballis MC. Human laterality. New York: Academic Press, 1983:176.
+86 Buxbaum LJ, Coslett HB, Schall RR, et al. Hemispatial factors in mirror writing.
+Neuropsychologia 1993;31:1417–21.
+87 Sunderland S. Nerves and nerve injuries, 2nd edn. Edinburgh: Churchill
+Livingstone, 1978:429.
+88 Brain, Lord. Speech disorders, aphasia, apraxia and agnosia, 2nd edn.
+London: Butterworths, 1965:134.
+89 Milisen R, Van Riper C. Differential transfer of training in a rotary activity. J Exp
+Psychol 1939;24:640–6.
+90 Orton ST. Specific reading disability—strephosymbolia. JAMA
+1928;90:1095–9.
+91 Noble J. Paradoxical interocular transfer of mirror-image discriminations in the
+optic chiasm sectioned monkey. Brain Res 1968;10:127–51.
+92 Bradshaw JL, Nettleton NC, Patterson K. Identification of mirror-reversed and
+nonreversed facial profiles in same and opposite visual fields. J Exp Psychol
+1973;99:42–8.
+93 Rollenhagen JE, Olson CR. Mirror-image confusion in single neurons of the
+macaque inferotemporal cortex. Science 2000;287:1506–8.
+94 Corballis MC, Beale IL. The psychology of left and right. Hillsdale: Lawrence
+Erlbaum, 1976:58–73.
+95 Ellis AW. Normal writing processes and peripheral acquired dysgraphias. Lang
+Cogn Process 1988;3:99–127.
+96 Szaflarski JP, Binder JR, Possing ET, et al. Language lateralization in
+left-handed and ambidextrous people. fMRI data. Neurology
+2002;59:238–44.
+97 Siebner HR, Limmer C, Peinemann A, et al. Long-term consequences of
+switching handedness: a positron emission tomography study on handwriting in
+‘‘converted’’ left-handers. J Neurosci 2002;22:2816–25.
+98 Gaur, A. A history of writing. London: British Library, 1984.
+99 Schott GD. Some neurological observations on Leonardo da Vinci’s
+handwriting. J Neurol Sci 1979;42:321–9.
+100 Bambach CC, ed. Leonardo, left-handed draftsman and writer. Leonardo da
+Vinci, master draftsman. New York: The Metropolitan Museum of Art,
+2003:31–57.
+101 Conklin HC. Preliminary report on field work on the islands of Mindoro and
+Palawan, Philippines. Am Anthropol 1949;51:268–73.
+Mirror writing
+13
+www.jnnp.com
