@@ -25,6 +25,7 @@ Source material available here: seven iPhone photographs of pages 73-79,
 | per-character bold cipher | **not measurable at this resolution** | a visibly-bold word measures 3.3-6.4 stroke width while regular text on the same line sits at 3.3-3.8 — see `window/bold_cipher_resolved.md` |
 | whole-word bold, highlighted phrases, acrostics, punctuation/spacing | 0 hits | tasks #9-#14 |
 | highlight runs as an ordered sequence | 0 hits | `gen_highlight_seq.py`; concatenations, acrostics, first/last-word null ciphers, per colour and per page |
+| inter-word spacing cipher | 0 hits, and the measurement is *sound* | `gap_measure.py`; monospace grid verified (residual 0.11-0.14), 291 gaps of >=2 spaces, sequence is 2s and 3s and maps to no plaintext |
 | mirror-writing image transforms | 0 hidden addresses | 35 vision scans, 7 pages x 5 transforms |
 | on-chain markers (OP_RETURN / inscriptions) | 0 hits | 2.2M lines of embedded chain text, blocks 0-829,999, **including input scripts**; validated with data-source and search-method positive controls |
 | bech32 / Taproot puzzle wallet | none exists | 0 addresses with exactly 20 BTC unmoved in either class — so the @NachoKeysBTC `bc1q3e...6gvskf` claim is unsupported by chain data |
@@ -40,11 +41,12 @@ date.
 |---|---|---|---|
 | original corpus, ~360 paths | 8,490 | 15,579,150 | 0 |
 | body text (OCR), direct | 84,687 | 2,964,045 | 0 |
-| transcript + mirror variants, direct | 373,660 | *running* | 0 so far |
+| transcript + mirror variants, direct | 373,660 | 13,078,100 | 0 |
 | highlight sequences, ~360 paths | 516 | 946,860 | 0 |
 | page furniture / bill serial / photo credit, ~360 paths | 301 | 552,335 | 0 |
+| gap-sequence encodings, ~360 paths | 32 | 58,720 | 0 |
 
-Plus ~2.6M from the earlier big-corpus sweep. **Roughly 23M derived addresses,
+Plus ~2.6M from the earlier big-corpus sweep. **Roughly 36M derived addresses,
 zero funded.**
 
 ## What was corrected this session
