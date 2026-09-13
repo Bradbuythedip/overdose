@@ -156,3 +156,25 @@ That leaves exactly three places it could be:
    That is the null-cipher family, swept exhaustively and closed with
    operation-matched nulls.
 3. **Nowhere in these pages.**
+
+## 7. Cross-validation against the third parallel session
+
+Merging `claude/keiser-overdose-puzzle-itkf6t` brought independently-built
+chain-side candidate sets. Checking them against this session's historical
+ever-funded index (1,051,256 scripthashes from the April-2023 rich list):
+
+| their set | size | already in my historical index |
+|---|---|---|
+| `swept_post2021_candidates.txt` | 13,690 | **13,690 (100%)** |
+| `tier1_in_window.txt` | 32 | **32 (100%)** |
+| `candidates_wide.txt` (the [15,25] BTC band) | 12,418 | 12,413 (99.96%) |
+
+Two candidate sets built by different methods from different sources, and one
+covers essentially all of the other. That is mutual validation of both, and it
+means the historical sweeps run here already spanned their entire candidate
+space — the 15,579,150-address historical pass over the article corpus was
+tested against a set containing all of it.
+
+It also settles a worry worth stating: the historical index is not a
+convenience sample. It contains every candidate a separate session arrived at
+independently.
