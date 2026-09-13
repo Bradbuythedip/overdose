@@ -109,3 +109,52 @@ note on page 74 resolves to roughly 40 pixels in the 200 dpi background layer,
 so the limit is the photograph, not the scanner.
 
 No private key.
+
+---
+
+# Addendum: the bill on page 73 is ROTATED, not mirrored (2026-09-13)
+
+This repo asserted, in `gen_banknote.py` and in `mirror_writing_scan.md`, that
+"on page 73 the bill is printed fully reversed, every glyph on it reading
+backwards", and treated that as the one demonstrated instance of Keiser's
+mirror-writing clue. A parallel analysis went further and read the page as
+printing the suffix-first form `A 41714867`.
+
+Both are wrong, and the transform is directly testable. Taking the page-73
+serial region and applying each candidate transform:
+
+| transform | result |
+|---|---|
+| **rotate 180°** | **reads `...841714 A` cleanly, glyphs upright, the `100` upright** |
+| horizontal mirror | glyphs laterally inverted, unreadable |
+| vertical flip | glyphs upside down |
+
+Rotation makes it readable; reflection does not. **The bill is printed 180°
+rotated.** A 180° rotation is not a mirror: it reverses order AND turns each
+glyph upside down, where a reflection inverts glyphs laterally and leaves them
+in place.
+
+Three consequences:
+
+1. **Page 73 is not a visible instance of "mirror writing."** There is no
+   reflected text anywhere in this issue that we have found. The 2023-03-05
+   clue has no printed referent on these pages.
+2. **`A41714867LC` is not what a reader sees.** Facing an upside-down bill, a
+   reader tilts their head or turns the page and reads `CL76841714A`. The
+   reversed string only exists if one chooses to read rotated glyphs as though
+   upright — and the note's `4`s and `7`s make that impossible anyway, since
+   neither maps to a digit under rotation. The optical argument that the serial
+   is a poor Leonardo candidate is correct, and it defeats the premise it was
+   offered to support.
+3. **The rotation is probably not authored at all.** Every page in the 400 dpi
+   scan is 180° rotated, the bills in the page-74 photograph lie at every
+   angle, and the credited photographer is @ANNABELLEBAZI. An upside-down
+   banknote in a dropped-money photoshoot is what a photograph looks like, not
+   a cipher.
+
+Swept anyway, since the readings were cheap: the reversed-serial digit pairs
+(41, 71, 48, 67), the forward pairs (76, 84, 17, 14), the plate readings 21 and
+21L, and the full reversed digit string, as indices into the column's words,
+lines and sentences, 0- and 1-based, forward and mirrored — 265 readings,
+486,275 addresses, **0 funded hits**. The word-level readings are ordinary
+prose fragments ("in after system paper", "stuff time nervous white").
