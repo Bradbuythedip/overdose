@@ -93,3 +93,53 @@ directly, whatever the phrase suggests. Tested anyway as a decimal integer, as
 hex left- and right-padded, and hashed in every form: **0 hits.**
 
 The phrase is rhetoric.
+
+## 6. Hypothesis-free statistical anomaly scan — the strongest negative
+
+Every other test here is hypothesis-first: guess a mechanism, build it, check
+the chain. That only pays if the guess is right, and about twenty guesses have
+now missed. This inverts the approach.
+
+Any encoding embedded in text leaves a statistical trace. A region carrying
+base58, hex, a raw key, or a substitution-ciphered payload does not have the
+letter statistics of English prose. So instead of guessing the mechanism, scan
+for the trace.
+
+`anomaly_scan.py` profiles sliding 120-character windows by index of
+coincidence, chi-square against English letter frequencies, per-character
+entropy and vowel ratio, and compares the article's window distribution against
+a matched baseline: the Schott paper, 44,946 letters of ordinary published
+English, processed identically.
+
+Power confirmed first — a planted 120-character random blob drops window IC
+from 0.0648 to 0.0387 and is detected.
+
+| metric | article | baseline |
+|---|---|---|
+| index of coincidence | 0.0635 ± 0.0051 | 0.0659 ± 0.0055 |
+| chi2 vs English | 33.15 ± 18.33 | 31.36 ± 17.29 |
+| entropy per character | 4.055 ± 0.080 | 4.001 ± 0.085 |
+| vowel ratio | 0.379 ± 0.025 | 0.370 ± 0.026 |
+| **worst-window z** | **11.1** | **13.6** |
+
+**The article's most anomalous window is LESS anomalous than the most anomalous
+window of ordinary academic English.** Its top-ranked "anomalies" are simply
+real prose with skewed letters — `toxicbitcoinmaximalistswithinsixmonths`,
+`loveeconomytheefficienciesoflove`.
+
+### What this rules out, without assuming any mechanism
+
+There is **no embedded non-English region anywhere in the article text**. No
+disguised base58 or hex blob, no substitution-ciphered passage, no region whose
+statistics differ from prose. Whatever else is true, the key is not sitting in
+the text in modified form.
+
+That leaves exactly three places it could be:
+
+1. **Typography** — bold, weight, highlight state. Measured unrecoverable at
+   ~215 dpi: per-character weight tracks glyph identity, and per-word ink shows
+   a 2.2x test-retest spread on identical words against a 1.4-1.8x real effect.
+2. **Selection** — which words or letters to read, the text itself unmodified.
+   That is the null-cipher family, swept exhaustively and closed with
+   operation-matched nulls.
+3. **Nowhere in these pages.**
