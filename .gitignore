@@ -49,3 +49,5 @@ solver/index_all_candidates.txt
 solver/zoom/
 # regenerable from page_furniture.py
 solver/furniture.txt
+# regenerable from highlight_color.py
+solver/hlcolor.txt
