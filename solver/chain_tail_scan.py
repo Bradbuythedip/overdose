@@ -147,6 +147,64 @@ def classify(text):
     return False, gen, "single generic term, uncorroborated"
 
 
+class Sink:
+    """Writes each finding to TSV and/or JSON Lines.
+
+    JSON LINES, not one JSON array. This scan runs for hours over 136,917
+    blocks and is resumable; an array would have to be closed at the end, so a
+    Ctrl-C or a dropped endpoint would leave a truncated file that no parser
+    accepts. One complete object per line survives interruption, appends on
+    resume, and collapses to an array with `jq -s .` whenever you want one.
+    """
+
+    def __init__(self, tsv=None, jsonl=None):
+        self.t = open(tsv, "a", encoding="utf-8") if tsv else None
+        self.j = open(jsonl, "a", encoding="utf-8") if jsonl else None
+
+    def write(self, rec, tsv_cols):
+        if self.t:
+            self.t.write("\t".join(str(c) for c in tsv_cols) + "\n")
+            self.t.flush()
+        if self.j:
+            self.j.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            self.j.flush()
+
+    def close(self):
+        for f in (self.t, self.j):
+            if f:
+                f.close()
+
+
+def tsv_to_json(tsv_path, json_path):
+    """Convert a TSV already collected by an earlier run. Nothing is lost."""
+    cols = {
+        "FULL": ["type", "block", "tag", "value", "scripthash", "spk", "known"],
+        "TEXT": ["type", "block", "kind", "why", "matched", "text"],
+        "PUBLISHER": ["type", "block", "kind", "matched", "text"],
+        "SWEEP": ["type", "block", "scripthash", "pubkey"],
+    }
+    n = 0
+    with open(json_path, "w", encoding="utf-8") as out:
+        for line in open(tsv_path, encoding="utf-8"):
+            p = line.rstrip("\n").split("\t")
+            names = cols.get(p[0])
+            if not names:
+                continue
+            rec = dict(zip(names, p))
+            if "block" in rec:
+                rec["block"] = int(rec["block"])
+            if "value" in rec:
+                rec["value"] = int(rec["value"])
+                rec["btc"] = rec["value"] / 1e8
+            if "matched" in rec:
+                rec["matched"] = rec["matched"].split(",")
+            if "known" in rec:
+                rec["known"] = rec["known"] == "known"
+            out.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            n += 1
+    return n
+
+
 def dsha(b):
     return hashlib.sha256(hashlib.sha256(b).digest()).digest()
 
@@ -392,6 +450,12 @@ def main():
     ap.add_argument("--batch", type=int, default=20)
     ap.add_argument("--out", default="chain_tail_hits.tsv")
     ap.add_argument("--state", default="chain_tail_state.json")
+    ap.add_argument("--json", default="chain_tail_hits.jsonl",
+                    help="JSON Lines output, one complete object per finding. "
+                         "Survives interruption; `jq -s .` makes it an array")
+    ap.add_argument("--convert", metavar="TSV",
+                    help="convert an existing TSV from a previous run to "
+                         "--json and exit")
     ap.add_argument("--verbose", action="store_true",
                     help="also print suppressed matches and why")
     ap.add_argument("--selftest", action="store_true")
@@ -402,6 +466,10 @@ def main():
         sys.exit("detection logic fails offline; a null from it would be "
                  "meaningless")
     if a.selftest:
+        return
+    if a.convert:
+        n = tsv_to_json(a.convert, a.json)
+        sys.stderr.write(f"\n  {n:,} records: {a.convert} -> {a.json}\n")
         return
     if not a.rpc:
         sys.exit("need --rpc (or $B): an endpoint serving getblockhash/getblock")
@@ -421,7 +489,7 @@ def main():
                      f"  {len(targets):,} exactly-20 scripthashes watched for "
                      f"a sweep\n\n")
 
-    fh = open(a.out, "a", encoding="utf-8")
+    sink = Sink(a.out, a.json)
     t0, nblk, ntext, nsweep, nsupp, npub = time.time(), 0, 0, 0, 0, 0
     nfull = nnew = 0
     h = start
@@ -447,8 +515,11 @@ def main():
                             if hit:
                                 nsweep += 1
                                 for s in hit:
-                                    fh.write(f"SWEEP\t{ht}\t{s}\t{pub.hex()}\n")
-                                    fh.flush()
+                                    sink.write(
+                                        {"type": "SWEEP", "block": ht,
+                                         "scripthash": s,
+                                         "pubkey": pub.hex()},
+                                        ["SWEEP", ht, s, pub.hex()])
                                     sys.stderr.write(
                                         f"\n  *** SWEEP of an exactly-20 "
                                         f"address in block {ht}: {s}\n")
@@ -460,9 +531,13 @@ def main():
                             nfull += 1
                             sh = hashlib.sha256(payload).hexdigest()
                             known = "known" if sh in targets else "NEW"
-                            fh.write(f"FULL\t{ht}\t{vtag}\t{value}\t{sh}\t"
-                                     f"{payload.hex()}\t{known}\n")
-                            fh.flush()
+                            sink.write(
+                                {"type": "FULL", "block": ht, "tag": vtag,
+                                 "value": value, "btc": value / 1e8,
+                                 "scripthash": sh, "spk": payload.hex(),
+                                 "known": known == "known"},
+                                ["FULL", ht, vtag, value, sh,
+                                 payload.hex(), known])
                             if known == "NEW":
                                 nnew += 1
                                 sys.stderr.write(
@@ -474,9 +549,12 @@ def main():
                         prep, pgot = classify_publisher(txt)
                         if prep:
                             npub += 1
-                            fh.write(f"PUBLISHER\t{ht}\t{kind}\t"
-                                     f"{','.join(pgot)}\t{txt[:200]}\n")
-                            fh.flush()
+                            sink.write(
+                                {"type": "PUBLISHER", "block": ht,
+                                 "kind": kind, "matched": pgot,
+                                 "text": txt[:400]},
+                                ["PUBLISHER", ht, kind, ",".join(pgot),
+                                 txt[:200]])
                             sys.stderr.write(f"\n  ~~~ PUBLISHER block {ht} "
                                              f"{pgot}: {txt[:100]}\n")
                         report, got, why = classify(txt)
@@ -488,9 +566,12 @@ def main():
                             continue
                         if report:
                             ntext += 1
-                            fh.write(f"TEXT\t{ht}\t{kind}\t{why}\t"
-                                     f"{','.join(got)}\t{txt[:200]}\n")
-                            fh.flush()
+                            sink.write(
+                                {"type": "TEXT", "block": ht, "kind": kind,
+                                 "why": why, "matched": got,
+                                 "text": txt[:400]},
+                                ["TEXT", ht, kind, why, ",".join(got),
+                                 txt[:200]])
                             sys.stderr.write(f"\n  *** TEXT block {ht} "
                                              f"[{kind}] {got} ({why}): "
                                              f"{txt[:110]}\n")
@@ -506,7 +587,7 @@ def main():
     except KeyboardInterrupt:
         sys.stderr.write(f"\n  interrupted at {h:,}; rerun to resume\n")
     finally:
-        fh.close()
+        sink.close()
     sys.stderr.write(f"\n\n  {nblk:,} blocks, {ntext} reportable text "
                      f"hits, {nsupp} suppressed as noise, "
                      f"{npub} Bitcoin Magazine artifacts,\n"
