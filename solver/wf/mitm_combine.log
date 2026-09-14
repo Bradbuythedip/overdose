@@ -1,0 +1,10 @@
+  concat vector: OK
+  xor vector:    OK
+  hmac vector:   OK
+  derivation path: OK (1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T)
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis:  OK
+SELFTEST PASS
+
+half A: 363  half B: 122
+Oracle: full 56.8M index ACTIVE (checks both sets)
