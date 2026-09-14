@@ -1,0 +1,333 @@
+
+== p75: 9 exactly-matched lines
+   y    2 pitch 36.000px/6.480pt n 34 sd 5.98  Here's the bitter truth. Bitcoin was not a react
+   y  394 pitch 34.000px/6.120pt n 40 sd 4.88  The markets sensed Bitcoin was coming and starte
+   y  782 pitch 34.000px/6.120pt n 40 sd 4.42  around that time — after years of trying — and a
+   y 1165 pitch 37.500px/6.750pt n 32 sd52.43  of the Cosmic Now — and it had fiat markets in i
+   y 2006 pitch 34.500px/6.210pt n 42 sd 5.06  It's only the language of the shameless opportun
+   y 2105 pitch 33.000px/5.940pt n 39 sd 5.16  to cash in by riding Bitcoins coattails that giv
+   y 2779 pitch 39.000px/7.020pt n 31 sd 5.68  You wouldn't be digging blindly with your bare
+   y 2877 pitch 35.000px/6.300pt n 31 sd 6.01  hands in the muck of Bitcoin's rabbit hole if th
+   y 3170 pitch 34.000px/6.120pt n 33 sd 4.25  are easy listening for the gullible and unloved.
+
+== p76: 12 exactly-matched lines
+   y  102 pitch 33.500px/6.030pt n 40 sd 5.56  It's funkier than a whole parallel universe full
+   y  293 pitch 33.000px/5.940pt n 44 sd 6.20  nailing the Vatican with ultimatums. It's the so
+   y  393 pitch 36.000px/6.480pt n 37 sd 4.24  ripped off live central bankers tied to a burnin
+   y  708 pitch 35.000px/6.300pt n 42 sd 3.76  since I started honey-badgering him to buy some 
+   y  810 pitch 36.000px/6.480pt n 35 sd 4.02  have dulled shitcoiners' and nocoiners' minds.
+   y  910 pitch 33.000px/5.940pt n 42 sd 4.26  The collective unconscious, controlled now by ps
+   y 1104 pitch 35.000px/6.300pt n 42 sd 4.56  Our imaginations and inventiveness have been eut
+   y 2103 pitch 35.000px/6.300pt n 27 sd 3.98  Have you seen the president of El Salvador
+   y 2393 pitch 38.000px/6.840pt n 35 sd 4.38  I tweeted President Nayib Bukele when he announc
+   y 2492 pitch 34.000px/6.120pt n 31 sd 5.39  he was going to tap his nation's volcanoes to mi
+   y 2686 pitch 34.000px/6.120pt n 30 sd 4.49  billions worth of future bitcoin earnings
+   y 3167 pitch 35.000px/6.300pt n 31 sd 6.68  hasn't moved on it. I don't really trust that gu
+
+== p78: 10 exactly-matched lines
+   y    1 pitch 36.000px/6.480pt n 23 sd 5.35  We've never had an economy and a money
+   y   96 pitch 32.000px/5.760pt n 33 sd 4.20  that incentivizes love before until bitcoin.
+   y  193 pitch 34.000px/6.120pt n 31 sd 4.13  Love opens up the collective unconscious and
+   y  289 pitch 33.000px/5.940pt n 29 sd 3.85  our joint inner cosmic being. The economy of
+   y  576 pitch 36.000px/6.480pt n 37 sd 4.36  I listen to these eggheads — Michael Saylor, Nic
+   y  674 pitch 36.500px/6.570pt n 40 sd 4.60  Marty Bent —     who spend their days pouring ov
+   y 1644 pitch 34.000px/6.120pt n 51 sd85.87  corpse-ridden, poppy-harvesting fiat money with 
+   y 1816 pitch 35.000px/6.300pt n 50 sd40.40  Bitcoin fills the gap with love; our most natura
+   y 2256 pitch 33.000px/5.940pt n 27 sd 3.55  observable by anyone choosing to see it,
+   y 2353 pitch 34.500px/6.210pt n 22 sd 3.88  right there in the Genesis Block.
+
+== p79: 4 exactly-matched lines
+   y 2068 pitch 34.000px/6.120pt n 18 sd 4.18  during their 1969 bed-in.
+   y 2544 pitch 39.000px/7.020pt n 31 sd 7.18  We've seen some shit. Happy to share it all with
+   y 2642 pitch 36.000px/6.480pt n 31 sd 3.84  — the agony and ecstasy — as Bitcoin conquers fe
+   y 2740 pitch 38.000px/6.840pt n 28 sd 4.35  and hate and replaces it with peace and love.
+
+PITCH over 35 lines: median 35.0000 px = 6.3000 pt = 11.429 cpi, sd 1.726 px
+   p75: n=9 median 34.5000 px (6.2100 pt) sd 1.827
+   p76: n=12 median 35.0000 px (6.3000 pt) sd 1.376
+   p78: n=10 median 34.2500 px (6.1650 pt) sd 1.411
+   p79: n=4 median 37.0000 px (6.6600 pt) sd 1.920
+
+GAPS wider than one cell (cells = transcript, meas = measured/pitch)
+ pg      y  cells    meas  context
+ 75      2      2    1.53  "Here's the bitt"
+ 75      2      2    1.53  "Here's the bitter t"
+ 75      2      2    1.53  "re's the bitter truth. B"
+ 75      2      2    1.17  'e bitter truth. Bitcoin '
+ 75      2      2    1.69  ' truth. Bitcoin was not '
+ 75      2      2    1.56  'th. Bitcoin was not a re'
+ 75      2      2    1.53  'Bitcoin was not a reacti'
+ 75      2      2    1.67  'tcoin was not a reaction'
+ 75    394      2    1.50  'The markets '
+ 75    394      2    1.53  'The markets sensed B'
+ 75    394      2    1.62  ' markets sensed Bitcoin '
+ 75    394      2    1.62  ' sensed Bitcoin was comi'
+ 75    394      2    1.50  'sed Bitcoin was coming a'
+ 75    394      2    1.62  'coin was coming and star'
+ 75    394      2    1.65  ' was coming and started '
+ 75    394      2    1.59  'ing and started to crash'
+ 75    394      2    1.50  ' and started to crash.'
+ 75    782      2    1.56  'around that tim'
+ 75    782      2    1.44  'around that time — a'
+ 75    782      2    1.56  'round that time — after '
+ 75    782      2    1.94  'und that time — after ye'
+ 75    782      2    1.47  'at time — after years of'
+ 75    782      2    1.50  'e — after years of tryin'
+ 75    782      2    1.50  ' after years of trying —'
+ 75    782      2    1.65  'years of trying — and a '
+ 75    782      2    1.94  'ars of trying — and a co'
+ 75    782      2    1.62  'of trying — and a collec'
+ 75    782      2    1.65  ' trying — and a collecti'
+ 75    782      2    1.62  'nd a collective panic'
+ 75   1165      2    0.85  'of the Cosm'
+ 75   1165      2    1.17  'of the Cosmic N'
+ 75   1165      2    0.80  'of the Cosmic Now — an'
+ 75   1165      2    0.85  ' the Cosmic Now — and it'
+ 75   1165      2    1.79  'he Cosmic Now — and it h'
+ 75   1165      2    1.04  'osmic Now — and it had f'
+ 75   1165      2    0.61  'ic Now — and it had fiat'
+ 75   1165      2    1.04  'ow — and it had fiat mar'
+ 75   1165      2    1.33  'and it had fiat markets '
+ 75   1165      2    1.36  'ad fiat markets in its s'
+ 75   1165      2    1.49  'fiat markets in its sigh'
+ 75   1165      2    1.41  ' markets in its sight.'
+ 75   2006      2    1.48  "It's only the"
+ 75   2006      2    1.62  "It's only the lang"
+ 75   2006      2    1.48  "It's only the language"
+ 75   2006      2    1.48  'ly the language of the s'
+ 75   2006      2    1.48  'the language of the sham'
+ 75   2006      2    1.51  'language of the shameles'
+ 75   2006      2    1.45  'f the shameless opportun'
+ 75   2006      2    1.45  'ss opportunists trying'
+ 75   2105      2    1.55  'to cash in '
+ 75   2105      2    1.85  'to cash in by ri'
+ 75   2105      2    1.67  'to cash in by ridin'
+ 75   2105      2    1.73  'to cash in by riding B'
+ 75   2105      2    1.70  'sh in by riding Bitcoins'
+ 75   2105      2    1.58  'riding Bitcoins coattail'
+ 75   2105      2    1.55  'coins coattails that giv'
+ 75   2105      2    1.48  ' coattails that give it '
+ 75   2105      2    1.58  'tails that give it a bad'
+ 75   2105      2    1.48  'ls that give it a bad na'
+ 75   2105      2    1.67  ' that give it a bad name'
+ 75   2105      2    1.64  't give it a bad name.'
+ 75   2779      2    1.64  "You wouldn't"
+ 75   2779      2    1.36  "You wouldn't be diggi"
+ 75   2779      2    1.44  "You wouldn't be digging "
+ 75   2779      2    1.49  "dn't be digging blindly "
+ 75   2779      2    1.56  'digging blindly with you'
+ 75   2779      2    1.62  'ng blindly with your bar'
+ 75   2779      2    1.44  'indly with your bare'
+ 75   2877      2    1.54  'hands in the m'
+ 75   2877      2    1.71  'hands in the muck'
+ 75   2877      2    1.60  'hands in the muck of '
+ 75   2877      2    1.77  'nds in the muck of Bitco'
+ 75   2877      2    1.60  " in the muck of Bitcoin'"
+ 75   2877      2    1.54  "ck of Bitcoin's rabbit h"
+ 75   2877      2    1.51  "itcoin's rabbit hole if "
+ 75   2877      2    1.54  "n's rabbit hole if this"
+ 75   2877      2    1.60  ' rabbit hole if this'
+ 75   3170      2    1.53  'are easy lis'
+ 75   3170      2    1.68  'are easy listenin'
+ 75   3170      2    1.59  ' easy listening for the '
+ 75   3170      2    1.50  'y listening for the gull'
+ 75   3170      2    1.50  'stening for the gullible'
+ 75   3170      2    1.53  'or the gullible and unlo'
+ 75   3170      2    1.59  'he gullible and unloved.'
+ 76    102      2    1.52  "It's funkier "
+ 76    102      2    1.49  "It's funkier than a w"
+ 76    102      2    1.70  "'s funkier than a whole "
+ 76    102      2    1.64  ' funkier than a whole pa'
+ 76    102      2    1.49  'er than a whole parallel'
+ 76    102      2    1.52  ' whole parallel universe'
+ 76    102      2    1.49  'rallel universe full of '
+ 76    102      2    1.52  'l universe full of nothi'
+ 76    102      2    1.55  'niverse full of nothing'
+ 76    293      2    1.64  'nailing the Vati'
+ 76    293      2    1.55  'nailing the Vatican '
+ 76    293      2    1.67  'ing the Vatican with ult'
+ 76    293      2    1.82  'he Vatican with ultimatu'
+ 76    293      2    1.12  "ith ultimatums. It's the"
+ 76    293      2    1.55  "ltimatums. It's the soun"
+ 76    293      2    1.61  "atums. It's the sound of"
+ 76    293      2    1.61  " It's the sound of skin "
+ 76    293      2    1.61  "'s the sound of skin bei"
+ 76    293      2    1.64  'e sound of skin being'
+ 76    393      2    1.64  'ripped off live'
+ 76    393      2    1.47  'ripped off live cen'
+ 76    393      2    1.44  'ripped off live central '
+ 76    393      2    1.42  'ff live central bankers '
+ 76    393      2    1.36  'central bankers tied to '
+ 76    393      2    1.47  'al bankers tied to a bur'
+ 76    393      2    1.42  'bankers tied to a burnin'
+ 76    393      2    1.53  'nkers tied to a burning '
+ 76    393      2    1.56  'ed to a burning stake.'
+ 76    708      2    1.46  'since I starte'
+ 76    708      2    1.43  'since I started '
+ 76    708      2    1.57  'since I started honey-ba'
+ 76    708      2    1.60  'honey-badgering him to b'
+ 76    708      2    1.80  'y-badgering him to buy s'
+ 76    708      2    1.43  'adgering him to buy some'
+ 76    708      2    1.66  'ring him to buy some at '
+ 76    708      2    1.49  'him to buy some at $1 ba'
+ 76    708      2    1.43  ' to buy some at $1 back '
+ 76    708      2    1.43  ' buy some at $1 back in '
+ 76    708      2    1.69  'some at $1 back in 2011)'
+ 76    708      2    1.63  'e at $1 back in 2011)'
+ 76    810      2    1.42  'have dulled s'
+ 76    810      2    1.58  'have dulled shitcoin'
+ 76    810      2    1.11  "ed shitcoiners' and noco"
+ 76    810      2    1.47  "hitcoiners' and nocoiner"
+ 76    810      2    1.00  " and nocoiners' minds."
+ 76    910      2    1.55  'The collecti'
+ 76    910      2    1.55  'The collective unconsci'
+ 76    910      2    1.15  've unconscious, controll'
+ 76    910      2    1.61  'ous, controlled now by p'
+ 76    910      2    1.85  ' controlled now by psych'
+ 76    910      2    1.73  'ntrolled now by psychoti'
+ 76   1104      2    1.49  'Our imaginat'
+ 76   1104      2    1.49  'ur imaginations and inve'
+ 76   1104      2    1.54  'maginations and inventiv'
+ 76   1104      2    1.49  'd inventiveness have bee'
+ 76   1104      2    1.43  'entiveness have been eut'
+ 76   1104      2    1.60  'eness have been euthaniz'
+ 76   2103      2    1.46  'Have you seen'
+ 76   2103      2    1.71  'Have you seen the'
+ 76   2103      2    1.57  'Have you seen the pres'
+ 76   2103      2    1.46  've you seen the presiden'
+ 76   2103      2    1.43  'n the president of El Sa'
+ 76   2103      2    1.51  'he president of El Salva'
+ 76   2103      2    1.57  'president of El Salvador'
+ 76   2393      2    1.29  'I tweeted '
+ 76   2393      2    1.45  'I tweeted Presiden'
+ 76   2393      2    1.45  'eeted President Nayib Bu'
+ 76   2393      2    1.61  'President Nayib Bukele w'
+ 76   2393      2    1.39  'nt Nayib Bukele when he '
+ 76   2393      2    1.47  'yib Bukele when he annou'
+ 76   2393      2    1.34  ' Bukele when he announce'
+ 76   2492      2    1.47  'he was goin'
+ 76   2492      2    1.53  'he was going to'
+ 76   2492      2    1.56  'he was going to tap h'
+ 76   2492      2    1.47  'he was going to tap his '
+ 76   2492      2    1.62  'as going to tap his nati'
+ 76   2492      2    1.50  "oing to tap his nation's"
+ 76   2492      2    1.47  "ap his nation's volcanoe"
+ 76   2492      2    1.44  "ion's volcanoes to mine"
+ 76   2492      2    1.53  "'s volcanoes to mine"
+ 76   2686      2    1.50  'billions worth of'
+ 76   2686      2    1.76  'billions worth of futur'
+ 76   2686      2    1.53  'llions worth of future b'
+ 76   2686      2    1.47  'worth of future bitcoin '
+ 76   2686      2    1.65  ' future bitcoin earnings'
+ 76   3167      2    1.43  "hasn't moved on"
+ 76   3167      2    1.54  "hasn't moved on it. I"
+ 76   3167      2    1.60  "hasn't moved on it. I do"
+ 76   3167      2    1.03  "'t moved on it. I don't "
+ 76   3167      2    1.49  " moved on it. I don't re"
+ 76   3167      2    1.46  " on it. I don't really t"
+ 76   3167      2    1.69  " I don't really trust th"
+ 76   3167      2    1.43  "'t really trust that guy"
+ 76   3167      2    1.46  'ally trust that guy.'
+ 78      1      2    1.42  "We've never ha"
+ 78      1      2    1.44  "We've never had an e"
+ 78      1      2    1.50  "We've never had an econo"
+ 78      1      2    1.53  've never had an economy '
+ 78      1      2    1.56  ' had an economy and a mo'
+ 78      1      2    1.50  ' an economy and a money'
+ 78      1      2    1.50  'n economy and a money'
+ 78     96      2    1.56  'that incentiv'
+ 78     96      2    1.53  'at incentivizes love bef'
+ 78     96      2    1.50  'centivizes love before u'
+ 78     96      2    1.56  'zes love before until bi'
+ 78     96      2    1.53  've before until bitcoin.'
+ 78    193      2    1.47  'Love opens up'
+ 78    193      2    1.41  'Love opens up the c'
+ 78    193      2    1.62  'Love opens up the coll'
+ 78    193      2    1.50  've opens up the collecti'
+ 78    193      2    1.47  ' the collective unconsci'
+ 78    193      2    1.47  'ive unconscious and'
+ 78    289      2    1.58  'our joint in'
+ 78    289      2    1.48  'our joint inner co'
+ 78    289      2    1.61  'our joint inner cosmic b'
+ 78    289      2    1.45  'nt inner cosmic being. T'
+ 78    289      2    1.15  'r cosmic being. The econ'
+ 78    289      2    1.52  'smic being. The economy '
+ 78    289      2    1.67  'ng. The economy of'
+ 78    576      2    1.39  'I listen t'
+ 78    576      2    1.56  'I listen to these'
+ 78    576      2    1.39  'I listen to these eg'
+ 78    576      2    1.42  'listen to these eggheads'
+ 78    576      2    1.50  ' these eggheads — Michae'
+ 78    576      2    1.83  'hese eggheads — Michael '
+ 78    576      2    1.58  'heads — Michael Saylor, '
+ 78    576      2    1.17  'Michael Saylor, Nic Cart'
+ 78    576      2    1.53  'ael Saylor, Nic Carter,'
+ 78    674      2    1.70  'Marty Bent —  '
+ 78    674      2    1.56  'Marty Bent —     wh'
+ 78    674      6    5.42  'Marty Bent —     who spen'
+ 78    674      2    2.05  ' Bent —     who spend th'
+ 78    674      2    2.08  '—     who spend their da'
+ 78    674      2    2.05  'who spend their days pou'
+ 78    674      2    2.00  'pend their days pouring '
+ 78    674      2    2.11  'ir days pouring over spr'
+ 78    674      2    2.03  'ys pouring over spreadsh'
+ 78   1644      2    1.12  'corpse-ridden, poppy-ha'
+ 78   1644      2    1.56  'oppy-harvesting fiat mon'
+ 78   1644      2    1.29  'harvesting fiat money wi'
+ 78   1644      2    1.24  'ting fiat money with per'
+ 78   1644      2    1.15  'fiat money with perfect '
+ 78   1644      2    1.12  'ey with perfect bitcoin.'
+ 78   1816      2    1.57  'Bitcoin fills th'
+ 78   1816      2    0.91  'Bitcoin fills the gap '
+ 78   1816      2    1.03  'tcoin fills the gap with'
+ 78   1816      2    1.20  'n fills the gap with lov'
+ 78   1816      2    0.89  'ls the gap with love; ou'
+ 78   1816      2    0.89  ' gap with love; our most'
+ 78   1816      2    1.26  ' with love; our most nat'
+ 78   1816      2    1.09  ' love; our most natural '
+ 78   1816      2    0.91  'ur most natural tendency'
+ 78   1816      2    0.80  'atural tendency if given'
+ 78   1816      2    1.06  'ral tendency if given a '
+ 78   1816      2    1.54  'ndency if given a chance'
+ 78   1816      2    0.91  'ency if given a chance.'
+ 78   2256      2    1.48  'observable by anyon'
+ 78   2256      2    1.70  'observable by anyone c'
+ 78   2256      2    1.55  'vable by anyone choosing'
+ 78   2256      2    1.61  'anyone choosing to see i'
+ 78   2256      2    1.55  'one choosing to see it,'
+ 78   2256      2    1.52  'choosing to see it,'
+ 78   2353      2    1.42  'right there in'
+ 78   2353      2    1.45  'right there in the G'
+ 78   2353      2    1.57  'right there in the Gene'
+ 78   2353      2    1.45  'ht there in the Genesis '
+ 78   2353      2    1.45  ' in the Genesis Block.'
+ 79   2068      2    1.59  'during their 19'
+ 79   2068      2    1.50  'during their 1969 bed'
+ 79   2068      2    1.50  'ring their 1969 bed-in.'
+ 79   2544      2    1.54  "We've seen som"
+ 79   2544      2    1.72  "We've seen some shi"
+ 79   2544      2    1.56  "We've seen some shit. Ha"
+ 79   2544      2    1.08  'seen some shit. Happy to'
+ 79   2544      2    1.49  'ome shit. Happy to share'
+ 79   2544      2    1.36  ' shit. Happy to share it'
+ 79   2544      2    1.41  ' Happy to share it all w'
+ 79   2544      2    1.33  'ppy to share it all with'
+ 79   2544      2    1.38  'to share it all with you'
+ 79   2544      2    1.64  'are it all with you'
+ 79   2642      2    1.81  '— the agon'
+ 79   2642      2    1.42  '— the agony an'
+ 79   2642      2    1.58  '— the agony and ecst'
+ 79   2642      2    1.53  '— the agony and ecstasy '
+ 79   2642      2    1.64  'ony and ecstasy — as Bit'
+ 79   2642      2    1.86  'y and ecstasy — as Bitco'
+ 79   2642      2    1.50  'nd ecstasy — as Bitcoin '
+ 79   2642      2    1.69  'sy — as Bitcoin conquers'
+ 79   2642      2    1.50  'itcoin conquers fear'
+ 79   2740      2    1.55  'and hate and'
+ 79   2740      2    1.47  'and hate and repl'
+ 79   2740      2    1.58  'and hate and replaces'
+ 79   2740      2    1.42  'te and replaces it with '
+ 79   2740      2    1.42  'and replaces it with pea'
+ 79   2740      2    1.68  'eplaces it with peace an'
+ 79   2740      2    1.47  's it with peace and love'
+ 79   2740      2    1.55  ' with peace and love.'

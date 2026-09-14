@@ -15,3 +15,12 @@
 75	underline	1074	538	1050	2.62	They discount stuff in advance.
 75	underline	1504	1766	294	0.73	protocol.
 76	strikethrough	497	640	1556	3.89	(and 10years of watching Peter Schiff miss buying bitcoin
+#
+# BANKNOTE, measured at 600 dpi from the page images (2026-09-14):
+#   p74  bill right  serial CL 76841714 A, district L12  -- rotated, NOT mirrored
+#   p74  bill left   serial CL 76841714, L12             -- same note reused
+#   p73  big bill    MIRROR-WRITTEN: DOLLARS reads SRAJJOD, 100 reads OOI,
+#                    serial reads A41714867LC == CL76841714A reversed
+# One note, reused by the art department, sometimes flipped. The mirrored
+# instance on p73 is the column's only physical instance of mirror writing,
+# which is the one method clue Keiser gave in public.

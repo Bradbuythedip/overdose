@@ -1,0 +1,2464 @@
+{
+ "pitch": [
+  {
+   "page": 75,
+   "y": 2,
+   "pitch": 36.0,
+   "n": 34
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "pitch": 34.0,
+   "n": 40
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "pitch": 34.0,
+   "n": 40
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "pitch": 37.5,
+   "n": 32
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "pitch": 34.5,
+   "n": 42
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "pitch": 33.0,
+   "n": 39
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "pitch": 39.0,
+   "n": 31
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "pitch": 35.0,
+   "n": 31
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "pitch": 34.0,
+   "n": 33
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "pitch": 33.5,
+   "n": 40
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "pitch": 33.0,
+   "n": 44
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "pitch": 36.0,
+   "n": 37
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "pitch": 35.0,
+   "n": 42
+  },
+  {
+   "page": 76,
+   "y": 810,
+   "pitch": 36.0,
+   "n": 35
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "pitch": 33.0,
+   "n": 42
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "pitch": 35.0,
+   "n": 42
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "pitch": 35.0,
+   "n": 27
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "pitch": 38.0,
+   "n": 35
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "pitch": 34.0,
+   "n": 31
+  },
+  {
+   "page": 76,
+   "y": 2686,
+   "pitch": 34.0,
+   "n": 30
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "pitch": 35.0,
+   "n": 31
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "pitch": 36.0,
+   "n": 23
+  },
+  {
+   "page": 78,
+   "y": 96,
+   "pitch": 32.0,
+   "n": 33
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "pitch": 34.0,
+   "n": 31
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "pitch": 33.0,
+   "n": 29
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "pitch": 36.0,
+   "n": 37
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "pitch": 36.5,
+   "n": 40
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "pitch": 34.0,
+   "n": 51
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "pitch": 35.0,
+   "n": 50
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "pitch": 33.0,
+   "n": 27
+  },
+  {
+   "page": 78,
+   "y": 2353,
+   "pitch": 34.5,
+   "n": 22
+  },
+  {
+   "page": 79,
+   "y": 2068,
+   "pitch": 34.0,
+   "n": 18
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "pitch": 39.0,
+   "n": 31
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "pitch": 36.0,
+   "n": 31
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "pitch": 38.0,
+   "n": 28
+  }
+ ],
+ "gaps": [
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "Here's the bitt"
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "Here's the bitter t"
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "re's the bitter truth. B"
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.1666666666666667,
+   "pitch": 36.0,
+   "ctx": "e bitter truth. Bitcoin "
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.6944444444444444,
+   "pitch": 36.0,
+   "ctx": " truth. Bitcoin was not "
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.5555555555555556,
+   "pitch": 36.0,
+   "ctx": "th. Bitcoin was not a re"
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "Bitcoin was not a reacti"
+  },
+  {
+   "page": 75,
+   "y": 2,
+   "cells": 2,
+   "meas": 1.6666666666666667,
+   "pitch": 36.0,
+   "ctx": "tcoin was not a reaction"
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "The markets "
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.5294117647058822,
+   "pitch": 34.0,
+   "ctx": "The markets sensed B"
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": " markets sensed Bitcoin "
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": " sensed Bitcoin was comi"
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "sed Bitcoin was coming a"
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": "coin was coming and star"
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.6470588235294117,
+   "pitch": 34.0,
+   "ctx": " was coming and started "
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.588235294117647,
+   "pitch": 34.0,
+   "ctx": "ing and started to crash"
+  },
+  {
+   "page": 75,
+   "y": 394,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": " and started to crash."
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.5588235294117647,
+   "pitch": 34.0,
+   "ctx": "around that tim"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.4411764705882353,
+   "pitch": 34.0,
+   "ctx": "around that time \u2014 a"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.5588235294117647,
+   "pitch": 34.0,
+   "ctx": "round that time \u2014 after "
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.9411764705882353,
+   "pitch": 34.0,
+   "ctx": "und that time \u2014 after ye"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "at time \u2014 after years of"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "e \u2014 after years of tryin"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": " after years of trying \u2014"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.6470588235294117,
+   "pitch": 34.0,
+   "ctx": "years of trying \u2014 and a "
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.9411764705882353,
+   "pitch": 34.0,
+   "ctx": "ars of trying \u2014 and a co"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": "of trying \u2014 and a collec"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.6470588235294117,
+   "pitch": 34.0,
+   "ctx": " trying \u2014 and a collecti"
+  },
+  {
+   "page": 75,
+   "y": 782,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": "nd a collective panic"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 0.8533333333333334,
+   "pitch": 37.5,
+   "ctx": "of the Cosm"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.1733333333333333,
+   "pitch": 37.5,
+   "ctx": "of the Cosmic N"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 0.8,
+   "pitch": 37.5,
+   "ctx": "of the Cosmic Now \u2014 an"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 0.8533333333333334,
+   "pitch": 37.5,
+   "ctx": " the Cosmic Now \u2014 and it"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.7866666666666666,
+   "pitch": 37.5,
+   "ctx": "he Cosmic Now \u2014 and it h"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.04,
+   "pitch": 37.5,
+   "ctx": "osmic Now \u2014 and it had f"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 0.6133333333333333,
+   "pitch": 37.5,
+   "ctx": "ic Now \u2014 and it had fiat"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.04,
+   "pitch": 37.5,
+   "ctx": "ow \u2014 and it had fiat mar"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.3333333333333333,
+   "pitch": 37.5,
+   "ctx": "and it had fiat markets "
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.36,
+   "pitch": 37.5,
+   "ctx": "ad fiat markets in its s"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.4933333333333334,
+   "pitch": 37.5,
+   "ctx": "fiat markets in its sigh"
+  },
+  {
+   "page": 75,
+   "y": 1165,
+   "cells": 2,
+   "meas": 1.4133333333333333,
+   "pitch": 37.5,
+   "ctx": " markets in its sight."
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.4782608695652173,
+   "pitch": 34.5,
+   "ctx": "It's only the"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.6231884057971016,
+   "pitch": 34.5,
+   "ctx": "It's only the lang"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.4782608695652173,
+   "pitch": 34.5,
+   "ctx": "It's only the language"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.4782608695652173,
+   "pitch": 34.5,
+   "ctx": "ly the language of the s"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.4782608695652173,
+   "pitch": 34.5,
+   "ctx": "the language of the sham"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.5072463768115942,
+   "pitch": 34.5,
+   "ctx": "language of the shameles"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.4492753623188406,
+   "pitch": 34.5,
+   "ctx": "f the shameless opportun"
+  },
+  {
+   "page": 75,
+   "y": 2006,
+   "cells": 2,
+   "meas": 1.4492753623188406,
+   "pitch": 34.5,
+   "ctx": "ss opportunists trying"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "to cash in "
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.8484848484848484,
+   "pitch": 33.0,
+   "ctx": "to cash in by ri"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.6666666666666667,
+   "pitch": 33.0,
+   "ctx": "to cash in by ridin"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.7272727272727273,
+   "pitch": 33.0,
+   "ctx": "to cash in by riding B"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.696969696969697,
+   "pitch": 33.0,
+   "ctx": "sh in by riding Bitcoins"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.5757575757575757,
+   "pitch": 33.0,
+   "ctx": "riding Bitcoins coattail"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "coins coattails that giv"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.4848484848484849,
+   "pitch": 33.0,
+   "ctx": " coattails that give it "
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.5757575757575757,
+   "pitch": 33.0,
+   "ctx": "tails that give it a bad"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.4848484848484849,
+   "pitch": 33.0,
+   "ctx": "ls that give it a bad na"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.6666666666666667,
+   "pitch": 33.0,
+   "ctx": " that give it a bad name"
+  },
+  {
+   "page": 75,
+   "y": 2105,
+   "cells": 2,
+   "meas": 1.6363636363636365,
+   "pitch": 33.0,
+   "ctx": "t give it a bad name."
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.641025641025641,
+   "pitch": 39.0,
+   "ctx": "You wouldn't"
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.358974358974359,
+   "pitch": 39.0,
+   "ctx": "You wouldn't be diggi"
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.435897435897436,
+   "pitch": 39.0,
+   "ctx": "You wouldn't be digging "
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.4871794871794872,
+   "pitch": 39.0,
+   "ctx": "dn't be digging blindly "
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.564102564102564,
+   "pitch": 39.0,
+   "ctx": "digging blindly with you"
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.6153846153846154,
+   "pitch": 39.0,
+   "ctx": "ng blindly with your bar"
+  },
+  {
+   "page": 75,
+   "y": 2779,
+   "cells": 2,
+   "meas": 1.435897435897436,
+   "pitch": 39.0,
+   "ctx": "indly with your bare"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.542857142857143,
+   "pitch": 35.0,
+   "ctx": "hands in the m"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.7142857142857142,
+   "pitch": 35.0,
+   "ctx": "hands in the muck"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.6,
+   "pitch": 35.0,
+   "ctx": "hands in the muck of "
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.7714285714285714,
+   "pitch": 35.0,
+   "ctx": "nds in the muck of Bitco"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.6,
+   "pitch": 35.0,
+   "ctx": " in the muck of Bitcoin'"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.542857142857143,
+   "pitch": 35.0,
+   "ctx": "ck of Bitcoin's rabbit h"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.5142857142857142,
+   "pitch": 35.0,
+   "ctx": "itcoin's rabbit hole if "
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.542857142857143,
+   "pitch": 35.0,
+   "ctx": "n's rabbit hole if this"
+  },
+  {
+   "page": 75,
+   "y": 2877,
+   "cells": 2,
+   "meas": 1.6,
+   "pitch": 35.0,
+   "ctx": " rabbit hole if this"
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.5294117647058822,
+   "pitch": 34.0,
+   "ctx": "are easy lis"
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.6764705882352942,
+   "pitch": 34.0,
+   "ctx": "are easy listenin"
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.588235294117647,
+   "pitch": 34.0,
+   "ctx": " easy listening for the "
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "y listening for the gull"
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "stening for the gullible"
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.5294117647058822,
+   "pitch": 34.0,
+   "ctx": "or the gullible and unlo"
+  },
+  {
+   "page": 75,
+   "y": 3170,
+   "cells": 2,
+   "meas": 1.588235294117647,
+   "pitch": 34.0,
+   "ctx": "he gullible and unloved."
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.5223880597014925,
+   "pitch": 33.5,
+   "ctx": "It's funkier "
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.492537313432836,
+   "pitch": 33.5,
+   "ctx": "It's funkier than a w"
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.7014925373134329,
+   "pitch": 33.5,
+   "ctx": "'s funkier than a whole "
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.6417910447761195,
+   "pitch": 33.5,
+   "ctx": " funkier than a whole pa"
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.492537313432836,
+   "pitch": 33.5,
+   "ctx": "er than a whole parallel"
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.5223880597014925,
+   "pitch": 33.5,
+   "ctx": " whole parallel universe"
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.492537313432836,
+   "pitch": 33.5,
+   "ctx": "rallel universe full of "
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.5223880597014925,
+   "pitch": 33.5,
+   "ctx": "l universe full of nothi"
+  },
+  {
+   "page": 76,
+   "y": 102,
+   "cells": 2,
+   "meas": 1.5522388059701493,
+   "pitch": 33.5,
+   "ctx": "niverse full of nothing"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.6363636363636365,
+   "pitch": 33.0,
+   "ctx": "nailing the Vati"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "nailing the Vatican "
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.6666666666666667,
+   "pitch": 33.0,
+   "ctx": "ing the Vatican with ult"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.8181818181818181,
+   "pitch": 33.0,
+   "ctx": "he Vatican with ultimatu"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.121212121212121,
+   "pitch": 33.0,
+   "ctx": "ith ultimatums. It's the"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "ltimatums. It's the soun"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.606060606060606,
+   "pitch": 33.0,
+   "ctx": "atums. It's the sound of"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.606060606060606,
+   "pitch": 33.0,
+   "ctx": " It's the sound of skin "
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.606060606060606,
+   "pitch": 33.0,
+   "ctx": "'s the sound of skin bei"
+  },
+  {
+   "page": 76,
+   "y": 293,
+   "cells": 2,
+   "meas": 1.6363636363636365,
+   "pitch": 33.0,
+   "ctx": "e sound of skin being"
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.6388888888888888,
+   "pitch": 36.0,
+   "ctx": "ripped off live"
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.4722222222222223,
+   "pitch": 36.0,
+   "ctx": "ripped off live cen"
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.4444444444444444,
+   "pitch": 36.0,
+   "ctx": "ripped off live central "
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.4166666666666667,
+   "pitch": 36.0,
+   "ctx": "ff live central bankers "
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.3611111111111112,
+   "pitch": 36.0,
+   "ctx": "central bankers tied to "
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.4722222222222223,
+   "pitch": 36.0,
+   "ctx": "al bankers tied to a bur"
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.4166666666666667,
+   "pitch": 36.0,
+   "ctx": "bankers tied to a burnin"
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "nkers tied to a burning "
+  },
+  {
+   "page": 76,
+   "y": 393,
+   "cells": 2,
+   "meas": 1.5555555555555556,
+   "pitch": 36.0,
+   "ctx": "ed to a burning stake."
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.457142857142857,
+   "pitch": 35.0,
+   "ctx": "since I starte"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": "since I started "
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.5714285714285714,
+   "pitch": 35.0,
+   "ctx": "since I started honey-ba"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.6,
+   "pitch": 35.0,
+   "ctx": "honey-badgering him to b"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.8,
+   "pitch": 35.0,
+   "ctx": "y-badgering him to buy s"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": "adgering him to buy some"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.6571428571428573,
+   "pitch": 35.0,
+   "ctx": "ring him to buy some at "
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.4857142857142858,
+   "pitch": 35.0,
+   "ctx": "him to buy some at $1 ba"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": " to buy some at $1 back "
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": " buy some at $1 back in "
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.6857142857142857,
+   "pitch": 35.0,
+   "ctx": "some at $1 back in 2011)"
+  },
+  {
+   "page": 76,
+   "y": 708,
+   "cells": 2,
+   "meas": 1.6285714285714286,
+   "pitch": 35.0,
+   "ctx": "e at $1 back in 2011)"
+  },
+  {
+   "page": 76,
+   "y": 810,
+   "cells": 2,
+   "meas": 1.4166666666666667,
+   "pitch": 36.0,
+   "ctx": "have dulled s"
+  },
+  {
+   "page": 76,
+   "y": 810,
+   "cells": 2,
+   "meas": 1.5833333333333333,
+   "pitch": 36.0,
+   "ctx": "have dulled shitcoin"
+  },
+  {
+   "page": 76,
+   "y": 810,
+   "cells": 2,
+   "meas": 1.1111111111111112,
+   "pitch": 36.0,
+   "ctx": "ed shitcoiners' and noco"
+  },
+  {
+   "page": 76,
+   "y": 810,
+   "cells": 2,
+   "meas": 1.4722222222222223,
+   "pitch": 36.0,
+   "ctx": "hitcoiners' and nocoiner"
+  },
+  {
+   "page": 76,
+   "y": 810,
+   "cells": 2,
+   "meas": 1.0,
+   "pitch": 36.0,
+   "ctx": " and nocoiners' minds."
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "The collecti"
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "The collective unconsci"
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "cells": 2,
+   "meas": 1.1515151515151516,
+   "pitch": 33.0,
+   "ctx": "ve unconscious, controll"
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "cells": 2,
+   "meas": 1.606060606060606,
+   "pitch": 33.0,
+   "ctx": "ous, controlled now by p"
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "cells": 2,
+   "meas": 1.8484848484848484,
+   "pitch": 33.0,
+   "ctx": " controlled now by psych"
+  },
+  {
+   "page": 76,
+   "y": 910,
+   "cells": 2,
+   "meas": 1.7272727272727273,
+   "pitch": 33.0,
+   "ctx": "ntrolled now by psychoti"
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "cells": 2,
+   "meas": 1.4857142857142858,
+   "pitch": 35.0,
+   "ctx": "Our imaginat"
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "cells": 2,
+   "meas": 1.4857142857142858,
+   "pitch": 35.0,
+   "ctx": "ur imaginations and inve"
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "cells": 2,
+   "meas": 1.542857142857143,
+   "pitch": 35.0,
+   "ctx": "maginations and inventiv"
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "cells": 2,
+   "meas": 1.4857142857142858,
+   "pitch": 35.0,
+   "ctx": "d inventiveness have bee"
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": "entiveness have been eut"
+  },
+  {
+   "page": 76,
+   "y": 1104,
+   "cells": 2,
+   "meas": 1.6,
+   "pitch": 35.0,
+   "ctx": "eness have been euthaniz"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.457142857142857,
+   "pitch": 35.0,
+   "ctx": "Have you seen"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.7142857142857142,
+   "pitch": 35.0,
+   "ctx": "Have you seen the"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.5714285714285714,
+   "pitch": 35.0,
+   "ctx": "Have you seen the pres"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.457142857142857,
+   "pitch": 35.0,
+   "ctx": "ve you seen the presiden"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": "n the president of El Sa"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.5142857142857142,
+   "pitch": 35.0,
+   "ctx": "he president of El Salva"
+  },
+  {
+   "page": 76,
+   "y": 2103,
+   "cells": 2,
+   "meas": 1.5714285714285714,
+   "pitch": 35.0,
+   "ctx": "president of El Salvador"
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.2894736842105263,
+   "pitch": 38.0,
+   "ctx": "I tweeted "
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.4473684210526316,
+   "pitch": 38.0,
+   "ctx": "I tweeted Presiden"
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.4473684210526316,
+   "pitch": 38.0,
+   "ctx": "eeted President Nayib Bu"
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.605263157894737,
+   "pitch": 38.0,
+   "ctx": "President Nayib Bukele w"
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.394736842105263,
+   "pitch": 38.0,
+   "ctx": "nt Nayib Bukele when he "
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.4736842105263157,
+   "pitch": 38.0,
+   "ctx": "yib Bukele when he annou"
+  },
+  {
+   "page": 76,
+   "y": 2393,
+   "cells": 2,
+   "meas": 1.3421052631578947,
+   "pitch": 38.0,
+   "ctx": " Bukele when he announce"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "he was goin"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.5294117647058822,
+   "pitch": 34.0,
+   "ctx": "he was going to"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.5588235294117647,
+   "pitch": 34.0,
+   "ctx": "he was going to tap h"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "he was going to tap his "
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": "as going to tap his nati"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "oing to tap his nation's"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "ap his nation's volcanoe"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.4411764705882353,
+   "pitch": 34.0,
+   "ctx": "ion's volcanoes to mine"
+  },
+  {
+   "page": 76,
+   "y": 2492,
+   "cells": 2,
+   "meas": 1.5294117647058822,
+   "pitch": 34.0,
+   "ctx": "'s volcanoes to mine"
+  },
+  {
+   "page": 76,
+   "y": 2686,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "billions worth of"
+  },
+  {
+   "page": 76,
+   "y": 2686,
+   "cells": 2,
+   "meas": 1.7647058823529411,
+   "pitch": 34.0,
+   "ctx": "billions worth of futur"
+  },
+  {
+   "page": 76,
+   "y": 2686,
+   "cells": 2,
+   "meas": 1.5294117647058822,
+   "pitch": 34.0,
+   "ctx": "llions worth of future b"
+  },
+  {
+   "page": 76,
+   "y": 2686,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "worth of future bitcoin "
+  },
+  {
+   "page": 76,
+   "y": 2686,
+   "cells": 2,
+   "meas": 1.6470588235294117,
+   "pitch": 34.0,
+   "ctx": " future bitcoin earnings"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": "hasn't moved on"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.542857142857143,
+   "pitch": 35.0,
+   "ctx": "hasn't moved on it. I"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.6,
+   "pitch": 35.0,
+   "ctx": "hasn't moved on it. I do"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.0285714285714285,
+   "pitch": 35.0,
+   "ctx": "'t moved on it. I don't "
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.4857142857142858,
+   "pitch": 35.0,
+   "ctx": " moved on it. I don't re"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.457142857142857,
+   "pitch": 35.0,
+   "ctx": " on it. I don't really t"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.6857142857142857,
+   "pitch": 35.0,
+   "ctx": " I don't really trust th"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.4285714285714286,
+   "pitch": 35.0,
+   "ctx": "'t really trust that guy"
+  },
+  {
+   "page": 76,
+   "y": 3167,
+   "cells": 2,
+   "meas": 1.457142857142857,
+   "pitch": 35.0,
+   "ctx": "ally trust that guy."
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.4166666666666667,
+   "pitch": 36.0,
+   "ctx": "We've never ha"
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.4444444444444444,
+   "pitch": 36.0,
+   "ctx": "We've never had an e"
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 36.0,
+   "ctx": "We've never had an econo"
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "ve never had an economy "
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.5555555555555556,
+   "pitch": 36.0,
+   "ctx": " had an economy and a mo"
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 36.0,
+   "ctx": " an economy and a money"
+  },
+  {
+   "page": 78,
+   "y": 1,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 36.0,
+   "ctx": "n economy and a money"
+  },
+  {
+   "page": 78,
+   "y": 96,
+   "cells": 2,
+   "meas": 1.5625,
+   "pitch": 32.0,
+   "ctx": "that incentiv"
+  },
+  {
+   "page": 78,
+   "y": 96,
+   "cells": 2,
+   "meas": 1.53125,
+   "pitch": 32.0,
+   "ctx": "at incentivizes love bef"
+  },
+  {
+   "page": 78,
+   "y": 96,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 32.0,
+   "ctx": "centivizes love before u"
+  },
+  {
+   "page": 78,
+   "y": 96,
+   "cells": 2,
+   "meas": 1.5625,
+   "pitch": 32.0,
+   "ctx": "zes love before until bi"
+  },
+  {
+   "page": 78,
+   "y": 96,
+   "cells": 2,
+   "meas": 1.53125,
+   "pitch": 32.0,
+   "ctx": "ve before until bitcoin."
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "Love opens up"
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "cells": 2,
+   "meas": 1.411764705882353,
+   "pitch": 34.0,
+   "ctx": "Love opens up the c"
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "cells": 2,
+   "meas": 1.6176470588235294,
+   "pitch": 34.0,
+   "ctx": "Love opens up the coll"
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "ve opens up the collecti"
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": " the collective unconsci"
+  },
+  {
+   "page": 78,
+   "y": 193,
+   "cells": 2,
+   "meas": 1.4705882352941178,
+   "pitch": 34.0,
+   "ctx": "ive unconscious and"
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.5757575757575757,
+   "pitch": 33.0,
+   "ctx": "our joint in"
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.4848484848484849,
+   "pitch": 33.0,
+   "ctx": "our joint inner co"
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.606060606060606,
+   "pitch": 33.0,
+   "ctx": "our joint inner cosmic b"
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.4545454545454546,
+   "pitch": 33.0,
+   "ctx": "nt inner cosmic being. T"
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.1515151515151516,
+   "pitch": 33.0,
+   "ctx": "r cosmic being. The econ"
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.5151515151515151,
+   "pitch": 33.0,
+   "ctx": "smic being. The economy "
+  },
+  {
+   "page": 78,
+   "y": 289,
+   "cells": 2,
+   "meas": 1.6666666666666667,
+   "pitch": 33.0,
+   "ctx": "ng. The economy of"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.3888888888888888,
+   "pitch": 36.0,
+   "ctx": "I listen t"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.5555555555555556,
+   "pitch": 36.0,
+   "ctx": "I listen to these"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.3888888888888888,
+   "pitch": 36.0,
+   "ctx": "I listen to these eg"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.4166666666666667,
+   "pitch": 36.0,
+   "ctx": "listen to these eggheads"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 36.0,
+   "ctx": " these eggheads \u2014 Michae"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.8333333333333333,
+   "pitch": 36.0,
+   "ctx": "hese eggheads \u2014 Michael "
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.5833333333333333,
+   "pitch": 36.0,
+   "ctx": "heads \u2014 Michael Saylor, "
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.1666666666666667,
+   "pitch": 36.0,
+   "ctx": "Michael Saylor, Nic Cart"
+  },
+  {
+   "page": 78,
+   "y": 576,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "ael Saylor, Nic Carter,"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 1.6986301369863013,
+   "pitch": 36.5,
+   "ctx": "Marty Bent \u2014  "
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 1.5616438356164384,
+   "pitch": 36.5,
+   "ctx": "Marty Bent \u2014     wh"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 6,
+   "meas": 5.424657534246576,
+   "pitch": 36.5,
+   "ctx": "Marty Bent \u2014     who spen"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 2.0547945205479454,
+   "pitch": 36.5,
+   "ctx": " Bent \u2014     who spend th"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 2.0821917808219177,
+   "pitch": 36.5,
+   "ctx": "\u2014     who spend their da"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 2.0547945205479454,
+   "pitch": 36.5,
+   "ctx": "who spend their days pou"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 2.0,
+   "pitch": 36.5,
+   "ctx": "pend their days pouring "
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 2.1095890410958904,
+   "pitch": 36.5,
+   "ctx": "ir days pouring over spr"
+  },
+  {
+   "page": 78,
+   "y": 674,
+   "cells": 2,
+   "meas": 2.0273972602739727,
+   "pitch": 36.5,
+   "ctx": "ys pouring over spreadsh"
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "cells": 2,
+   "meas": 1.1176470588235294,
+   "pitch": 34.0,
+   "ctx": "corpse-ridden, poppy-ha"
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "cells": 2,
+   "meas": 1.5588235294117647,
+   "pitch": 34.0,
+   "ctx": "oppy-harvesting fiat mon"
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "cells": 2,
+   "meas": 1.2941176470588236,
+   "pitch": 34.0,
+   "ctx": "harvesting fiat money wi"
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "cells": 2,
+   "meas": 1.2352941176470589,
+   "pitch": 34.0,
+   "ctx": "ting fiat money with per"
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "cells": 2,
+   "meas": 1.1470588235294117,
+   "pitch": 34.0,
+   "ctx": "fiat money with perfect "
+  },
+  {
+   "page": 78,
+   "y": 1644,
+   "cells": 2,
+   "meas": 1.1176470588235294,
+   "pitch": 34.0,
+   "ctx": "ey with perfect bitcoin."
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.5714285714285714,
+   "pitch": 35.0,
+   "ctx": "Bitcoin fills th"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 0.9142857142857143,
+   "pitch": 35.0,
+   "ctx": "Bitcoin fills the gap "
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.0285714285714285,
+   "pitch": 35.0,
+   "ctx": "tcoin fills the gap with"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.2,
+   "pitch": 35.0,
+   "ctx": "n fills the gap with lov"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 0.8857142857142857,
+   "pitch": 35.0,
+   "ctx": "ls the gap with love; ou"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 0.8857142857142857,
+   "pitch": 35.0,
+   "ctx": " gap with love; our most"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.2571428571428571,
+   "pitch": 35.0,
+   "ctx": " with love; our most nat"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.0857142857142856,
+   "pitch": 35.0,
+   "ctx": " love; our most natural "
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 0.9142857142857143,
+   "pitch": 35.0,
+   "ctx": "ur most natural tendency"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 0.8,
+   "pitch": 35.0,
+   "ctx": "atural tendency if given"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.0571428571428572,
+   "pitch": 35.0,
+   "ctx": "ral tendency if given a "
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 1.542857142857143,
+   "pitch": 35.0,
+   "ctx": "ndency if given a chance"
+  },
+  {
+   "page": 78,
+   "y": 1816,
+   "cells": 2,
+   "meas": 0.9142857142857143,
+   "pitch": 35.0,
+   "ctx": "ency if given a chance."
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "cells": 2,
+   "meas": 1.4848484848484849,
+   "pitch": 33.0,
+   "ctx": "observable by anyon"
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "cells": 2,
+   "meas": 1.696969696969697,
+   "pitch": 33.0,
+   "ctx": "observable by anyone c"
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "vable by anyone choosing"
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "cells": 2,
+   "meas": 1.606060606060606,
+   "pitch": 33.0,
+   "ctx": "anyone choosing to see i"
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "cells": 2,
+   "meas": 1.5454545454545454,
+   "pitch": 33.0,
+   "ctx": "one choosing to see it,"
+  },
+  {
+   "page": 78,
+   "y": 2256,
+   "cells": 2,
+   "meas": 1.5151515151515151,
+   "pitch": 33.0,
+   "ctx": "choosing to see it,"
+  },
+  {
+   "page": 78,
+   "y": 2353,
+   "cells": 2,
+   "meas": 1.4202898550724639,
+   "pitch": 34.5,
+   "ctx": "right there in"
+  },
+  {
+   "page": 78,
+   "y": 2353,
+   "cells": 2,
+   "meas": 1.4492753623188406,
+   "pitch": 34.5,
+   "ctx": "right there in the G"
+  },
+  {
+   "page": 78,
+   "y": 2353,
+   "cells": 2,
+   "meas": 1.565217391304348,
+   "pitch": 34.5,
+   "ctx": "right there in the Gene"
+  },
+  {
+   "page": 78,
+   "y": 2353,
+   "cells": 2,
+   "meas": 1.4492753623188406,
+   "pitch": 34.5,
+   "ctx": "ht there in the Genesis "
+  },
+  {
+   "page": 78,
+   "y": 2353,
+   "cells": 2,
+   "meas": 1.4492753623188406,
+   "pitch": 34.5,
+   "ctx": " in the Genesis Block."
+  },
+  {
+   "page": 79,
+   "y": 2068,
+   "cells": 2,
+   "meas": 1.588235294117647,
+   "pitch": 34.0,
+   "ctx": "during their 19"
+  },
+  {
+   "page": 79,
+   "y": 2068,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "during their 1969 bed"
+  },
+  {
+   "page": 79,
+   "y": 2068,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 34.0,
+   "ctx": "ring their 1969 bed-in."
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.5384615384615385,
+   "pitch": 39.0,
+   "ctx": "We've seen som"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.7179487179487178,
+   "pitch": 39.0,
+   "ctx": "We've seen some shi"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.564102564102564,
+   "pitch": 39.0,
+   "ctx": "We've seen some shit. Ha"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.0769230769230769,
+   "pitch": 39.0,
+   "ctx": "seen some shit. Happy to"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.4871794871794872,
+   "pitch": 39.0,
+   "ctx": "ome shit. Happy to share"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.358974358974359,
+   "pitch": 39.0,
+   "ctx": " shit. Happy to share it"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.4102564102564104,
+   "pitch": 39.0,
+   "ctx": " Happy to share it all w"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.3333333333333333,
+   "pitch": 39.0,
+   "ctx": "ppy to share it all with"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.3846153846153846,
+   "pitch": 39.0,
+   "ctx": "to share it all with you"
+  },
+  {
+   "page": 79,
+   "y": 2544,
+   "cells": 2,
+   "meas": 1.641025641025641,
+   "pitch": 39.0,
+   "ctx": "are it all with you"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.8055555555555556,
+   "pitch": 36.0,
+   "ctx": "\u2014 the agon"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.4166666666666667,
+   "pitch": 36.0,
+   "ctx": "\u2014 the agony an"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.5833333333333333,
+   "pitch": 36.0,
+   "ctx": "\u2014 the agony and ecst"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.5277777777777777,
+   "pitch": 36.0,
+   "ctx": "\u2014 the agony and ecstasy "
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.6388888888888888,
+   "pitch": 36.0,
+   "ctx": "ony and ecstasy \u2014 as Bit"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.8611111111111112,
+   "pitch": 36.0,
+   "ctx": "y and ecstasy \u2014 as Bitco"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 36.0,
+   "ctx": "nd ecstasy \u2014 as Bitcoin "
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.6944444444444444,
+   "pitch": 36.0,
+   "ctx": "sy \u2014 as Bitcoin conquers"
+  },
+  {
+   "page": 79,
+   "y": 2642,
+   "cells": 2,
+   "meas": 1.5,
+   "pitch": 36.0,
+   "ctx": "itcoin conquers fear"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.5526315789473684,
+   "pitch": 38.0,
+   "ctx": "and hate and"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.4736842105263157,
+   "pitch": 38.0,
+   "ctx": "and hate and repl"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.5789473684210527,
+   "pitch": 38.0,
+   "ctx": "and hate and replaces"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.4210526315789473,
+   "pitch": 38.0,
+   "ctx": "te and replaces it with "
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.4210526315789473,
+   "pitch": 38.0,
+   "ctx": "and replaces it with pea"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.6842105263157894,
+   "pitch": 38.0,
+   "ctx": "eplaces it with peace an"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.4736842105263157,
+   "pitch": 38.0,
+   "ctx": "s it with peace and love"
+  },
+  {
+   "page": 79,
+   "y": 2740,
+   "cells": 2,
+   "meas": 1.5526315789473684,
+   "pitch": 38.0,
+   "ctx": " with peace and love."
+  }
+ ]
+}

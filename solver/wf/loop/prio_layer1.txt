@@ -1,0 +1,200 @@
+Layer 1
+LAYER 1
+layer 1
+1 reyaL
+1 REYAL
+1 reyal
+Layer 1Layer 1Layer 1
+LAYER 1LAYER 1LAYER 1
+layer 1layer 1layer 1
+1 reyaL1 reyaL1 reyaL
+1 REYAL1 REYAL1 REYAL
+1 reyal1 reyal1 reyal
+Layer 1 Layer 1 Layer 1
+LAYER 1 LAYER 1 LAYER 1
+layer 1 layer 1 layer 1
+1 reyaL 1 reyaL 1 reyaL
+1 REYAL 1 REYAL 1 REYAL
+1 reyal 1 reyal 1 reyal
+L1
+l1
+1L
+1l
+Fact:
+FACT:
+fact:
+:tcaF
+:TCAF
+:tcaf
+Fact: Layer 1
+FACT: LAYER 1
+fact: layer 1
+1 reyaL :tcaF
+1 REYAL :TCAF
+1 reyal :tcaf
+Fact: Layer 1 Layer 1 Layer 1
+FACT: LAYER 1 LAYER 1 LAYER 1
+fact: layer 1 layer 1 layer 1
+1 reyaL 1 reyaL 1 reyaL :tcaF
+1 REYAL 1 REYAL 1 REYAL :TCAF
+1 reyal 1 reyal 1 reyal :tcaf
+Fact
+FACT
+fact
+tcaF
+TCAF
+tcaf
+Fact: Layer 1 of the protocol
+FACT: LAYER 1 OF THE PROTOCOL
+fact: layer 1 of the protocol
+locotorp eht fo 1 reyaL :tcaF
+LOCOTORP EHT FO 1 REYAL :TCAF
+locotorp eht fo 1 reyal :tcaf
+Fact: toxicity is Layer 1 of the protocol
+FACT: TOXICITY IS LAYER 1 OF THE PROTOCOL
+fact: toxicity is layer 1 of the protocol
+locotorp eht fo 1 reyaL si yticixot :tcaF
+LOCOTORP EHT FO 1 REYAL SI YTICIXOT :TCAF
+locotorp eht fo 1 reyal si yticixot :tcaf
+Look, toxicity is Layer 1 of the protocol.
+LOOK, TOXICITY IS LAYER 1 OF THE PROTOCOL.
+look, toxicity is layer 1 of the protocol.
+.locotorp eht fo 1 reyaL si yticixot ,kooL
+.LOCOTORP EHT FO 1 REYAL SI YTICIXOT ,KOOL
+.locotorp eht fo 1 reyal si yticixot ,kool
+It's Layer 1 for every great thing that's ever been invented or discovered.
+IT'S LAYER 1 FOR EVERY GREAT THING THAT'S EVER BEEN INVENTED OR DISCOVERED.
+it's layer 1 for every great thing that's ever been invented or discovered.
+.derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyaL s'tI
+.DEREVOCSID RO DETNEVNI NEEB REVE S'TAHT GNIHT TAERG YREVE ROF 1 REYAL S'TI
+.derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyal s'ti
+Fact: It's Layer 1 for every great thing that's ever been invented or discovered.
+FACT: IT'S LAYER 1 FOR EVERY GREAT THING THAT'S EVER BEEN INVENTED OR DISCOVERED.
+fact: it's layer 1 for every great thing that's ever been invented or discovered.
+.derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyaL s'tI :tcaF
+.DEREVOCSID RO DETNEVNI NEEB REVE S'TAHT GNIHT TAERG YREVE ROF 1 REYAL S'TI :TCAF
+.derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyal s'ti :tcaf
+the Layer 1 of the whole Satoshi experience.
+THE LAYER 1 OF THE WHOLE SATOSHI EXPERIENCE.
+the layer 1 of the whole satoshi experience.
+.ecneirepxe ihsotaS elohw eht fo 1 reyaL eht
+.ECNEIREPXE IHSOTAS ELOHW EHT FO 1 REYAL EHT
+.ecneirepxe ihsotas elohw eht fo 1 reyal eht
+Go Bitcoin Toxic Maximalist, the Layer 1 of the whole Satoshi experience.
+GO BITCOIN TOXIC MAXIMALIST, THE LAYER 1 OF THE WHOLE SATOSHI EXPERIENCE.
+go bitcoin toxic maximalist, the layer 1 of the whole satoshi experience.
+.ecneirepxe ihsotaS elohw eht fo 1 reyaL eht ,tsilamixaM cixoT nioctiB oG
+.ECNEIREPXE IHSOTAS ELOHW EHT FO 1 REYAL EHT ,TSILAMIXAM CIXOT NIOCTIB OG
+.ecneirepxe ihsotas elohw eht fo 1 reyal eht ,tsilamixam cixot nioctib og
+Look, toxicity is Layer 1 of the protocol. It's Layer 1 for every great thing that's ever been invented or discovered. the Layer 1 of the whole Satoshi experience.
+LOOK, TOXICITY IS LAYER 1 OF THE PROTOCOL. IT'S LAYER 1 FOR EVERY GREAT THING THAT'S EVER BEEN INVENTED OR DISCOVERED. THE LAYER 1 OF THE WHOLE SATOSHI EXPERIENCE.
+look, toxicity is layer 1 of the protocol. it's layer 1 for every great thing that's ever been invented or discovered. the layer 1 of the whole satoshi experience.
+.ecneirepxe ihsotaS elohw eht fo 1 reyaL eht .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyaL s'tI .locotorp eht fo 1 reyaL si yticixot ,kooL
+.ECNEIREPXE IHSOTAS ELOHW EHT FO 1 REYAL EHT .DEREVOCSID RO DETNEVNI NEEB REVE S'TAHT GNIHT TAERG YREVE ROF 1 REYAL S'TI .LOCOTORP EHT FO 1 REYAL SI YTICIXOT ,KOOL
+.ecneirepxe ihsotas elohw eht fo 1 reyal eht .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyal s'ti .locotorp eht fo 1 reyal si yticixot ,kool
+Look, toxicity is Layer 1 of the protocol. Fact: It's Layer 1 for every great thing that's ever been invented or discovered. Go Bitcoin Toxic Maximalist, the Layer 1 of the whole Satoshi experience.
+LOOK, TOXICITY IS LAYER 1 OF THE PROTOCOL. FACT: IT'S LAYER 1 FOR EVERY GREAT THING THAT'S EVER BEEN INVENTED OR DISCOVERED. GO BITCOIN TOXIC MAXIMALIST, THE LAYER 1 OF THE WHOLE SATOSHI EXPERIENCE.
+look, toxicity is layer 1 of the protocol. fact: it's layer 1 for every great thing that's ever been invented or discovered. go bitcoin toxic maximalist, the layer 1 of the whole satoshi experience.
+.ecneirepxe ihsotaS elohw eht fo 1 reyaL eht ,tsilamixaM cixoT nioctiB oG .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyaL s'tI :tcaF .locotorp eht fo 1 reyaL si yticixot ,kooL
+.ECNEIREPXE IHSOTAS ELOHW EHT FO 1 REYAL EHT ,TSILAMIXAM CIXOT NIOCTIB OG .DEREVOCSID RO DETNEVNI NEEB REVE S'TAHT GNIHT TAERG YREVE ROF 1 REYAL S'TI :TCAF .LOCOTORP EHT FO 1 REYAL SI YTICIXOT ,KOOL
+.ecneirepxe ihsotas elohw eht fo 1 reyal eht ,tsilamixam cixot nioctib og .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyal s'ti :tcaf .locotorp eht fo 1 reyal si yticixot ,kool
+the Layer 1 of the whole Satoshi experience. It's Layer 1 for every great thing that's ever been invented or discovered. Look, toxicity is Layer 1 of the protocol.
+THE LAYER 1 OF THE WHOLE SATOSHI EXPERIENCE. IT'S LAYER 1 FOR EVERY GREAT THING THAT'S EVER BEEN INVENTED OR DISCOVERED. LOOK, TOXICITY IS LAYER 1 OF THE PROTOCOL.
+the layer 1 of the whole satoshi experience. it's layer 1 for every great thing that's ever been invented or discovered. look, toxicity is layer 1 of the protocol.
+.locotorp eht fo 1 reyaL si yticixot ,kooL .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyaL s'tI .ecneirepxe ihsotaS elohw eht fo 1 reyaL eht
+.LOCOTORP EHT FO 1 REYAL SI YTICIXOT ,KOOL .DEREVOCSID RO DETNEVNI NEEB REVE S'TAHT GNIHT TAERG YREVE ROF 1 REYAL S'TI .ECNEIREPXE IHSOTAS ELOHW EHT FO 1 REYAL EHT
+.locotorp eht fo 1 reyal si yticixot ,kool .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyal s'ti .ecneirepxe ihsotas elohw eht fo 1 reyal eht
+Layer 1 of the protocol
+LAYER 1 OF THE PROTOCOL
+layer 1 of the protocol
+locotorp eht fo 1 reyaL
+LOCOTORP EHT FO 1 REYAL
+locotorp eht fo 1 reyal
+Layer 1 for every great thing
+LAYER 1 FOR EVERY GREAT THING
+layer 1 for every great thing
+gniht taerg yreve rof 1 reyaL
+GNIHT TAERG YREVE ROF 1 REYAL
+gniht taerg yreve rof 1 reyal
+Layer 1 of the whole Satoshi experience
+LAYER 1 OF THE WHOLE SATOSHI EXPERIENCE
+layer 1 of the whole satoshi experience
+ecneirepxe ihsotaS elohw eht fo 1 reyaL
+ECNEIREPXE IHSOTAS ELOHW EHT FO 1 REYAL
+ecneirepxe ihsotas elohw eht fo 1 reyal
+toxicity is Layer 1 of the protocol
+TOXICITY IS LAYER 1 OF THE PROTOCOL
+toxicity is layer 1 of the protocol
+locotorp eht fo 1 reyaL si yticixot
+LOCOTORP EHT FO 1 REYAL SI YTICIXOT
+locotorp eht fo 1 reyal si yticixot
+It's Layer 1 for every great thing
+IT'S LAYER 1 FOR EVERY GREAT THING
+it's layer 1 for every great thing
+gniht taerg yreve rof 1 reyaL s'tI
+GNIHT TAERG YREVE ROF 1 REYAL S'TI
+gniht taerg yreve rof 1 reyal s'ti
+Layer 1 Fact: It's Layer 1 for every great thing that's ever been invented or discovered. Layer 1
+LAYER 1 FACT: IT'S LAYER 1 FOR EVERY GREAT THING THAT'S EVER BEEN INVENTED OR DISCOVERED. LAYER 1
+layer 1 fact: it's layer 1 for every great thing that's ever been invented or discovered. layer 1
+1 reyaL .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyaL s'tI :tcaF 1 reyaL
+1 REYAL .DEREVOCSID RO DETNEVNI NEEB REVE S'TAHT GNIHT TAERG YREVE ROF 1 REYAL S'TI :TCAF 1 REYAL
+1 reyal .derevocsid ro detnevni neeb reve s'taht gniht taerg yreve rof 1 reyal s'ti :tcaf 1 reyal
+TmLFItMDKLGGbIb1VsTSGFhsuITgmwA2twiTEW
+TMLFITMDKLGGBIB1VSTSGFHSUITGMWA2TWITEW
+tmlfitmdklggbib1vstsgfhsuitgmwa2twitew
+WETiwt2AwmgTIushFGSTsV1bIbGGLKDMtIFLmT
+WETIWT2AWMGTIUSHFGSTSV1BIBGGLKDMTIFLMT
+wetiwt2awmgtiushfgstsv1bibgglkdmtiflmt
+TmLFItMDKLGGbIb$VsT(GFhsuITgmwA$twiTEW
+TMLFITMDKLGGBIB$VST(GFHSUITGMWA$TWITEW
+tmlfitmdklggbib$vst(gfhsuitgmwa$twitew
+WETiwt$AwmgTIushFG(TsV$bIbGGLKDMtIFLmT
+WETIWT$AWMGTIUSHFG(TSV$BIBGGLKDMTIFLMT
+wetiwt$awmgtiushfg(tsv$bibgglkdmtiflmt
+They money Layer Fact It's that's Maximalist Don't Keep Layer Get Gotta by It's buying 1 Volcano shitcoiner Toxic Sorry Get Faketoshi harass shitcoiners useless It The gargantuanly money wars America 2 the war infinitely That's Everyone We
+THEY MONEY LAYER FACT IT'S THAT'S MAXIMALIST DON'T KEEP LAYER GET GOTTA BY IT'S BUYING 1 VOLCANO SHITCOINER TOXIC SORRY GET FAKETOSHI HARASS SHITCOINERS USELESS IT THE GARGANTUANLY MONEY WARS AMERICA 2 THE WAR INFINITELY THAT'S EVERYONE WE
+they money layer fact it's that's maximalist don't keep layer get gotta by it's buying 1 volcano shitcoiner toxic sorry get faketoshi harass shitcoiners useless it the gargantuanly money wars america 2 the war infinitely that's everyone we
+eW enoyrevE s'tahT yletinifni raw eht 2 aciremA sraw yenom ylnautnagrag ehT tI sselesu srenioctihs ssarah ihsotekaF teG yrroS cixoT renioctihs onacloV 1 gniyub s'tI yb attoG teG reyaL peeK t'noD tsilamixaM s'taht s'tI tcaF reyaL yenom yehT
+EW ENOYREVE S'TAHT YLETINIFNI RAW EHT 2 ACIREMA SRAW YENOM YLNAUTNAGRAG EHT TI SSELESU SRENIOCTIHS SSARAH IHSOTEKAF TEG YRROS CIXOT RENIOCTIHS ONACLOV 1 GNIYUB S'TI YB ATTOG TEG REYAL PEEK T'NOD TSILAMIXAM S'TAHT S'TI TCAF REYAL YENOM YEHT
+ew enoyreve s'taht yletinifni raw eht 2 acirema sraw yenom ylnautnagrag eht ti sselesu srenioctihs ssarah ihsotekaf teg yrros cixot renioctihs onaclov 1 gniyub s'ti yb attog teg reyal peek t'nod tsilamixam s'taht s'ti tcaf reyal yenom yeht
+TmLFItMDKL
+TMLFITMDKL
+tmlfitmdkl
+LKDMtIFLmT
+LKDMTIFLMT
+lkdmtiflmt
+They money Layer Fact It's that's Maximalist Don't Keep Layer
+THEY MONEY LAYER FACT IT'S THAT'S MAXIMALIST DON'T KEEP LAYER
+they money layer fact it's that's maximalist don't keep layer
+reyaL peeK t'noD tsilamixaM s'taht s'tI tcaF reyaL yenom yehT
+REYAL PEEK T'NOD TSILAMIXAM S'TAHT S'TI TCAF REYAL YENOM YEHT
+reyal peek t'nod tsilamixam s'taht s'ti tcaf reyal yenom yeht
+HtRTMtaaataoIBacLFtItVNDKGtYhwtaGBIbnrGnshTcObplADHtHIh1bclNbhMMiJacSaHBSPLaluLETAMFIwbesiAittEWtLolIMaTataBtBcRBTIorTeotoBdadlootseoYidEWSWta
+HTRTMTAAATAOIBACLFTITVNDKGTYHWTAGBIBNRGNSHTCOBPLADHTHIH1BCLNBHMMIJACSAHBSPLALULETAMFIWBESIAITTEWTLOLIMATATABTBCRBTIORTEOTOBDADLOOTSEOYIDEWSWTA
+htrtmtaaataoibaclftitvndkgtyhwtagbibnrgnshtcobpladhthih1bclnbhmmijacsahbsplaluletamfiwbesiaittewtlolimatatabtbcrbtiorteotobdadlootseoyidewswta
+atWSWEdiYoestooldadBotoeTroITBRcBtBataTaMIloLtWEttiAisebwIFMATELulaLPSBHaScaJiMMhbNlcb1hIHtHDAlpbOcThsnGrnbIBGatwhYtGKDNVtItFLcaBIoataaatMTRtH
+ATWSWEDIYOESTOOLDADBOTOETROITBRCBTBATATAMILOLTWETTIAISEBWIFMATELULALPSBHASCAJIMMHBNLCB1HIHTHDALPBOCTHSNGRNBIBGATWHYTGKDNVTITFLCABIOATAAATMTRTH
+atwswediyoestooldadbotoetroitbrcbtbatatamiloltwettiaisebwifmatelulalpsbhascajimmhbnlcb1hihthdalpbocthsngrnbibgatwhytgkdnvtitflcabioataaatmtrth
+HtRTMtaaataoIBacLFtItVNDKGtYhwtaGBIbnrGnshTcObplADHtHIh$bclNbhMMiJac(aHBSPL(luLETAMFIwbesiAitt(WtLolIMaTataBtBcRBTIorTeotoBdadlootseoYidEWSW—a
+HTRTMTAAATAOIBACLFTITVNDKGTYHWTAGBIBNRGNSHTCOBPLADHTHIH$BCLNBHMMIJAC(AHBSPL(LULETAMFIWBESIAITT(WTLOLIMATATABTBCRBTIORTEOTOBDADLOOTSEOYIDEWSW—A
+htrtmtaaataoibaclftitvndkgtyhwtagbibnrgnshtcobpladhthih$bclnbhmmijac(ahbspl(luletamfiwbesiaitt(wtlolimatatabtbcrbtiorteotobdadlootseoyidewsw—a
+a—WSWEdiYoestooldadBotoeTroITBRcBtBataTaMIloLtW(ttiAisebwIFMATELul(LPSBHa(caJiMMhbNlcb$hIHtHDAlpbOcThsnGrnbIBGatwhYtGKDNVtItFLcaBIoataaatMTRtH
+A—WSWEDIYOESTOOLDADBOTOETROITBRCBTBATATAMILOLTW(TTIAISEBWIFMATELUL(LPSBHA(CAJIMMHBNLCB$HIHTHDALPBOCTHSNGRNBIBGATWHYTGKDNVTITFLCABIOATAAATMTRTH
+a—wswediyoestooldadbotoetroitbrcbtbatatamiloltw(ttiaisebwifmatelul(lpsbha(cajimmhbnlcb$hihthdalpbocthsngrnbibgatwhytgkdnvtitflcabioataaatmtrth
+Here's to Really The Markets the all around arose terrorists and of In Bitcoin and complaining Look Fact that's It's to Vitalik Now Don't Keep Go the You hands weren't to are Get Bitcoin It's but nailing ripped Gotta nonsense since have The cats Our by puts laundering A Don't Have trolling He's I he 1 billions collateralized loan Novogratz bunch hasn't Maybe Meanwhile is Jack a country Sorry at Has Big Size Particularly London and legal useless London EVERY THE ADA MONEY FATE It's why bitcoin energy starve insatiable And it the time Elvis We've that Love our love I Marty and The and the and BILLION that BITCOIN corpse-ridden Remove Bitcoin The It's observable right To economy of to or Bitcoin drops all drops love our of to sea express of Yes in during Everyone We Stacy We've and
+HERE'S TO REALLY THE MARKETS THE ALL AROUND AROSE TERRORISTS AND OF IN BITCOIN AND COMPLAINING LOOK FACT THAT'S IT'S TO VITALIK NOW DON'T KEEP GO THE YOU HANDS WEREN'T TO ARE GET BITCOIN IT'S BUT NAILING RIPPED GOTTA NONSENSE SINCE HAVE THE CATS OUR BY PUTS LAUNDERING A DON'T HAVE TROLLING HE'S I HE 1 BILLIONS COLLATERALIZED LOAN NOVOGRATZ BUNCH HASN'T MAYBE MEANWHILE IS JACK A COUNTRY SORRY AT HAS BIG SIZE PARTICULARLY LONDON AND LEGAL USELESS LONDON EVERY THE ADA MONEY FATE IT'S WHY BITCOIN ENERGY STARVE INSATIABLE AND IT THE TIME ELVIS WE'VE THAT LOVE OUR LOVE I MARTY AND THE AND THE AND BILLION THAT BITCOIN CORPSE-RIDDEN REMOVE BITCOIN THE IT'S OBSERVABLE RIGHT TO ECONOMY OF TO OR BITCOIN DROPS ALL DROPS LOVE OUR OF TO SEA EXPRESS OF YES IN DURING EVERYONE WE STACY WE'VE AND
+here's to really the markets the all around arose terrorists and of in bitcoin and complaining look fact that's it's to vitalik now don't keep go the you hands weren't to are get bitcoin it's but nailing ripped gotta nonsense since have the cats our by puts laundering a don't have trolling he's i he 1 billions collateralized loan novogratz bunch hasn't maybe meanwhile is jack a country sorry at has big size particularly london and legal useless london every the ada money fate it's why bitcoin energy starve insatiable and it the time elvis we've that love our love i marty and the and the and billion that bitcoin corpse-ridden remove bitcoin the it's observable right to economy of to or bitcoin drops all drops love our of to sea express of yes in during everyone we stacy we've and
+dna ev'eW ycatS eW enoyrevE gnirud ni seY fo sserpxe aes ot fo ruo evol spord lla spord nioctiB ro ot fo ymonoce oT thgir elbavresbo s'tI ehT nioctiB evomeR neddir-esproc NIOCTIB taht NOILLIB dna eht dna ehT dna ytraM I evol ruo evoL taht ev'eW sivlE emit eht ti dnA elbaitasni evrats ygrene nioctib yhw s'tI ETAF YENOM ADA EHT YREVE nodnoL sselesu lagel dna nodnoL ylralucitraP eziS giB saH ta yrroS yrtnuoc a kcaJ si elihwnaeM ebyaM t'nsah hcnub ztargovoN naol dezilaretalloc snoillib 1 eh I s'eH gnillort evaH t'noD A gnirednual stup yb ruO stac ehT evah ecnis esnesnon attoG deppir gnilian tub s'tI nioctiB teG era ot t'nerew sdnah uoY eht oG peeK t'noD woN kilatiV ot s'tI s'taht tcaF kooL gninialpmoc dna nioctiB nI fo dna stsirorret esora dnuora lla eht stekraM ehT yllaeR ot s'ereH
+DNA EV'EW YCATS EW ENOYREVE GNIRUD NI SEY FO SSERPXE AES OT FO RUO EVOL SPORD LLA SPORD NIOCTIB RO OT FO YMONOCE OT THGIR ELBAVRESBO S'TI EHT NIOCTIB EVOMER NEDDIR-ESPROC NIOCTIB TAHT NOILLIB DNA EHT DNA EHT DNA YTRAM I EVOL RUO EVOL TAHT EV'EW SIVLE EMIT EHT TI DNA ELBAITASNI EVRATS YGRENE NIOCTIB YHW S'TI ETAF YENOM ADA EHT YREVE NODNOL SSELESU LAGEL DNA NODNOL YLRALUCITRAP EZIS GIB SAH TA YRROS YRTNUOC A KCAJ SI ELIHWNAEM EBYAM T'NSAH HCNUB ZTARGOVON NAOL DEZILARETALLOC SNOILLIB 1 EH I S'EH GNILLORT EVAH T'NOD A GNIREDNUAL STUP YB RUO STAC EHT EVAH ECNIS ESNESNON ATTOG DEPPIR GNILIAN TUB S'TI NIOCTIB TEG ERA OT T'NEREW SDNAH UOY EHT OG PEEK T'NOD WON KILATIV OT S'TI S'TAHT TCAF KOOL GNINIALPMOC DNA NIOCTIB NI FO DNA STSIRORRET ESORA DNUORA LLA EHT STEKRAM EHT YLLAER OT S'EREH
+dna ev'ew ycats ew enoyreve gnirud ni sey fo sserpxe aes ot fo ruo evol spord lla spord nioctib ro ot fo ymonoce ot thgir elbavresbo s'ti eht nioctib evomer neddir-esproc nioctib taht noillib dna eht dna eht dna ytram i evol ruo evol taht ev'ew sivle emit eht ti dna elbaitasni evrats ygrene nioctib yhw s'ti etaf yenom ada eht yreve nodnol sselesu lagel dna nodnol ylralucitrap ezis gib sah ta yrros yrtnuoc a kcaj si elihwnaem ebyam t'nsah hcnub ztargovon naol dezilaretalloc snoillib 1 eh i s'eh gnillort evah t'nod a gnirednual stup yb ruo stac eht evah ecnis esnesnon attog deppir gnilian tub s'ti nioctib teg era ot t'nerew sdnah uoy eht og peek t'nod won kilativ ot s'ti s'taht tcaf kool gninialpmoc dna nioctib ni fo dna stsirorret esora dnuora lla eht stekram eht yllaer ot s'ereh
+HtRTMtaaataoIBacLFtItVNDKGtYhwta
+HTRTMTAAATAOIBACLFTITVNDKGTYHWTA
+htrtmtaaataoibaclftitvndkgtyhwta
+atwhYtGKDNVtItFLcaBIoataaatMTRtH
+ATWHYTGKDNVTITFLCABIOATAAATMTRTH
+atwhytgkdnvtitflcabioataaatmtrth
+Here's to Really The Markets the all around arose terrorists and of In Bitcoin and complaining Look Fact that's It's to Vitalik Now Don't Keep Go the You hands weren't to are
+HERE'S TO REALLY THE MARKETS THE ALL AROUND AROSE TERRORISTS AND OF IN BITCOIN AND COMPLAINING LOOK FACT THAT'S IT'S TO VITALIK NOW DON'T KEEP GO THE YOU HANDS WEREN'T TO ARE
+here's to really the markets the all around arose terrorists and of in bitcoin and complaining look fact that's it's to vitalik now don't keep go the you hands weren't to are
+era ot t'nerew sdnah uoY eht oG peeK t'noD woN kilatiV ot s'tI s'taht tcaF kooL gninialpmoc dna nioctiB nI fo dna stsirorret esora dnuora lla eht stekraM ehT yllaeR ot s'ereH

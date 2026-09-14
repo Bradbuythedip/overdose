@@ -1,0 +1,112 @@
+
+== p72
+  y  246 n  12 xh 55.00( 10) cap   - (  0) asc  56.8 desc  0.8 base   303.2 pitch42.86 parts1.00
+  y 1055 n  16 xh 48.40( 15) cap   - (  0) asc  49.2 desc  1.5 base  1104.2 pitch40.96 parts1.00
+  y 1144 n  21 xh 53.87( 15) cap   - (  0) asc  56.4 desc  3.8 base  1201.6 pitch54.90 parts1.14
+  y 1673 n  19 xh 38.55( 11) cap 50.8(  4) asc  58.5 desc 14.7 base  1735.5 pitch39.31 parts1.21
+  y 1795 n  21 xh 68.14( 14) cap   - (  0) asc  74.8 desc 13.4 base  1873.4 pitch31.16 parts1.24
+  y 1933 n  27 xh166.50( 12) cap   - (  0) asc 177.3 desc 10.5 base  2110.8 pitch18.00 parts2.70
+  y 2130 n  19 xh 32.09( 11) cap 41.3(  6) asc  46.3 desc 12.1 base  2178.1 pitch18.00 parts1.16
+  y 2200 n  14 xh 32.20(  5) cap 40.0(  2) asc  44.4 desc 22.7 base  2244.9 pitch18.00 parts1.14
+  y 2822 n  18 xh 45.36( 11) cap 60.0(  4) asc  61.2 desc  0.8 base  2883.2 pitch45.00 parts1.17
+  y 2960 n  18 xh 67.57( 14) cap   - (  0) asc  69.4 desc  1.6 base  3029.4 pitch31.23 parts1.00
+  y 3221 n  13 xh 67.36( 11) cap   - (  0) asc  69.7 desc  1.3 base  3290.7 pitch31.88 parts1.08
+  y 3639 n  33 xh 18.44( 18) cap 24.2(  6) asc  25.7 desc  7.3 base  3664.7 pitch20.71 parts1.06
+  y 3680 n  45 xh 18.71( 31) cap 23.5(  6) asc  24.5 desc  4.6 base  3704.5 pitch20.55 parts1.04
+  y 3718 n  61 xh 18.92( 38) cap 25.1( 14) asc  26.6 desc  3.2 base  3744.6 pitch20.59 parts1.13
+  y 3759 n  45 xh 18.73( 30) cap 24.1( 11) asc  25.8 desc  1.5 base  3784.8 pitch20.23 parts1.04
+  y 3798 n  54 xh 18.52( 25) cap 24.9( 17) asc  26.5 desc  5.4 base  3824.5 pitch20.77 parts1.04
+
+== p73
+
+== p75
+  y    2 n  43 xh 33.33( 24) cap 45.2( 12) asc  50.5 desc  2.5 base    52.5 pitch22.07 parts1.23
+  y  100 n  45 xh 46.00( 22) cap   - (  0) asc  48.5 desc  4.5 base   148.5 pitch41.61 parts1.16
+  y  394 n  50 xh 30.52( 31) cap 41.7(  9) asc  44.2 desc  4.9 base   439.2 pitch36.74 parts1.24
+  y  490 n  34 xh 30.38( 16) cap 41.7(  9) asc  43.0 desc  9.8 base   533.6 pitch37.99 parts1.85
+  y  587 n  42 xh 30.74( 27) cap 42.1(  7) asc  45.6 desc 11.2 base   633.4 pitch36.75 parts1.02
+  y  687 n  41 xh 31.05( 19) cap 41.8(  9) asc  45.3 desc 11.7 base   732.3 pitch36.90 parts1.12
+  y  782 n  53 xh 30.96( 28) cap 43.0(  7) asc  45.4 desc 12.6 base   827.4 pitch36.83 parts1.11
+  y  877 n  29 xh 32.59( 17) cap 43.2(  4) asc  45.8 desc  5.2 base   923.4 pitch39.13 parts1.03
+  y 1072 n  58 xh 30.36( 25) cap 41.6( 13) asc  43.4 desc 14.6 base  1115.4 pitch20.70 parts1.19
+  y 1165 n  45 xh 41.39( 18) cap   - (  0) asc  50.1 desc 12.6 base  1215.1 pitch19.83 parts1.22
+  y 1330 n  53 xh 30.59( 32) cap 41.3(  6) asc  47.4 desc 13.5 base  1377.4 pitch18.58 parts1.11
+  y 1412 n  60 xh 31.00( 27) cap 42.3(  6) asc  48.0 desc 11.1 base  1475.0 pitch20.00 parts1.28
+  y 1523 n  56 xh 31.11( 28) cap 45.0(  6) asc  48.4 desc 12.2 base  1571.4 pitch36.83 parts1.05
+  y 1616 n  56 xh 30.84( 25) cap 42.3(  9) asc  46.4 desc 13.9 base  1666.5 pitch42.05 parts1.12
+  y 1705 n  22 xh 41.91( 11) cap   - (  0) asc  50.7 desc 15.8 base  1761.1 pitch38.05 parts1.59
+  y 2006 n  51 xh 30.74( 27) cap 41.9(  9) asc  46.9 desc 12.1 base  2054.9 pitch38.14 parts1.08
+  y 2105 n  52 xh 41.88( 26) cap   - (  0) asc  43.4 desc 10.6 base  2149.4 pitch38.25 parts1.29
+  y 2199 n  35 xh 41.60( 15) cap 45.2(  4) asc  46.6 desc 12.4 base  2246.3 pitch37.98 parts1.09
+  y 2298 n  47 xh 30.87( 23) cap 41.8( 10) asc  46.2 desc  8.0 base  2345.1 pitch19.75 parts1.17
+  y 2578 n  27 xh 36.82( 11) cap 53.2(  9) asc  55.0 desc  7.3 base  2633.0 pitch50.06 parts1.04
+  y 2675 n  31 xh 31.00( 17) cap 42.0(  9) asc  55.4 desc  5.4 base  2731.0 pitch19.96 parts1.10
+  y 2779 n  39 xh 44.95( 22) cap   - (  0) asc  46.8 desc 12.9 base  2827.3 pitch40.75 parts1.03
+  y 2877 n  41 xh 44.48( 21) cap   - (  0) asc  48.2 desc  1.8 base  2925.2 pitch41.14 parts1.00
+  y 2975 n  47 xh 42.06( 18) cap   - (  0) asc  46.2 desc 10.9 base  3021.2 pitch39.81 parts1.15
+  y 3073 n  47 xh 30.40( 30) cap 41.6(  8) asc  43.5 desc  9.6 base  3117.4 pitch19.71 parts1.15
+  y 3170 n  41 xh 31.05( 22) cap 42.2( 12) asc  45.2 desc  9.0 base  3215.2 pitch39.98 parts1.17
+
+== p76
+  y    3 n  40 xh 43.53( 17) cap   - (  0) asc  46.4 desc 10.9 base    49.4 pitch41.76 parts1.05
+  y  102 n  50 xh 30.96( 25) cap 41.9( 16) asc  44.1 desc  8.9 base   146.1 pitch20.38 parts1.06
+  y  198 n  54 xh 30.96( 28) cap 42.1( 14) asc  45.2 desc  2.7 base   243.2 pitch20.53 parts1.15
+  y  293 n  55 xh 30.85( 26) cap 42.0( 22) asc  46.8 desc  7.5 base   340.9 pitch20.44 parts1.15
+  y  393 n  47 xh 30.59( 22) cap 42.1( 14) asc  44.3 desc 12.7 base   437.3 pitch38.51 parts1.13
+  y  708 n  55 xh 30.81( 26) cap 41.9( 19) asc  50.9 desc 11.5 base   759.5 pitch37.45 parts1.11
+  y  810 n  41 xh 31.32( 19) cap 41.3(  7) asc  45.6 desc  2.6 base   855.6 pitch36.49 parts1.12
+  y  910 n  49 xh 31.30( 30) cap 42.1( 13) asc  44.1 desc 10.9 base   954.1 pitch19.89 parts1.08
+  y 1008 n  45 xh 31.00( 22) cap 41.7( 11) asc  42.6 desc 12.4 base  1050.6 pitch36.82 parts1.11
+  y 1104 n  49 xh 30.87( 31) cap 41.7( 15) asc  42.6 desc  1.9 base  1147.5 pitch20.07 parts1.18
+  y 1200 n  21 xh 31.00(  9) cap 42.2(  8) asc  43.3 desc 17.1 base  1243.3 pitch21.05 parts1.10
+  y 1298 n  45 xh 30.38( 26) cap 41.3( 12) asc  42.8 desc 14.7 base  1340.8 pitch19.50 parts1.16
+  y 1392 n  20 xh 30.50( 10) cap 42.2(  6) asc  45.0 desc 11.5 base  1438.5 pitch19.65 parts1.15
+  y 1492 n  42 xh 31.05( 22) cap 41.8( 15) asc  42.6 desc  6.7 base  1534.6 pitch36.58 parts1.07
+  y 2009 n  15 xh 31.00(  8) cap 41.8(  6) asc  43.0 desc  0.7 base  2052.3 pitch36.51 parts1.20
+  y 2103 n  35 xh 31.20( 20) cap 43.1( 12) asc  45.9 desc 11.5 base  2148.9 pitch37.83 parts1.11
+  y 2193 n  57 xh 42.00( 25) cap   - (  0) asc  51.0 desc 10.8 base  2245.0 pitch36.93 parts1.18
+  y 2298 n  32 xh 42.07( 15) cap   - (  0) asc  43.6 desc 11.1 base  2342.9 pitch20.13 parts1.09
+  y 2393 n  43 xh 31.29( 17) cap 44.8(  9) asc  45.2 desc  2.7 base  2439.1 pitch39.27 parts1.05
+  y 2492 n  41 xh 30.50( 26) cap 41.6( 11) asc  43.3 desc 11.7 base  2535.3 pitch19.84 parts1.12
+  y 2588 n  26 xh 41.93( 14) cap   - (  0) asc  44.2 desc  1.3 base  2632.2 pitch20.58 parts1.15
+  y 2686 n  36 xh 31.10( 20) cap 42.1( 15) asc  43.0 desc  4.1 base  2729.0 pitch20.59 parts1.17
+  y 2780 n  28 xh 42.21( 14) cap   - (  0) asc  46.3 desc 10.2 base  2826.3 pitch32.69 parts1.07
+  y 2876 n  41 xh 42.11( 19) cap   - (  0) asc  45.6 desc 10.2 base  2923.2 pitch37.38 parts1.15
+  y 2976 n  39 xh 31.00( 17) cap 42.0( 12) asc  44.2 desc 11.1 base  3020.2 pitch38.13 parts1.15
+  y 3072 n  41 xh 31.05( 19) cap 42.0( 15) asc  43.5 desc 10.9 base  3116.3 pitch37.11 parts1.05
+  y 3167 n  41 xh 30.56( 16) cap 41.5( 11) asc  45.4 desc 10.0 base  3213.2 pitch37.77 parts1.07
+  y 3290 n  19 xh 37.33(  9) cap 50.2(  5) asc  52.3 desc  9.3 base  3343.1 pitch43.33 parts1.05
+
+== p78
+  y    1 n  31 xh 30.74( 23) cap 40.8(  4) asc  41.2 desc  9.8 base    42.2 pitch36.37 parts1.00
+  y   96 n  39 xh 30.62( 21) cap 41.1( 17) asc  42.3 desc  0.7 base   138.3 pitch34.86 parts1.00
+  y  193 n  38 xh 30.81( 26) cap 40.8(  9) asc  41.9 desc 10.1 base   234.9 pitch35.40 parts1.00
+  y  289 n  37 xh 31.08( 24) cap 41.7(  9) asc  42.8 desc 10.5 base   331.8 pitch36.20 parts1.00
+  y  387 n  42 xh 30.92( 24) cap 41.2( 16) asc  42.0 desc  2.8 base   429.0 pitch38.63 parts1.00
+  y  576 n  47 xh 31.31( 16) cap 43.4( 14) asc  45.9 desc 10.2 base   621.9 pitch38.67 parts1.06
+  y  674 n  50 xh 31.35( 26) cap 42.2( 11) asc  44.7 desc 11.4 base   718.7 pitch37.14 parts1.10
+  y  772 n  25 xh 31.25( 16) cap 42.2(  6) asc  43.5 desc 10.5 base   815.5 pitch35.73 parts1.12
+  y  869 n  35 xh 31.19( 21) cap 42.2( 11) asc  43.0 desc 12.0 base   912.0 pitch19.95 parts1.14
+  y 1063 n  57 xh 31.18( 38) cap 42.3( 15) asc  42.9 desc 11.0 base  1105.9 pitch37.97 parts1.02
+  y 1157 n  39 xh 33.33( 18) cap 42.3(  9) asc  46.0 desc 11.3 base  1203.0 pitch19.77 parts1.10
+  y 1256 n  18 xh 30.85( 13) cap   - (  0) asc  42.1 desc 10.9 base  1298.1 pitch40.26 parts1.00
+  y 1340 n  21 xh 31.23( 13) cap 42.0(  7) asc  51.1 desc  8.7 base  1396.8 pitch18.00 parts1.14
+  y 1546 n  44 xh 40.45( 33) cap   - (  0) asc  41.9 desc 10.3 base  1589.7 pitch39.58 parts1.02
+  y 1644 n  58 xh 31.04( 27) cap 41.4( 17) asc  42.7 desc 11.3 base  1686.7 pitch35.86 parts1.02
+  y 1735 n  52 xh 30.47( 34) cap 40.9( 14) asc  42.6 desc 10.4 base  1783.6 pitch36.07 parts1.04
+  y 1816 n  64 xh 30.57( 35) cap 40.8( 22) asc  43.0 desc 10.8 base  1880.0 pitch35.70 parts1.03
+  y 2046 n  43 xh 39.22( 18) cap 58.1(  9) asc  59.0 desc 13.3 base  2105.8 pitch55.63 parts1.00
+  y 2161 n  18 xh 41.11(  9) cap   - (  0) asc  41.9 desc  0.7 base  2202.9 pitch42.95 parts1.00
+  y 2256 n  34 xh 30.81( 21) cap 41.1(  9) asc  42.6 desc 10.4 base  2298.6 pitch35.90 parts1.00
+  y 2353 n  28 xh 31.23( 13) cap 41.1( 12) asc  42.5 desc  7.3 base  2395.5 pitch37.57 parts1.00
+
+== p79
+  y    3 n  24 xh126.00(  7) cap   - (  0) asc 256.0 desc  5.2 base   265.0 pitch19.32 parts4.58
+  y  747 n  13 xh611.00(  2) cap   - (  0) asc 607.1 desc195.3 base  1357.5 pitch37.81 parts29.23
+  y 1865 n  39 xh 31.13( 15) cap 45.1( 10) asc  48.7 desc 11.5 base  1917.5 pitch38.48 parts1.08
+  y 1958 n  37 xh 30.71( 21) cap 41.7( 12) asc  46.9 desc  8.3 base  2013.6 pitch18.69 parts1.19
+  y 2068 n  22 xh 41.69( 13) cap   - (  0) asc  42.9 desc  6.9 base  2111.3 pitch36.60 parts1.27
+  y 2442 n  40 xh 36.00( 14) cap 53.4(  8) asc  55.5 desc 12.4 base  2497.5 pitch46.71 parts1.02
+  y 2544 n  42 xh 36.55( 11) cap 43.0(  6) asc  48.4 desc 12.5 base  2593.2 pitch41.23 parts1.05
+  y 2642 n  41 xh 33.40( 15) cap 45.0(  4) asc  46.8 desc 11.8 base  2690.4 pitch38.33 parts1.00
+  y 2740 n  37 xh 33.18( 22) cap 44.7(  9) asc  47.2 desc 10.0 base  2787.2 pitch40.17 parts1.00

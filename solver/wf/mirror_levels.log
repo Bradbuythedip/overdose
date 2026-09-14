@@ -1,0 +1,16 @@
+  word-order reverse != string reverse: OK ('d bc a' vs 'd cb a')
+  in-word reverse: OK
+  line-order reverse: OK
+  boustrophedon: OK
+  page-73 mirrored serial == reverse of page-74 serial: OK (A41714867LC)
+  corpus: 1,032 phrases
+  all 8 transforms distinct on p75: OK (8/8)
+  planted phrase recovered: OK (12UMvvAwSWop5TdhZX5ri4yBNkP8TKUA34)
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+phrases 1,032  paths 72
+
+phrases 1,032  addresses 1,893,720 in 245s
+mirror-level hits: 0

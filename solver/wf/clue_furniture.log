@@ -100,32 +100,50 @@
    /Obj66     41.76 x   6.48 pt at printed x  50.40 y  43.92   fill = (253.0,136.9, 65.0)
 
 ========================================================================
-== running head, window y 37-58 pt ==
-  p72  x[530.38,566.56] y[42.76,48.70]  w=36.36 cap=6.12pt medRGB=(105, 106, 91)  offset-from-outer-edge=45.44pt
-  p73  x[ 51.88, 91.84] y[42.94,48.16]  w=40.14 cap=5.40pt medRGB=(251, 135, 64)  offset-from-outer-edge=51.88pt
-  p74  x[523.00,563.14] y[43.48,48.88]  w=40.32 cap=5.58pt medRGB=(255, 136, 82)  offset-from-outer-edge=48.86pt
-  p75  x[ 50.98, 90.76] y[42.94,48.16]  w=39.96 cap=5.40pt medRGB=(252, 136, 65)  offset-from-outer-edge=50.98pt
-  p76  x[514.58,559.22] y[43.66,56.80]  w=44.82 cap=13.32pt medRGB=(254, 135, 81)  offset-from-outer-edge=52.78pt
-  p77  x[ 49.18, 88.60] y[44.02,48.88]  w=39.60 cap=5.04pt medRGB=(210, 128, 86)  offset-from-outer-edge=49.18pt
-  p78  x[522.28,562.42] y[43.84,49.06]  w=40.32 cap=5.40pt medRGB=(253, 137, 66)  offset-from-outer-edge=49.58pt
-  p79  x[ 51.34,109.84] y[37.00,57.88]  w=58.68 cap=21.06pt medRGB=(251, 136, 65)  offset-from-outer-edge=51.34pt
+== running head, window y 41-51 pt ==
+  p72  x[530.38,566.56] y[42.80,48.74]  w=36.36 cap=6.12pt medRGB=(105, 106, 91)  offset-from-outer-edge=45.44pt
+  p73  x[ 51.88, 91.84] y[42.98,48.20]  w=40.14 cap=5.40pt medRGB=(251, 135, 64)  offset-from-outer-edge=51.88pt
+  p74  x[523.00,563.14] y[43.52,48.92]  w=40.32 cap=5.58pt medRGB=(255, 136, 82)  offset-from-outer-edge=48.86pt
+  p75  x[ 50.98, 90.76] y[42.98,48.20]  w=39.96 cap=5.40pt medRGB=(252, 136, 65)  offset-from-outer-edge=50.98pt
+  p76  x[519.26,559.22] y[43.70,48.92]  w=40.14 cap=5.40pt medRGB=(254, 135, 81)  offset-from-outer-edge=52.78pt
+  p77  x[ 49.18, 88.60] y[44.06,48.92]  w=39.60 cap=5.04pt medRGB=(210, 128, 86)  offset-from-outer-edge=49.18pt
+  p78  x[522.28,562.42] y[43.88,49.10]  w=40.32 cap=5.40pt medRGB=(253, 137, 66)  offset-from-outer-edge=49.58pt
+  p79  x[ 51.34, 91.30] y[44.60,49.82]  w=40.14 cap=5.40pt medRGB=(251, 136, 65)  offset-from-outer-edge=51.34pt
+
+========================================================================
+== OVERDOSE running-head bitmaps (1-bit XObjects, 400 dpi) ==
+  p73 xref  8 224x32px  cap= 5.40pt  width= 40.14pt  ink px=3190
+  p74 xref 27 224x32px  cap= 5.40pt  width= 40.14pt  ink px=2885
+  p75 xref 38 232x32px  cap= 5.40pt  width= 39.96pt  ink px=3013
+  p76 xref 51 232x32px  cap= 5.22pt  width= 40.14pt  ink px=3072
+  p78 xref 78 232x36px  cap= 5.40pt  width= 40.14pt  ink px=3328
+  p79 xref 66 232x36px  cap= 5.40pt  width= 40.14pt  ink px=3117
+
+  pairwise IoU after normalising each to its ink bbox:
+        p73  p74  p75  p76  p78  p79
+    p73 1.000  0.791  0.841  0.821  0.854  0.900
+    p74 0.791  1.000  0.786  0.853  0.851  0.832
+    p75 0.841  0.786  1.000  0.807  0.798  0.826
+    p76 0.821  0.853  0.807  1.000  0.875  0.815
+    p78 0.854  0.851  0.798  0.875  1.000  0.850
+    p79 0.900  0.832  0.826  0.815  0.850  1.000
 
 ========================================================================
 == page number, window y 744-768 pt, both outer corners ==
-  p72 ** NO FOLIO in either bottom corner **
-  p73 LEFT  x[ 29.00, 38.72] y[751.56,760.02] w= 9.90 cap=8.64pt medRGB=(49, 49, 49) n=878
-  p74 RIGHT x[573.80,584.60] y[751.02,759.84] w=10.98 cap=9.00pt medRGB=(141, 141, 141) n=1114
-  p75 LEFT  x[ 27.74, 37.46] y[751.74,760.20] w= 9.90 cap=8.64pt medRGB=(103, 85, 92) n=899
-  p76 RIGHT x[568.22,578.48] y[751.92,760.56] w=10.44 cap=8.82pt medRGB=(100, 91, 95) n=957
+  p72 RIGHT x[574.56,585.36] y[750.84,759.48] w=10.98 cap=8.82pt medRGB=(121, 122, 109) n=969 thr=55
+  p73 LEFT  x[ 29.00, 38.72] y[751.56,760.02] w= 9.90 cap=8.64pt medRGB=(49, 49, 49) n=878 thr=40
+  p74 RIGHT x[573.66,584.46] y[751.02,759.84] w=10.98 cap=9.00pt medRGB=(141, 141, 141) n=1114 thr=40
+  p75 LEFT  x[ 27.74, 37.46] y[751.74,760.20] w= 9.90 cap=8.64pt medRGB=(103, 85, 92) n=899 thr=40
+  p76 RIGHT x[568.08,578.34] y[751.92,760.56] w=10.44 cap=8.82pt medRGB=(100, 91, 95) n=957 thr=40
   p77 ** NO FOLIO in either bottom corner **
-  p78 RIGHT x[569.84,581.00] y[751.92,760.56] w=11.34 cap=8.82pt medRGB=(107, 91, 93) n=1183
-  p79 LEFT  x[ 32.24, 42.50] y[753.36,762.18] w=10.44 cap=9.00pt medRGB=(135, 137, 136) n=1092
+  p78 RIGHT x[569.70,580.86] y[751.92,760.56] w=11.34 cap=8.82pt medRGB=(107, 91, 93) n=1183 thr=40
+  p79 LEFT  x[ 32.24, 42.50] y[753.36,762.18] w=10.44 cap=9.00pt medRGB=(135, 137, 136) n=1092 thr=40
 
 ========================================================================
 == rotated slug "Bitcoin Magazine | El Salvador", window y 335-475 pt ==
   p72 edge=RIGHT x[580.00,593.86] y[340.22,466.76] len=126.54pt medRGB=(105, 106, 91)
   p73 edge=LEFT  x[ 23.58, 32.94] y[340.58,467.30] len=126.72pt medRGB=(49, 49, 49)
-  p74 edge=RIGHT x[580.00,603.76] y[335.00,474.68] len=139.68pt medRGB=(147, 148, 142)
+  p74 edge=RIGHT x[586.00,599.86] y[335.00,474.68] len=139.68pt medRGB=(198, 199, 194)
   p75 edge=LEFT  x[ 22.58, 31.94] y[340.58,467.30] len=126.72pt medRGB=(103, 85, 92)
   p76 edge=RIGHT x[580.00,594.22] y[342.56,467.48] len=124.92pt medRGB=(100, 91, 95)
   p77 edge=LEFT  x[ 21.76, 30.94] y[341.66,467.84] len=126.18pt medRGB=(218, 210, 213)
@@ -135,7 +153,7 @@
   reading direction -- normalised correlation against p73 rotated CCW:
    p72: ccw=+0.200 cw=+0.507 -> reads BOTTOM-TO-TOP
    p73: ccw=+1.000 cw=+0.269 -> reads TOP-TO-BOTTOM
-   p74: ccw=+0.036 cw=+0.018 -> reads TOP-TO-BOTTOM
+   p74: ccw=-0.123 cw=-0.058 -> reads BOTTOM-TO-TOP
    p75: ccw=+0.973 cw=+0.249 -> reads TOP-TO-BOTTOM
    p76: ccw=-0.190 cw=-0.142 -> reads BOTTOM-TO-TOP
    p77: ccw=+0.859 cw=+0.234 -> reads TOP-TO-BOTTOM
@@ -156,8 +174,9 @@
 ========================================================================
 == physical structure ==
 
-  Every page carries its running head, its folio and its rotated issue slug on
-  ONE edge, and the torn binding fringe on the other:
+  Every page carries its running head, its folio (7 of 8 -- page 77 has none)
+  and its rotated issue slug on ONE edge, and the torn binding fringe on the
+  other:
 
       page   furniture edge    torn (binding) edge
         72       RIGHT               LEFT

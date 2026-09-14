@@ -8,6 +8,7 @@ of the sheets.
     python3 wf/clue_furniture.py survey       # placed-image inventory
     python3 wf/clue_furniture.py streams      # content-stream stencils + fills
     python3 wf/clue_furniture.py runhead      # running heads
+    python3 wf/clue_furniture.py strips       # the six OVERDOSE bitmaps compared
     python3 wf/clue_furniture.py folio        # page numbers
     python3 wf/clue_furniture.py sidebar      # rotated issue slug + direction
     python3 wf/clue_furniture.py edges        # which edge is torn (binding side)
@@ -233,8 +234,9 @@ def edges(dpi=400, save=None):
 def leaf():
     print("== physical structure ==")
     print("""
-  Every page carries its running head, its folio and its rotated issue slug on
-  ONE edge, and the torn binding fringe on the other:
+  Every page carries its running head, its folio (7 of 8 -- page 77 has none)
+  and its rotated issue slug on ONE edge, and the torn binding fringe on the
+  other:
 
       page   furniture edge    torn (binding) edge
         72       RIGHT               LEFT
@@ -261,6 +263,35 @@ def leaf():
 """)
 
 
+# ------------------------------------------------------------------ 8 strips
+RH_XREF = {73: 8, 74: 27, 75: 38, 76: 51, 78: 78, 79: 66}
+
+def strips():
+    """The six OVERDOSE running heads are separate 1-bit XObjects. Measure the
+    art itself (ink = the LIGHT class in these masks) and compare the six."""
+    print("== OVERDOSE running-head bitmaps (1-bit XObjects, 400 dpi) ==")
+    d = pymupdf.open(PDF)
+    bits = {}
+    for pr, xr in RH_XREF.items():
+        im = Image.open(io.BytesIO(d.extract_image(xr)["image"])).convert("L")
+        a = np.asarray(im) > 127
+        ys, xs = np.where(a)
+        bits[pr] = a
+        print(f"  p{pr} xref{xr:3d} {im.size[0]}x{im.size[1]}px  "
+              f"cap={(ys.max()-ys.min()+1)/400*72:5.2f}pt  "
+              f"width={(xs.max()-xs.min()+1)/400*72:6.2f}pt  ink px={a.sum()}")
+    norm = {}
+    for pr, a in bits.items():
+        ys, xs = np.where(a)
+        sub = a[ys.min():ys.max()+1, xs.min():xs.max()+1]
+        norm[pr] = np.asarray(Image.fromarray((sub*255).astype("uint8")).resize((230, 30))) > 127
+    ks = sorted(norm)
+    print("\n  pairwise IoU after normalising each to its ink bbox:")
+    print("        " + "  ".join(f"p{k}" for k in ks))
+    for i in ks:
+        print(f"    p{i} " + "  ".join(f"{(norm[i]&norm[j]).sum()/max(1,(norm[i]|norm[j]).sum()):.3f}" for j in ks))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", nargs="?", default="all")
@@ -270,9 +301,9 @@ if __name__ == "__main__":
         os.makedirs(a.save, exist_ok=True)
     fns = {"survey": survey, "streams": streams, "runhead": runhead,
            "folio": folio, "sidebar": lambda: sidebar(save=a.save),
-           "edges": lambda: edges(save=a.save), "leaf": leaf}
+           "edges": lambda: edges(save=a.save), "leaf": leaf, "strips": strips}
     if a.cmd == "all":
-        for k in ("survey", "streams", "runhead", "folio", "sidebar", "edges", "leaf"):
+        for k in ("survey", "streams", "runhead", "strips", "folio", "sidebar", "edges", "leaf"):
             print("\n" + "=" * 72); fns[k]()
     else:
         fns[a.cmd]()
