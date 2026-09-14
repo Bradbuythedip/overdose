@@ -258,20 +258,71 @@ def _checksum_products(phrase):
     return out
 
 
-def run_checksum_unit(gen, oracle, led, wid, family):
+def _verify_on_chain(phrase, index_oracle):
+    """Derive from a checksum hit and ask the chain. Returns a verdict string.
+
+    A 4-byte match is only as selective as the space it was found in, so a hit
+    means nothing on its own — it has to survive a second, INDEPENDENT test.
+    This is that test, run automatically, so a noise hit is disposed of in the
+    same breath it is reported instead of surviving into a summary.
+    """
+    if not index_oracle.ready:
+        return "unverified (no index on this machine)"
+    try:
+        from coincurve import PrivateKey
+        from hd_sweep import h160
+    except Exception:
+        return "unverified (no curve library)"
+    N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
+    spks = []
+    cands = [hashlib.sha256(phrase.encode()).digest()]
+    t = phrase.strip()
+    if t.isdigit() and len(t) <= 78:
+        cands.append(int(t).to_bytes(32, "big"))
+    if re.fullmatch(r"[0-9a-fA-F]{8}", t):
+        cands.append(bytes.fromhex(t * 8))
+    for k in cands:
+        if not (0 < int.from_bytes(k, "big") < N):
+            continue
+        pub = PrivateKey(k).public_key
+        for comp in (True, False):
+            spks.append(b"\x76\xa9\x14"
+                        + h160(pub.format(compressed=comp)) + b"\x88\xac")
+    if not spks:
+        return "no valid key"
+    got = index_oracle.check(spks)
+    return f"CHAIN HIT {got}" if got else "chain says nothing"
+
+
+def run_checksum_unit(gen, oracle, led, wid, family, index_oracle=None):
     products = _checksum_products
     cand = hits = 0
+    npred = len(products("x"))
+    ntarget = len(oracle.rev)
     for phrase in gen:
         cand += 1
         for label, v in products(phrase):
             names = oracle.match(v)
             if names:
                 hits += 1
-                led.hit(wid, family, f"{phrase[:80]}|{label}|{names[0]}",
+                verdict = (_verify_on_chain(phrase, index_oracle)
+                           if index_oracle else "not verified")
+                led.hit(wid, family,
+                        f"{phrase[:80]}|{label}|{names[0]}|{verdict}",
                         v.hex(), 0, oracle.name)
                 sys.stderr.write(f"  *** CHECKSUM MATCH {label}={names[0]} "
-                                 f":: {phrase[:80]}\n")
-    return cand, 0, hits
+                                 f":: {phrase[:80]}\n      -> {verdict}\n")
+    # A 4-byte filter is fixed at 2^32 selectivity, so its usefulness depends
+    # entirely on how big a space it was pointed at. Reported every time, so a
+    # hit is never read without the number that says whether to care.
+    exp = cand * npred * ntarget / 2 ** 32
+    note = f"expected_fp={exp:.3f}"
+    if hits and exp >= 0.05:
+        note += " WITHIN NOISE"
+        sys.stderr.write(f"      {hits} hit(s) against {exp:.2f} expected by "
+                         f"chance — this space is too large for a 32-bit "
+                         f"filter to select in\n")
+    return cand, 0, hits, note
 
 
 def seed_work(led):
@@ -422,15 +473,16 @@ def main():
         sys.stderr.write(f"\n  [{done+1}] {family} {json.dumps(params)}\n")
         try:
             gen = genfn(params)
+            note = ""
             if oname == CHECKSUM:
-                cand, addrs, hits = run_checksum_unit(gen, oracle, led, wid,
-                                                      family)
+                cand, addrs, hits, note = run_checksum_unit(
+                    gen, oracle, led, wid, family, oracles[INDEX])
             else:
                 cand, addrs, hits = run_index_unit(gen, oracle, led, wid,
                                                    family)
             led.finish(wid, oracle=oname, control_ok=True, candidates=cand,
                        addresses=addrs, hits=hits,
-                       detail=f"{time.time()-t0:.1f}s")
+                       detail=f"{time.time()-t0:.1f}s {note}")
             sys.stderr.write(f"      {cand:,} candidates, {addrs:,} addresses, "
                              f"{hits} hits, {time.time()-t0:.0f}s\n")
         except Exception as e:
