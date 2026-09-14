@@ -49,9 +49,13 @@ B58IDX = {c: i for i, c in enumerate(B58)}
 
 SERIAL_DIGITS = "76841714"          # CL76841714A, page 73/74 note
 SERIAL_FULL = "CL76841714A"
-# Second note, ghosting through on page 72. Only four characters are legible
-# ("KB 4?27"), so it cannot produce a 4-byte target; recorded, not used.
-SECOND_NOTE_PARTIAL = "KB4?27"
+# Second note, ghosting through on page 72. This was recorded as "KB4?27" --
+# only four characters legible -- and set aside as unable to produce a 4-byte
+# target. That reading came from the phone JPEGs. Read from the 400 dpi scan
+# (scan/Scan1.pdf) with the faint layer isolated, all eight digits resolve:
+SECOND_NOTE = "KB46279860"
+SECOND_NOTE_DIGITS = "46279860"     # all legal hex, so 0x46279860 IS a target
+SECOND_NOTE_PARTIAL = "KB4?27"      # kept: what the JPEGs could support
 
 
 def sha256d(b):
