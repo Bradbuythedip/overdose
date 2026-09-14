@@ -168,6 +168,46 @@ def fam_checksum_mine(params):
             yield " ".join(seq[::-1])
 
 
+def fam_kdf(params):
+    """Stretched KDFs — the family the solver had ZERO coverage of.
+
+    WarpWallet, PBKDF2 and scrypt are what a careful person uses instead of a
+    bare sha256, precisely so the result is not crackable from a dictionary.
+    The solver derived only fast hashes and BIP-32 seeds, so every phrase it
+    swept was tested under the WEAK constructions and none of the deliberate
+    ones.
+    """
+    import hashlib
+    phrases = list(itertools.islice(fam_ngram(params), params.get("cap", 400)))
+    salts = params.get("salts", ["", "bitcoin", "El Salvador", "CL76841714A"])
+    for p in phrases:
+        pb = p.encode()
+        for salt in salts:
+            sb = salt.encode()
+            for c in (4096, 65536):
+                yield (f"pbkdf2-{c}|{salt}|{p[:60]}",
+                       hashlib.pbkdf2_hmac("sha256", pb, sb, c, 32))
+            try:
+                yield (f"scrypt-4096|{salt}|{p[:60]}",
+                       hashlib.scrypt(pb, salt=sb, n=2 ** 12, r=8, p=1,
+                                      dklen=32))
+            except Exception:
+                pass
+
+
+def fam_wrapped(params):
+    """Phrases -> keys -> the 20 wrapped and 1-of-1 multisig script forms.
+
+    The solver only ever built the five address-shaped scriptPubKeys. These are
+    the P2SH and P2WSH wrappings around P2PK, P2PKH and multisig — the only
+    offline test of the multisig question — and they were never in its
+    derivation path.
+    """
+    import hashlib
+    for p in itertools.islice(fam_ngram(params), params.get("cap", 2000)):
+        yield (f"sha256|{p[:70]}", hashlib.sha256(p.encode()).digest())
+
+
 def fam_serial_cs(params):
     """Serial-keyspace slices as TEXT, for the checksum oracle.
 
@@ -198,6 +238,8 @@ def fam_serial_range(params):
 # the heavy families is not idle, it is doing the chain-free half of all of
 # them.
 FAMILIES = {
+    "kdf": (fam_kdf, INDEX),
+    "wrapped": (fam_wrapped, INDEX),
     "ngram": (fam_ngram, INDEX),
     "corpus": (fam_corpus, INDEX),
     "checksum_mine": (fam_checksum_mine, CHECKSUM),
@@ -213,6 +255,9 @@ def run_index_unit(gen, oracle, led, wid, family, batch=4000):
     from hd_sweep import direct_keys, seeds_from, derive, build_paths
     from full_sweep import spks_for_key
     paths = build_paths()[:8]
+    if family == "wrapped":
+        from spk_extra import spks_extra
+        spks_for_key = spks_extra
     cand = addrs = hits = 0
     meta, spks = [], []
 
@@ -228,9 +273,19 @@ def run_index_unit(gen, oracle, led, wid, family, batch=4000):
 
     for item in gen:
         cand += 1
-        keys = ([("raw", item)] if isinstance(item, (bytes, bytearray))
-                else [(f"d:{n}", k) for n, k in direct_keys(item).items()])
-        if not isinstance(item, (bytes, bytearray)):
+        # A family may yield a phrase, raw key bytes, or (provenance, bytes).
+        # The third form exists because a raw key is unattributable on its own:
+        # a kdf hit reported as 32 hex bytes cannot be traced back to the
+        # phrase, salt and iteration count that produced it, and this project's
+        # rule is that no key is presented without its derivation chain.
+        prov = None
+        if isinstance(item, tuple):
+            prov, item = item
+        if isinstance(item, (bytes, bytearray)):
+            keys = [("raw", item)]
+            label = prov or item.hex()
+        else:
+            keys = [(f"d:{n}", k) for n, k in direct_keys(item).items()]
             for sn, seed in seeds_from(item).items():
                 for p in paths:
                     try:
@@ -239,7 +294,7 @@ def run_index_unit(gen, oracle, led, wid, family, batch=4000):
                         continue
                     if k:
                         keys.append((f"{sn}:{p}", k))
-        label = item if isinstance(item, str) else item.hex()
+            label = item
         for dn, k in keys:
             for st, spk in spks_for_key(k):
                 meta.append((f"{label[:80]}|{dn}|{st}", st))
@@ -351,6 +406,10 @@ def seed_work(led):
         for case in ("lower", "as-is", "joined"):
             led.add("ngram", {"n": ln, "case": case})
             n += 1
+    for ln in range(2, 9):
+        led.add("kdf", {"n": ln, "case": "lower", "cap": 400})
+        led.add("wrapped", {"n": ln, "case": "lower", "cap": 2000})
+        n += 2
     for script, extra in [("boustrophedon.py", []), ("sentence_cipher.py", []),
                           ("gen_typographic.py", []), ("gen_numbers.py", []),
                           ("gen_numbers.py", ["--set", "p72"]),
