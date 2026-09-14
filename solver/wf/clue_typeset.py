@@ -1495,6 +1495,190 @@ def stage_display(a):
                   f"{bm['xh']/bm['tall']:7.4f} {nz[-1]-nz[0]:8d}")
 
 
+
+def bar_regions(printed, kind="orange"):
+    """Highlight rectangles from the 200 dpi colour layer, in colour-layer px."""
+    c = colour_page(printed)
+    R, G, B = c[..., 0].astype(int), c[..., 1].astype(int), c[..., 2].astype(int)
+    lum = c.mean(2)
+    if kind == "orange":
+        msk = (R > 150) & (G > 40) & (G < 185) & (B < 120) & (R - B > 70)
+    else:
+        msk = (lum < 90) & (abs(R - B) < 60)
+    mm = ndimage.binary_fill_holes(ndimage.binary_closing(msk, np.ones((5, 25))))
+    lab, n = ndimage.label(mm)
+    out = []
+    for sl in ndimage.find_objects(lab):
+        sy, sx = sl
+        w, h = sx.stop - sx.start, sy.stop - sy.start
+        if w < 80 or h < 12 or h > 60 or w / h < 3:
+            continue
+        out.append((sy, sx))
+    return out
+
+
+def stage_holes(a):
+    """
+    Every highlight rectangle is a HOLE in the 400 dpi bilevel text mask:
+    the scanner assigned the highlighted type to the 200 dpi colour layer.
+    """
+    mi = mask_index()
+    tot = {"orange": [0, 0, 0], "black": [0, 0, 0]}
+    for p in (75, 76, 78, 79):
+        ink, m = load(p, mi)
+        rx0 = m["rect_rot"][0] * 400 / 72.0
+        ry0 = m["rect_rot"][1] * 400 / 72.0
+        for kind in ("orange", "black"):
+            for sy, sx in bar_regions(p, kind):
+                x0 = int(max(0, sx.start * 2 - rx0)); x1 = int(min(ink.shape[1], sx.stop * 2 - rx0))
+                y0 = int(max(0, sy.start * 2 - ry0)); y1 = int(min(ink.shape[0], sy.stop * 2 - ry0))
+                if x1 - x0 < 40 or y1 - y0 < 15:
+                    continue
+                sub = ink[y0:y1, x0:x1]
+                tot[kind][0] += 1
+                tot[kind][1] += int(sub.sum())
+                tot[kind][2] += sub.size
+    for k, v in tot.items():
+        print(f"{k:6s} bars overlapping a mask: {v[0]:3d}   "
+              f"mask ink inside them: {v[1]} px of {v[2]} "
+              f"({100*v[1]/max(v[2],1):.5f}%)")
+    # the worked example
+    ink, m = load(75, mi)
+    y0, y1 = 1705, 1779
+    bs = glyph_boxes(ink, y0, y1)
+    bs = [b for b in bs if (b["x1"] - b["x0"]) >= 4 and b["area"] >= 18 and b["x0"] > 300]
+    L = np.array([b["x0"] for b in bs], float)
+    d = np.diff(L)
+    pit = float(np.median(d[d < 60]))
+    print(f"\nWORKED EXAMPLE  p75 mask band at page y {pxpt_y(m,y0):.1f} pt")
+    print(f'  printed line: "Look, toxicity is Layer 1 of the protocol."')
+    print(f"  mask holds {len(bs)} glyphs; character advance {pit:.2f} px")
+    for k, x in enumerate(d):
+        if x > 2.2 * pit:
+            print(f"  void of {x:.0f} px = {x/pit:.2f} character advances at page x "
+                  f"{pxpt_x(m,bs[k]['x1']):.1f}-{pxpt_x(m,bs[k+1]['x0']):.1f} pt")
+    print('  "Layer 1 o" (9 chars + 2 spaces) predicts '
+          f'{9 + 2*0.529:.2f} advances')
+
+
+def stroke_lim(sub, cap):
+    runs, lim = [], max(6, int(0.7 * cap))
+    for row in sub:
+        x, n = 0, len(row)
+        while x < n:
+            if row[x]:
+                j = x
+                while j < n and row[j]:
+                    j += 1
+                if j - x <= lim:
+                    runs.append(j - x)
+                x = j
+            else:
+                x += 1
+    return float(np.median(runs)) if runs else float("nan")
+
+
+def stage_faces(a):
+    """Display faces: masthead, page-72 figures, against the body face."""
+    mi = mask_index()
+    # body reference
+    xs, cs, ss = [], [], []
+    for p in (75, 76, 78, 79):
+        ink, m = load(p, mi)
+        for (y0, y1) in line_bands(ink):
+            lb = line_body(ink, y0, y1)
+            if not (lb and 27 <= lb["xh"] <= 36):
+                continue
+            bm = block_metrics(ink, y0, y1, 0, ink.shape[1])
+            if bm:
+                xs.append(bm["xh"]); cs.append(bm["tall"])
+                ss.append(stroke_lim(ink[y0:y1], bm["tall"]))
+    bx, bc, bs_ = np.median(xs), np.median(cs), np.median(ss)
+    print(f"BODY  x-height {bx:.2f} px  asc/cap {bc:.2f} px  stroke {bs_:.2f} px  "
+          f"stroke/cap {bs_/bc:.4f}  ({len(xs)} lines)")
+    # masthead
+    ink, m = load(73, mi)
+    d, _ = skew_angle(ink, -2.2, 0.6, 0.02)
+    ink2 = deskew(ink, d)
+    for (y0, y1) in line_bands(ink2):
+        bx2 = glyph_boxes(ink2, y0, y1, min_area=200, ov=0.3)
+        bx2 = [b for b in bx2 if (b["x1"] - b["x0"]) >= 20]
+        if len(bx2) < 3:
+            continue
+        cap = float(np.median([b["y1"] - b["y0"] for b in bx2]))
+        sw = stroke_lim(ink2[y0:y1], cap)
+        adv = np.diff([b["x0"] for b in bx2])
+        print(f"MASTHEAD p73 (deskew {d:+.2f} deg): {len(bx2)} letters  "
+              f"cap {cap:.1f} px = {cap*PT_PER_PX:.2f} pt = {cap/400:.4f} in  "
+              f"stroke {sw:.1f}  stroke/cap {sw/cap:.4f}  "
+              f"advances {[int(x) for x in adv]}  CV {adv.std()/adv.mean():.4f}")
+    # page 72
+    ink, m = load(72, mi)
+    vals = []
+    print("\np72 blocks: ypt  glyphs  x-ht  cap  stroke  sw/cap  x/cap")
+    for (y0, y1) in line_bands(ink):
+        bm = block_metrics(ink, y0, y1, 950, 3140)
+        if not bm or bm["n"] < 5:
+            continue
+        sw = stroke_lim(ink[y0:y1, 950:3140], bm["tall"])
+        vals.append(sw / bm["tall"])
+        print(f"   {pxpt_y(m,y0):6.1f} {bm['n']:6d} {bm['xh']:6.1f} {bm['tall']:6.1f} "
+              f"{sw:6.1f} {sw/bm['tall']:7.4f} {bm['xh']/bm['tall']:6.4f}")
+    v = np.array(sorted(x for x in vals if x > 0.05))
+    print(f"\np72 stroke/cap sorted: {np.round(v,4).tolist()}")
+    print(f"   light class {v[v<=0.15].min():.4f}-{v[v<=0.15].max():.4f} (n={int((v<=0.15).sum())});  "
+          f"heavy class {v[v>=0.22].min():.4f}-{v[v>=0.22].max():.4f} (n={int((v>=0.22).sum())})")
+    print(f"   body face sits at {bs_/bc:.4f}, inside the empty band")
+
+
+
+def stage_vclass(a):
+    """
+    Full vertical metric set, using the exact glyph->character map so each
+    glyph's letter identity is known: x-height, cap-height, ascender,
+    descender, measured per letter class rather than by percentile.
+    """
+    import collections
+    mi = mask_index()
+    H = collections.defaultdict(list)
+    D = collections.defaultdict(list)
+    for p in (75, 76, 78, 79):
+        ink, m, rows = exact_lines(p, mi)
+        for mr, st, ns in rows:
+            L = np.array(mr["lefts"], float)
+            bs = glyph_boxes(ink, mr["y0"], mr["y1"])
+            bs = [b for b in bs if (b["x1"] - b["x0"]) >= 4 and b["area"] >= 18]
+            idx = [k for k, c in enumerate(st) if c != " "]
+            ins = [L[t + 1] - L[t] for t in range(len(idx) - 1)
+                   if idx[t + 1] - idx[t] == 1]
+            if len(ins) < 10 or np.std(ins) > 8.0:
+                continue
+            bots = np.array([b["y1"] for b in bs], float)
+            base, _ = mode1(bots)
+            for t, k in enumerate(idx):
+                if t >= len(bs):
+                    break
+                H[st[k]].append(bs[t]["y1"] - bs[t]["y0"])
+                D[st[k]].append(bs[t]["y1"] - base)
+    classes = dict(x="acemnorsuvwxz", ascender="bdfhkl",
+                   capital="ABCDEFGHIJKLMNOPQRSTUVWXYZ", descender="gjpqy")
+    print(" class       n   height_px  height_pt   below_baseline_px")
+    res = {}
+    for cl, letters in classes.items():
+        h = [v for ch in letters for v in H.get(ch, [])]
+        d = [v for ch in letters for v in D.get(ch, [])]
+        if len(h) < 20:
+            print(f" {cl:10s} {len(h):4d}  (too few)")
+            continue
+        h = np.array(h, float); d = np.array(d, float)
+        res[cl] = float(np.median(h))
+        print(f" {cl:10s} {len(h):4d}   {np.median(h):8.2f}   {np.median(h)*PT_PER_PX:8.3f}"
+              f"   {np.median(d):12.2f}")
+    if "x" in res and "capital" in res:
+        print(f"\n x-height/cap-height = {res['x']/res['capital']:.4f}")
+    json.dump(res, open(f"{OUT}/vclass.json", "w"), indent=1)
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", default="rects")

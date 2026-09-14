@@ -1,0 +1,13 @@
+  candidate files: 4  phrases 17,469
+     cand_layer1.txt: 3,379
+     cand_marks.txt: 4,908
+     cand_mirror.txt: 4,722
+     cand_serial.txt: 4,460
+  priority phrases: 780
+  candidates present: OK
+  derivation path: OK
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+[tier1 shallow, all candidates] phrases 17,469  addresses 611,600  63s  hits 0
