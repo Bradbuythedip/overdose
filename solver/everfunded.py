@@ -394,9 +394,17 @@ def main():
     else:
         sys.exit("give --addresses or --phrases")
 
+    # CACHED ENTRIES ARE STILL REPORTED. An earlier version filtered them out
+    # of the work list and then only recorded hits found in that list, so a
+    # fully-cached re-run printed "0 EVER-FUNDED" while the cache itself held
+    # known hits — a silent FALSE NEGATIVE, and the worst kind, because it
+    # looked like a clean completed sweep. The cache decides what needs an API
+    # CALL; it never decides what gets reported.
+    cached = [(s_, x) for s_, x in items if x in api.cache]
     todo = [(s_, x) for s_, x in items if x not in api.cache]
-    sys.stderr.write(f"\n  {len(items):,} addresses, {len(items)-len(todo):,} "
-                     f"already cached, {len(todo):,} to fetch\n")
+    sys.stderr.write(f"\n  {len(items):,} addresses, {len(cached):,} "
+                     f"already cached (reported from cache, no API call), "
+                     f"{len(todo):,} to fetch\n")
     if ad:
         sys.stderr.write(f"  ADAPTIVE: starting {a.start_qps}/s, {a.workers} "
                          f"workers, ramping until the endpoint throttles then "
@@ -430,6 +438,15 @@ def main():
                 sys.stderr.write(f"  {n:,}/{len(todo):,}  {state['hits']} "
                                  f"ever-funded  {n/el:5.1f}/s actual  "
                                  f"eta {eta:4.0f}m{extra}\n")
+
+    # replay the cache first, so a resumed or fully-cached run reports every
+    # hit it already knows about
+    for src, addr in cached:
+        try:
+            fc, fs, bal = api.stats(addr)
+            record(src, addr, fc, fs, bal)
+        except Exception:
+            pass
 
     if not ad or a.workers <= 1:
         for src, addr in todo:
@@ -473,7 +490,8 @@ def main():
                              "in the cache; re-run to resume\n")
     fh.close()
     el = max(time.time() - t0, 1e-9)
-    sys.stderr.write(f"\n  {state['done']:,} fetched in {el/60:.1f} min "
+    sys.stderr.write(f"\n  {state['done']:,} evaluated ({len(todo):,} fetched) "
+                     f"in {el/60:.1f} min "
                      f"({state['done']/el:.1f}/s average"
                      + (f", peak rate {ad.peak:.0f}/s, {ad.throttles} throttles"
                         if ad else "") + f"), {state['err']} errors\n")
