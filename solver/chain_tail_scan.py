@@ -72,6 +72,29 @@ PROTOCOL_NOISE = ["request_realm", "bitworkc", "request_subrealm", "atomicals",
                   "ord\x01", "mint_ticker"]
 
 
+# A third class, discovered by a "false positive". Block 830,776 carries
+# "Bitcoin Magazine The Inscription Issue" — the publisher inscribing a whole
+# issue onto Bitcoin as an Ordinal. That is not a puzzle hit, but it matters:
+# if issue 24, the El Salvador issue, was ever inscribed, then the canonical
+# digital text of the Overdose column is ON CHAIN. That would replace
+# article_transcript.txt, a human transcription, with the publisher's own
+# bytes — and would retire the transcription-error hypothesis outright instead
+# of merely bounding it the way edit1 does.
+PUBLISHER = ["bitcoin magazine", "bitcoinmagazine", "btc media", "btcmedia"]
+ISSUE_HINTS = ["el salvador", "issue 24", "issue24", "overdose",
+               "inscription issue", "the el salvador issue", "volume", "vol."]
+
+
+def classify_publisher(text):
+    """(report?, matched) for a Bitcoin Magazine artifact worth collecting."""
+    s = text.lower()
+    pub = [w for w in PUBLISHER if w in s]
+    if not pub:
+        return False, []
+    hints = [w for w in ISSUE_HINTS if w in s]
+    return True, pub + hints
+
+
 def classify(text):
     """(report?, matched, reason) for one embedded ASCII run.
 
@@ -291,6 +314,19 @@ def selftest():
     sys.stderr.write(f"  a SPECIFIC term reports on its own: "
                      f"{'OK' if rep4 else 'FAIL'}\n")
 
+    bm = "Bitcoin Magazine The Inscription Issue"
+    rep5, _g, _w = classify(bm)
+    prep, pgot = classify_publisher(bm)
+    ok &= (not rep5) and prep
+    sys.stderr.write(f"  block 830,776 'Bitcoin Magazine The Inscription "
+                     f"Issue': not a puzzle hit ({not rep5}),\n"
+                     f"    but IS collected as a publisher artifact "
+                     f"({prep}, {pgot}): {'OK' if (not rep5 and prep) else 'FAIL'}\n")
+    _p2, g2 = classify_publisher("Bitcoin Magazine Issue 24 The El Salvador Issue")
+    ok &= "el salvador" in g2 and "issue 24" in g2
+    sys.stderr.write(f"    an issue-24 inscription would be flagged with its "
+                     f"hints {g2}: {'OK' if 'issue 24' in g2 else 'FAIL'}\n")
+
     t = load_targets()
     sys.stderr.write(f"  {len(t):,} exactly-20-BTC scripthashes loaded as "
                      f"sweep targets\n")
@@ -337,7 +373,7 @@ def main():
                      f"a sweep\n\n")
 
     fh = open(a.out, "a", encoding="utf-8")
-    t0, nblk, ntext, nsweep, nsupp = time.time(), 0, 0, 0, 0
+    t0, nblk, ntext, nsweep, nsupp, npub = time.time(), 0, 0, 0, 0, 0
     h = start
     try:
         while h <= tip:
@@ -369,6 +405,14 @@ def main():
                         continue
                     for run in ASCII_RUN.findall(payload):
                         txt = run.decode("ascii", "replace")
+                        prep, pgot = classify_publisher(txt)
+                        if prep:
+                            npub += 1
+                            fh.write(f"PUBLISHER\t{ht}\t{kind}\t"
+                                     f"{','.join(pgot)}\t{txt[:200]}\n")
+                            fh.flush()
+                            sys.stderr.write(f"\n  ~~~ PUBLISHER block {ht} "
+                                             f"{pgot}: {txt[:100]}\n")
                         report, got, why = classify(txt)
                         if got and not report:
                             nsupp += 1
@@ -388,7 +432,7 @@ def main():
             json.dump({"next": h}, open(a.state, "w"))
             el = time.time() - t0
             sys.stderr.write(f"\r  {nblk:,} blocks  {ntext} text  "
-                             f"{nsweep} sweeps  {nsupp} suppressed  "
+                             f"{nsweep} sweeps  {npub} pub  {nsupp} suppressed  "
                              f"{nblk/max(el,1e-9):.1f} blk/s  "
                              f"at {h:,}   ")
             sys.stderr.flush()
@@ -398,6 +442,7 @@ def main():
         fh.close()
     sys.stderr.write(f"\n\n  {nblk:,} blocks, {ntext} reportable text "
                      f"hits, {nsupp} suppressed as noise, "
+                     f"{npub} Bitcoin Magazine artifacts, "
                      f"{nsweep} sweeps of exactly-20 addresses\n")
 
 
