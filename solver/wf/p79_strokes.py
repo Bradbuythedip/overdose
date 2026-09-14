@@ -2,13 +2,19 @@
 Per line: deskew by searching the rotation that sharpens the line's ink profile, isolate the
 line band, upsample 4x, label connected components, merge vertically stacked parts (i-dots),
 estimate stroke width w ~= 4*mean(EDT over ink) in 1x pixels, write annotated chunks."""
+
+# --- migrated to the scan: the phone photos were removed (see pages.py) ---
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from scipy import ndimage as ndi
 import json
 
 S='/tmp/claude-0/-home-user-overdose/c95379e1-4acd-5742-a1a9-2a7a29aef63b/scratchpad/p79/'
-im=Image.open('/home/user/overdose/IMG_6250.jpeg').convert('RGB')
+im=Image.open(_pages.page_path(79)).convert('RGB')
 rows=[(306,348),(357,394),(408,437),(458,490),(508,545),(560,596),(611,648),(665,706),(718,752),(770,803),(820,856),(873,907),(923,958),(969,1013),(1028,1060),(1079,1110),
 (1301,1333),(1355,1382),(1410,1436),(1475,1510),(1529,1563),(1608,1645),(1664,1696),(1716,1752),(1768,1802)]
 X0,X1=300,1600

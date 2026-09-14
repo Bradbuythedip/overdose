@@ -3,11 +3,17 @@
 Produces annotated 4x line crops with a stroke-width value over every ink run so that
 letter-level bold can be judged against the image.  Run from solver/.
 """
+
+# --- migrated to the scan: the phone photos were removed (see pages.py) ---
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 from PIL import Image, ImageDraw
 import numpy as np, math, json, sys
 from scipy.ndimage import distance_transform_edt, binary_opening
 
-PAGE = '/home/user/overdose/IMG_6248.jpeg'
+PAGE = _pages.page_path(77)
 OUT = '/tmp/claude-0/-home-user-overdose/c95379e1-4acd-5742-a1a9-2a7a29aef63b/scratchpad/p77/'
 ROWS = [(287,318),(342,373),(395,429),(451,483),(504,542),(558,596),(612,650),(709,740),(761,794),
         (816,841),(868,903),(919,955),(973,997),(1025,1060),(1076,1110),(1123,1162),(1270,1299),

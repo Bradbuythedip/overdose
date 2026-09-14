@@ -32,6 +32,12 @@ looks the same everywhere is the camera.
   python3 curve_residual.py --selftest
   python3 curve_residual.py --page 79
 """
+
+# --- migrated to the scan: the phone photos were removed (see pages.py) ---
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 import argparse, sys
 
 import numpy as np
@@ -41,8 +47,8 @@ try:
 except ImportError:
     sys.exit("needs opencv")
 
-IMG = {75: "IMG_6246.jpeg", 76: "IMG_6247.jpeg", 77: "IMG_6248.jpeg",
-       78: "IMG_6249.jpeg", 79: "IMG_6250.jpeg"}
+IMG = {75: _pages.page_path(75), 76: _pages.page_path(76), 77: _pages.page_path(77),
+       78: _pages.page_path(78), 79: _pages.page_path(79)}
 BASE = "/home/user/overdose/public/images"
 
 

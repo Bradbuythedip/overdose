@@ -1,10 +1,16 @@
 """Page 78: per-line pitch (autocorrelation of column ink profile) and per-glyph
 stroke width (2 x 90th pct of EDT inside ink), normalized by pitch. Bars (orange/black)
 handled by inverting ink inside black bars. Output: per-line glyph strings with sw/pitch."""
+
+# --- migrated to the scan: the phone photos were removed (see pages.py) ---
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-im=Image.open('/home/user/overdose/IMG_6249.jpeg').convert('RGB')
+im=Image.open(_pages.page_path(78)).convert('RGB')
 a=np.array(im).astype(float); g=a.mean(axis=2)
 R,G,B=a[...,0],a[...,1],a[...,2]
 rows=[(292,328),(348,378),(408,436),(460,493),(514,546),(626,662),(677,714),(734,766),(786,831),(841,882),(895,934),(950,984),(999,1041),(1056,1089),(1164,1200),(1219,1253),(1271,1302),(1323,1361),(1438,1484),(1493,1540),(1557,1591),(1610,1640)]

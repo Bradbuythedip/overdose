@@ -1,11 +1,17 @@
 """Per-character ink measurement for page 75 (IMG_6246) to support letter-level bold calls.
 Monospace typewriter face: fit pitch+offset per line using the transcript, measure ink per cell,
 then compare each glyph to the median of the same glyph across regular text."""
+
+# --- migrated to the scan: the phone photos were removed (see pages.py) ---
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 import numpy as np
 from PIL import Image, ImageDraw
 import json, sys, os
 
-PAGE='/home/user/overdose/IMG_6246.jpeg'
+PAGE=_pages.page_path(75)
 OUT='/tmp/claude-0/-home-user-overdose/c95379e1-4acd-5742-a1a9-2a7a29aef63b/scratchpad/p75'
 lines_txt = [
 "BITCOIN IS TOXIC AF",

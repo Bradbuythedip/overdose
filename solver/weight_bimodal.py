@@ -10,12 +10,18 @@ compare ink mass across all its instances.
 Two real weights  -> per-letter distribution is BIMODAL (clear high cluster)
 Print/scan noise  -> per-letter distribution is UNIMODAL
 """
+
+# --- migrated to the scan: the phone photos were removed (see pages.py) ---
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 from PIL import Image
 import numpy as np, collections, sys, statistics
 
 THRESH = 128
-PAGES = [('IMG_6246.jpeg','p75',(250,1560)), ('IMG_6247.jpeg','p76',(250,1560)),
-         ('IMG_6249.jpeg','p78',(250,1600)), ('IMG_6250.jpeg','p79',(300,1600))]
+PAGES = [(_pages.page_path(75),'p75',(250,1560)), (_pages.page_path(76),'p76',(250,1560)),
+         (_pages.page_path(78),'p78',(250,1600)), (_pages.page_path(79),'p79',(300,1600))]
 
 def lines_of(bw, min_h=14):
     rows = bw.sum(axis=1); on = rows > 4

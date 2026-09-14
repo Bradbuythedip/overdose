@@ -14,26 +14,30 @@ images are in the repository; this script is the method.
   python3 zoom_pages.py            # writes zoom/*.png
   python3 zoom_pages.py --list     # just print what would be made
 """
+
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import pages as _pages
 import argparse, os, sys
 
 IMG = "/home/user/overdose/public/images"
 
 # (name, source image, crop box in ORIGINAL pixel coords, scale, what it shows)
 CROPS = [
-    ("p79_closing", "IMG_6250.jpeg", (430, 1580, 1680, 1830), 3,
+    ("p79_closing", _pages.page_path(79), (430, 1580, 1680, 1830), 3,
      "the closing block: bold runs, not word alternation"),
-    ("p79_rabbit", "IMG_6250.jpeg", (430, 1290, 1680, 1480), 3,
+    ("p79_rabbit", _pages.page_path(79), (430, 1290, 1680, 1480), 3,
      "'Bitcoin rabbit hole' bold, and the 1969 bed-in reference"),
-    ("p79_curve_a", "IMG_6250.jpeg", (330, 690, 1700, 960), 2,
+    ("p79_curve_a", _pages.page_path(79), (330, 690, 1700, 960), 2,
      "curved baseline, upper half of the arc"),
-    ("p79_curve_b", "IMG_6250.jpeg", (330, 940, 1700, 1180), 2,
+    ("p79_curve_b", _pages.page_path(79), (330, 940, 1700, 1180), 2,
      "curved baseline; the bold run ENDS mid-line at 'connect'"),
-    ("p78_warmongers", "IMG_6249.jpeg", (300, 1420, 1620, 1500), 3,
+    ("p78_warmongers", _pages.page_path(78), (300, 1420, 1620, 1500), 3,
      "'The warmongers will start mining bitcoin for sure.' in display size -- "
      "the clearest apparent word-level bold, which is the font"),
-    ("p78_genesis", "IMG_6249.jpeg", (300, 1490, 1620, 1650), 3,
+    ("p78_genesis", _pages.page_path(78), (300, 1490, 1620, 1650), 3,
      "'right there in the Genesis Block', set as a right-aligned staircase"),
-    ("p77_tracked", "IMG_6248.jpeg", (560, 1760, 1680, 1990), 2.6,
+    ("p77_tracked", _pages.page_path(77), (560, 1760, 1680, 1990), 2.6,
      "the letter-tracked passage -- justification, flush to both margins"),
 ]
 
