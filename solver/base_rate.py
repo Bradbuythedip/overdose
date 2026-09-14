@@ -100,6 +100,42 @@ def fisher(a, b, c, d):
                         if p_of(x) <= obs * (1 + 1e-9)))
 
 
+def interpret(tp, tn, cp, cn, p):
+    """Say what the numbers show, INCLUDING which way the effect points.
+
+    The first version tested only `p < 0.05` and then asserted "swept
+    addresses are older". The real data came back the other way -- 18.2% of
+    swept addresses predate the claim against 39.3% of un-swept ones -- and it
+    printed the opposite of the truth at p = 0.0004. A significance test
+    without a direction is not a result.
+    """
+    tr, cr = tp / tn, cp / cn
+    if p >= 0.05:
+        return (f"  NOT DISTINGUISHABLE FROM THE BASE RATE. An exactly-20-BTC\n"
+                f"  address swept here is no more likely to predate the claim\n"
+                f"  ({tr:.1%}) than one that was not ({cr:.1%}). The 'dormant\n"
+                f"  then claimed' shape is what these addresses look like\n"
+                f"  anyway, so the {tp} hits carry no information.\n")
+    if tr > cr:
+        return (f"  SWEPT ADDRESSES SKEW OLDER than the population "
+                f"({tr:.1%} vs {cr:.1%},\n"
+                f"  p = {p:.4f}). That is the direction the prize hypothesis\n"
+                f"  predicts. It still does not say WHICH address, or that any\n"
+                f"  of them is the prize. Verify each funding tx by hand.\n")
+    return (f"  SWEPT ADDRESSES SKEW **YOUNGER** than the population\n"
+            f"  ({tr:.1%} predate the claim, against {cr:.1%} of those never\n"
+            f"  seen swept; p = {p:.4f}). The effect is real and it points the\n"
+            f"  OPPOSITE way to the prize hypothesis, which predicted that\n"
+            f"  old-and-swept would be over-represented.\n\n"
+            f"  Coins that moved recently are disproportionately coins that\n"
+            f"  arrived recently -- ordinary flow. Long-dormant cold storage\n"
+            f"  mostly stays put, which is why it is over-represented among\n"
+            f"  the addresses that did NOT move.\n\n"
+            f"  So the {tp} pre-claim addresses in the swept set are not an\n"
+            f"  enrichment. There are FEWER of them than chance predicts, and\n"
+            f"  they carry no evidence that a prize was claimed.\n")
+
+
 def selftest():
     ok = True
     # a table with no association must not look significant
@@ -122,6 +158,25 @@ def selftest():
     ok &= abs(fisher(18, 81, 5, 94) - fisher(5, 94, 18, 81)) < 1e-12
     sys.stderr.write(f"  p is symmetric under swapping the two groups: "
                      f"{'OK' if abs(fisher(18,81,5,94)-fisher(5,94,18,81))<1e-12 else 'FAIL'}\n")
+    # REGRESSION: the direction must be read from the data, not assumed.
+    # The real run was 18/99 vs 59/150 -- significant, and YOUNGER -- and the
+    # first version announced "older" at p = 0.0004.
+    msg = interpret(18, 99, 59, 150, 0.0004)
+    good = "YOUNGER" in msg and "OLDER" not in msg
+    ok &= good
+    sys.stderr.write(f"  18/99 vs 59/150 at p=0.0004 reports YOUNGER, not "
+                     f"older: {'OK' if good else 'FAIL'}\n")
+    msg2 = interpret(59, 150, 18, 99, 0.0004)
+    good = "OLDER" in msg2 and "YOUNGER" not in msg2
+    ok &= good
+    sys.stderr.write(f"  the mirrored table reports OLDER: "
+                     f"{'OK' if good else 'FAIL'}\n")
+    msg3 = interpret(18, 99, 18, 99, 1.0)
+    good = "NOT DISTINGUISHABLE" in msg3
+    ok &= good
+    sys.stderr.write(f"  equal proportions report no difference: "
+                     f"{'OK' if good else 'FAIL'}\n")
+
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
@@ -178,19 +233,7 @@ def main():
             f"  {'swept in the window':<28} {tp:>10} {tn:>7} {tr:>7.1%}\n"
             f"  {'never seen swept':<28} {cp:>10} {cn:>7} {cr:>7.1%}\n"
             f"\n  Fisher exact, two-sided: p = {p:.4f}\n\n")
-        if p >= 0.05:
-            sys.stderr.write(
-                f"  NOT DISTINGUISHABLE FROM THE BASE RATE. An exactly-20-BTC\n"
-                f"  address that was swept here is no more likely to predate the\n"
-                f"  claim than one that was not. The 'dormant then claimed'\n"
-                f"  shape is what these addresses look like anyway, and the\n"
-                f"  {tp} hits carry no information about the puzzle.\n")
-        else:
-            sys.stderr.write(
-                f"  SWEPT ADDRESSES ARE OLDER THAN THE BASE RATE (p = {p:.4f}).\n"
-                f"  That is a real association. It still does not say WHICH\n"
-                f"  address is the prize, or that any of them is -- only that\n"
-                f"  this set is not the ordinary population. Verify by hand.\n")
+        sys.stderr.write(interpret(tp, tn, cp, cn, p))
         return
 
     ap.print_help()
