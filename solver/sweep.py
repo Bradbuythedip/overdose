@@ -477,7 +477,7 @@ REQUIRED_CONTROLS = ("p2pkh", "p2wpkh", "p2sh")
 OPTIONAL_CONTROLS = ("p2pk",)
 
 
-def find_control_txs(chain, back=12, per_block=40,
+def find_control_txs(chain, back=6, per_block=25,
                      need=REQUIRED_CONTROLS, optional=OPTIONAL_CONTROLS):
     """Discover confirmed transactions to validate the signer against.
 
@@ -492,11 +492,22 @@ def find_control_txs(chain, back=12, per_block=40,
     """
     need = tuple(need) + tuple(optional)
     tip = int(chain._req("/blocks/tip/height"))
-    found, seen = {}, 0
+    found, seen, blocks = {}, 0, 0
+
+    def done():
+        """Stop once every type is found, required and optional alike.
+
+        Stopping at the REQUIRED set and then reporting that an optional type
+        was 'not found in N blocks' is a lie: the search ended before it ever
+        looked. `budget` is what actually bounds the hunt.
+        """
+        return all(k in found for k in need)
+
+    budget = back * per_block
     sys.stderr.write(f"  searching for control transactions from block {tip} "
-                     f"backwards\n")
+                     f"backwards (budget {budget} tx)\n")
     for h in range(tip - 1, tip - 1 - back, -1):
-        if all(k in found for k in REQUIRED_CONTROLS):
+        if done() or seen >= budget:
             break
         try:
             bh = chain._req(f"/block-height/{h}")
@@ -504,8 +515,9 @@ def find_control_txs(chain, back=12, per_block=40,
         except RuntimeError as e:
             sys.stderr.write(f"    block {h}: {e}\n")
             continue
+        blocks += 1
         for txid in txids[1:per_block + 1]:          # [0] is the coinbase
-            if all(k in found for k in REQUIRED_CONTROLS):
+            if done() or seen >= budget:
                 break
             try:
                 meta = chain.tx(txid)
@@ -537,10 +549,16 @@ def find_control_txs(chain, back=12, per_block=40,
     absent = [k for k in optional if k not in found]
     if absent:
         sys.stderr.write(
-            f"    no {', '.join(absent)} spend in {seen} transactions across "
-            f"{back} blocks — bare-pubkey outputs are nearly extinct, so that\n"
-            f"    path stays UNPROVEN. It shares the legacy sighash with "
-            f"p2pkh, but its scriptCode differs.\n")
+            f"    searched {seen} transactions in {blocks} block(s); no "
+            f"{', '.join(absent)} spend among them.\n"
+            f"    Bare-pubkey outputs are nearly extinct on the modern chain, "
+            f"so recent blocks are the\n"
+            f"    wrong place to look — raise --control-blocks, or pass "
+            f"--control-tx with an old spend.\n"
+            f"    That path stays UNPROVEN: it shares the legacy sighash with "
+            f"p2pkh, but its pubkey\n"
+            f"    comes from the OUTPUT and its scriptCode is the whole "
+            f"scriptPubKey.\n")
     if missing:
         sys.stderr.write(f"    no confirmed {', '.join(missing)} spend found in "
                          f"{seen} transactions across {back} blocks\n")
@@ -917,6 +935,10 @@ def main():
                          "repeatable. Use one legacy and one segwit spend")
     ap.add_argument("--control", action="store_true",
                     help="run the chain-grounded controls and stop")
+    ap.add_argument("--control-blocks", type=int, default=6,
+                    help="how many recent blocks --auto-control may search. "
+                         "Raise it to hunt for a bare-P2PK spend, which is "
+                         "rare on the modern chain")
     ap.add_argument("--auto-control", action="store_true",
                     help="find control transactions from recent blocks rather "
                          "than being told which. Nothing is remembered; the "
@@ -955,7 +977,7 @@ def main():
             sys.exit("--auto-control needs --base")
         sys.stderr.write("\n  FINDING CONTROL TRANSACTIONS\n")
         try:
-            found, missing = find_control_txs(chain)
+            found, missing = find_control_txs(chain, back=a.control_blocks)
         except RuntimeError as e:
             sys.exit(f"  {e}")
         if missing:
