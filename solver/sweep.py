@@ -35,14 +35,24 @@ Cheap, because Esplora annotates prevouts (see trace_funding.py:109), so one
 /tx/{txid} fetch supplies the amounts BIP-143 needs.
 
 WHERE THE ACTUAL RISK IS
-Most signing bugs are FAIL-SAFE: a wrong sighash, a wrong BIP-143 amount or a
-dust output produces a transaction nodes simply reject, and nothing is lost. The
-paranoia belongs on the two mistakes that are irreversible —
+Many signing bugs are FAIL-SAFE: a wrong sighash, a wrong BIP-143 amount or a
+dust output produces a transaction nodes simply reject, and nothing is lost.
+Three mistakes are not —
 
   1. a wrong output script    funds leave and do not come back
   2. an excessive fee         a typo on 20 BTC is a gift to a miner
+  3. a wrong LEGACY input amount
 
-Both are checked after signing, by re-parsing the finished transaction.
+The third was missed on the first pass and its absence was actively claimed as
+safe. It is not. A legacy SIGHASH_ALL preimage contains no input amount at all
+— signing the same input as 100,000 sat and as 2,000,000,000 sat yields a
+byte-identical sighash — so an understated legacy value still produces a valid
+signature, and the difference is paid to a miner. Every fee check here compares
+endpoint-supplied numbers against each other, which is circular and cannot see
+it. verify_amounts() closes it by reading each legacy value out of that input's
+own previous transaction, and refusing when it cannot.
+
+(1) and (2) are checked after signing by re-parsing the finished transaction.
 
   python3 sweep.py --selftest
   python3 sweep.py --control --base "$ESPLORA"
@@ -781,6 +791,29 @@ def selftest():
     sys.stderr.write(f"  PSBT magic, round trip, and empty scriptSigs in the "
                      f"unsigned tx: {'OK' if good else 'FAIL'}\n")
 
+    # The reason verify_amounts exists, asserted rather than described: a
+    # legacy sighash is blind to the input amount, a segwit one is not.
+    spk_l = b"\x76\xa9\x14" + h160(pub) + b"\x88\xac"
+    def _lsh(v):
+        t = Tx([TxIn(b"\xaa" * 32, 0, amount=v, spk=spk_l, kind="p2pkh_c")],
+               [TxOut(90_000, b"\x00\x14" + b"\xdd" * 20)])
+        return sighash_legacy(t, 0, spk_l)
+    def _wsh(v):
+        t = Tx([TxIn(b"\xaa" * 32, 0, amount=v, spk=b"\x00\x14" + h160(pub),
+                     kind="p2wpkh")],
+               [TxOut(90_000, b"\x00\x14" + b"\xdd" * 20)])
+        return sighash_bip143(t, 0, spk_l, v)
+    blind = _lsh(100_000) == _lsh(2_000_000_000)
+    commits = _wsh(100_000) != _wsh(2_000_000_000)
+    good = blind and commits
+    ok &= good
+    sys.stderr.write(f"  legacy sighash is blind to the input amount "
+                     f"({'confirmed' if blind else 'NOT CONFIRMED'}) and "
+                     f"BIP-143 commits to it\n"
+                     f"    ({'confirmed' if commits else 'NOT CONFIRMED'}) — "
+                     f"this is why verify_amounts() is mandatory: "
+                     f"{'OK' if good else 'FAIL'}\n")
+
     # fee guards
     good = (fee_ok(50_000, 2_000_000_000, DEFAULT_MAX_FEE)[0]
             and not fee_ok(200_000, 2_000_000_000, DEFAULT_MAX_FEE)[0]
@@ -1104,6 +1137,78 @@ def discover(chain, keys, include_exotic=True):
 
 
 # ---------------------------------------------------------------------- main ---
+def verify_amounts(chain, utxos):
+    """Confirm every LEGACY input's value against its own previous transaction.
+
+    THE BUG THIS EXISTS FOR. A legacy SIGHASH_ALL preimage contains no input
+    amount — verified directly: claiming 100,000 sat and claiming 2,000,000,000
+    sat for the same input produce a byte-identical sighash. So if the endpoint
+    understates a legacy UTXO's value, the signature is STILL VALID, the
+    transaction is accepted, and the difference is paid to the miner.
+
+    That is not a hypothetical. The values come from whatever /utxo returns, and
+    every fee check in this file compares those same claimed numbers against
+    each other, so it is circular and cannot detect it. `total_in - out == fee`
+    is satisfied perfectly by a lie.
+
+    BIP-143 commits to the amount, so for p2wpkh and p2sh-p2wpkh an understated
+    value simply invalidates the signature and nothing is lost. Legacy is the
+    exception, and it is the one this project would actually hit: a 2021
+    brainwallet prize is far likelier to sit in p2pkh than anywhere else.
+
+    The fix is the same data BIP-174 demands for exactly this reason — the full
+    previous transaction. Fetch it, hash it to confirm it is the right one, and
+    read the value out of it.
+    """
+    legacy = [u for u in utxos if u["kind"] in ("p2pkh_c", "p2pkh_u",
+                                                "p2pk_c", "p2pk_u")]
+    if not legacy:
+        sys.stderr.write("  input amounts: no legacy inputs; BIP-143 commits "
+                         "to every amount here, so a wrong one is fail-safe\n")
+        return True, {}
+    if chain is None:
+        sys.stderr.write("  input amounts: CANNOT VERIFY without an endpoint\n")
+        return False, {}
+
+    ok, prevtxs = True, {}
+    for u in legacy:
+        try:
+            raw = chain.raw_tx(u["txid"])
+        except Exception as e:
+            sys.stderr.write(f"    {u['txid'][:16]}…: prev tx unavailable "
+                             f"({e}) — REFUSING\n")
+            ok = False
+            continue
+        prev = parse_tx(raw)
+        if prev.txid() != u["txid"]:
+            sys.stderr.write(f"    {u['txid'][:16]}…: endpoint returned a "
+                             f"transaction that hashes to {prev.txid()[:16]}… "
+                             f"— REFUSING\n")
+            ok = False
+            continue
+        if u["vout"] >= len(prev.vout):
+            sys.stderr.write(f"    {u['txid'][:16]}…: has no output "
+                             f"{u['vout']} — REFUSING\n")
+            ok = False
+            continue
+        real = prev.vout[u["vout"]]
+        if real.value != u["value"]:
+            sys.stderr.write(f"    {u['txid'][:16]}…:{u['vout']} endpoint said "
+                             f"{u['value']:,} sat, the transaction itself says "
+                             f"{real.value:,} — REFUSING\n")
+            ok = False
+            continue
+        if real.spk != u["spk"]:
+            sys.stderr.write(f"    {u['txid'][:16]}…:{u['vout']} script does "
+                             f"not match what we derived — REFUSING\n")
+            ok = False
+            continue
+        prevtxs[u["txid"]] = raw
+        sys.stderr.write(f"    {u['kind']:12} {u['value']:>15,} sat confirmed "
+                         f"against its own prev tx\n")
+    return ok, prevtxs
+
+
 def build_and_sign(utxos, dest_spk, fee_rate, max_fee):
     """Build one transaction spending every utxo to dest_spk. Returns (tx, fee)."""
     total = sum(u["value"] for u in utxos)
@@ -1343,11 +1448,21 @@ def main():
     sys.stderr.write(f"    {total:,} sat = {total/1e8:.8f} BTC across "
                      f"{len(spendable)} input(s)\n")
 
+    sys.stderr.write("\n  INPUT AMOUNTS — legacy values checked against their "
+                     "own previous transactions\n")
+    amounts_ok, prevtxs = verify_amounts(chain, spendable)
+    if not amounts_ok:
+        sys.exit("\n  refusing to sign: at least one legacy input's value "
+                 "could not be confirmed from the chain itself.\n  A legacy "
+                 "sighash does not commit to the amount, so an unverified "
+                 "value is not fail-safe —\n  the difference would be paid to "
+                 "a miner.")
+
     tx, fee = build_and_sign(spendable, dest_spk, a.fee_rate, a.max_fee)
     raw = tx.ser().hex()
 
     if a.psbt:
-        emit_psbt(a.psbt, tx, spendable, chain)
+        emit_psbt(a.psbt, tx, spendable, chain, prevtxs)
     sys.stderr.write(f"\n  BUILT  txid {tx.txid()}\n")
     sys.stderr.write(f"    vsize {tx.vsize()} vB, fee {fee:,} sat "
                      f"({fee/tx.vsize():.1f} sat/vB), "
