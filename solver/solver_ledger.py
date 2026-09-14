@@ -69,11 +69,25 @@ class Ledger:
         self.db.commit()
         return wid
 
-    def claim(self, order_by="family"):
-        """Take the next pending unit and mark it running."""
-        cur = self.db.execute(
-            f"SELECT id,family,params FROM work WHERE status='pending' "
-            f"ORDER BY {order_by} LIMIT 1")
+    def claim(self, order_by="family", families=None):
+        """Take the next pending unit THIS RUNNER CAN DO, and mark it running.
+
+        `families` filters in SQL rather than after the fact. Filtering after
+        meant claiming a unit, discovering it was not runnable, setting it back
+        to pending — and then claiming the very same unit again, because the
+        ordering is deterministic. An unattended spin loop with no output and
+        no progress. Never filter a work queue outside the query that pops it.
+        """
+        if families:
+            qs = ",".join("?" * len(families))
+            cur = self.db.execute(
+                f"SELECT id,family,params FROM work WHERE status='pending' "
+                f"AND family IN ({qs}) ORDER BY {order_by} LIMIT 1",
+                tuple(families))
+        else:
+            cur = self.db.execute(
+                f"SELECT id,family,params FROM work WHERE status='pending' "
+                f"ORDER BY {order_by} LIMIT 1")
         row = cur.fetchone()
         if not row:
             return None

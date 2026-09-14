@@ -148,6 +148,20 @@ def fam_checksum_mine(params):
             yield " ".join(seq[::-1])
 
 
+def fam_serial_cs(params):
+    """Serial-keyspace slices as TEXT, for the checksum oracle.
+
+    The index family turns each serial into a private key; this one keeps it as
+    the string a person would type, so the checksum products apply. Different
+    question, no curve required.
+    """
+    lo, hi = params["lo"], params["hi"]
+    for i in range(lo, hi):
+        d = f"{i:08d}"
+        yield d
+        yield "CL" + d + "A"
+
+
 def fam_serial_range(params):
     """A slice of the serial keyspace, as private keys."""
     from serial_exhaust import TRANSFORMS
@@ -156,11 +170,21 @@ def fam_serial_range(params):
         yield fn(f"{i:08d}")
 
 
+# Two oracles judge the same phrase families, and that is deliberate rather
+# than redundant. The index asks "does this derivation hold coins today"; the
+# serial-as-checksum asks "does this derivation reproduce the note". They are
+# different questions with different blind spots, and only the second runs on a
+# machine with no 2.3 GB index and no crypto library — so a box that cannot do
+# the heavy families is not idle, it is doing the chain-free half of all of
+# them.
 FAMILIES = {
     "ngram": (fam_ngram, INDEX),
     "corpus": (fam_corpus, INDEX),
     "checksum_mine": (fam_checksum_mine, CHECKSUM),
     "serial_range": (fam_serial_range, INDEX),
+    "ngram_cs": (fam_ngram, CHECKSUM),
+    "corpus_cs": (fam_corpus, CHECKSUM),
+    "serial_cs": (fam_serial_cs, CHECKSUM),
 }
 
 
@@ -266,6 +290,21 @@ def seed_work(led):
         for L in range(2, 25):
             led.add("checksum_mine", {"stride": stride, "len": L})
             n += 1
+    # the same text families under the chain-free oracle, so a machine without
+    # the index still has real work rather than none
+    for ln in range(2, 13):
+        for case in ("lower", "as-is", "joined"):
+            led.add("ngram_cs", {"n": ln, "case": case})
+            n += 1
+    for script, extra in [("boustrophedon.py", []), ("sentence_cipher.py", []),
+                          ("gen_typographic.py", []), ("gen_numbers.py", []),
+                          ("gen_numbers.py", ["--set", "p72"]),
+                          ("gen_schott.py", [])]:
+        led.add("corpus_cs", {"script": script, "extra": extra})
+        n += 1
+    for lo in range(0, 100_000_000, 2_000_000):
+        led.add("serial_cs", {"lo": lo, "hi": lo + 2_000_000})
+        n += 1
     from serial_exhaust import TRANSFORMS
     for t in TRANSFORMS:
         for lo in range(0, 100_000_000, 5_000_000):
@@ -363,25 +402,11 @@ def main():
         sys.exit("no family can run on this machine")
     done = 0
     while True:
-        got = led.claim(order_by="family, id")
+        got = led.claim(order_by="family, id", families=sorted(usable))
         if not got:
             sys.stderr.write("\n  queue empty — all known work is done\n")
             break
         wid, family, params = got
-        if family not in usable:
-            # put it back untouched; another machine, or a later run with the
-            # index present, can take it
-            led.db.execute("UPDATE work SET status='pending' WHERE id=?",
-                           (wid,))
-            led.db.commit()
-            if family not in getattr(main, "_warned", set()):
-                main._warned = getattr(main, "_warned", set()) | {family}
-                sys.stderr.write(f"  leaving {family} units queued for a "
-                                 f"machine that has its oracle\n")
-            if all(f not in usable for f, _ in
-                   [(r[0], r[1]) for r in led.stats() if r[1] == "pending"]):
-                break
-            continue
         genfn, oname = FAMILIES[family]
         oracle = oracles[oname]
 
