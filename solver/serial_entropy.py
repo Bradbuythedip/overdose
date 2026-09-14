@@ -120,9 +120,65 @@ def gen_java(seed, n):
     return bytes(out[:n])
 
 
+def gen_msvc(seed, n):
+    """MSVC rand(): 32-bit LCG, 15-bit output."""
+    s = int(seed) & 0xFFFFFFFF
+    out = []
+    while len(out) < n:
+        s = (s * 214013 + 2531011) & 0xFFFFFFFF
+        out.append((s >> 16) & 0xFF)
+    return bytes(out)
+
+
+def gen_xorshift64(seed, n):
+    """Marsaglia xorshift64*, a common one-liner PRNG."""
+    x = int(seed) & 0xFFFFFFFFFFFFFFFF or 0x9E3779B97F4A7C15
+    out = []
+    while len(out) < n:
+        x ^= (x >> 12) & 0xFFFFFFFFFFFFFFFF
+        x ^= (x << 25) & 0xFFFFFFFFFFFFFFFF
+        x ^= (x >> 27) & 0xFFFFFFFFFFFFFFFF
+        v = (x * 0x2545F4914F6CDD1D) & 0xFFFFFFFFFFFFFFFF
+        out.extend(v.to_bytes(8, "big"))
+    return bytes(out[:n])
+
+
+def gen_pcg32(seed, n):
+    """PCG32, the modern default in several languages' libraries."""
+    MUL, INC = 6364136223846793005, 1442695040888963407
+    st = (int(seed) + INC) & 0xFFFFFFFFFFFFFFFF
+    st = (st * MUL + INC) & 0xFFFFFFFFFFFFFFFF
+    out = []
+    while len(out) < n:
+        old = st
+        st = (old * MUL + INC) & 0xFFFFFFFFFFFFFFFF
+        xs = (((old >> 18) ^ old) >> 27) & 0xFFFFFFFF
+        rot = (old >> 59) & 31
+        v = ((xs >> rot) | (xs << ((-rot) & 31))) & 0xFFFFFFFF
+        out.extend(v.to_bytes(4, "big"))
+    return bytes(out[:n])
+
+
+def gen_tile(seed, n):
+    """NOT a PRNG: the digits repeated to fill the key.
+
+    This is the reading a person is most likely to actually produce. Asked to
+    turn eight digits into a 32-byte key by hand, the obvious move is to repeat
+    them until the field is full — "76841714" eight times is exactly 64 hex
+    characters. No library, no seeding convention, no ambiguity.
+    """
+    d = str(abs(int(seed)))
+    if not set(d) <= set("0123456789abcdefABCDEF"):
+        d = "0"
+    need = n * 2                       # hex characters
+    return bytes.fromhex((d * (need // len(d) + 1))[:need])
+
+
 GENS = {"python_mt": gen_python, "python_bits": gen_python_urandom_style,
         "numpy_legacy": gen_numpy, "glibc_rand": gen_glibc,
-        "java_random": gen_java}
+        "java_random": gen_java, "msvc_rand": gen_msvc,
+        "xorshift64": gen_xorshift64, "pcg32": gen_pcg32,
+        "tiled_digits": gen_tile}
 
 
 def selftest():
