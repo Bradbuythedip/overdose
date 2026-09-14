@@ -11,10 +11,22 @@
 # photograph and the barbed-wire graphic. Page 77 is printed white on dark
 # brown and has no black separation, so it is NOT measurable by this method.
 #
-# page	kind	x	y	width_px	width_in	text
-75	underline	1074	538	1050	2.62	They discount stuff in advance.
-75	underline	1504	1766	294	0.73	protocol.
-76	strikethrough	497	640	1556	3.89	(and 10years of watching Peter Schiff miss buying bitcoin
+# COORDINATE FRAME (corrected 2026-09-14 after the workflow critic flagged it):
+# x and y below are in the CROPPED MASK frame produced by pages.mask_path(),
+# NOT the 400 dpi page frame. The widths ARE true 400 dpi values, so the table
+# mixed a page-scale width with a mask-origin position. Page-frame positions are
+# given in the added columns. The transform is a pure translation:
+#     page_x = W - X0 - mask_w + mask_x ,  page_y = H - Y0 - mask_h + mask_y
+# where W,H = 3400x4400 (400 dpi page), and X0,Y0 is the mask's placement rect
+# scaled by 400/72. Verified two ways: 'protocol.' converts to page x1624-1918
+# y2534 against an independent measurement of x1625-1917 y2534, and the p75
+# underline converts to page y1306 against a directly measured ink row at
+# y1308 with a 473 px segment at x1502-1975 lying inside the predicted span.
+#
+# page	kind	mask_x	mask_y	width_px	width_in	page_x	page_y	text
+75	underline	1074	538	1050	2.62	1194	1306	They discount stuff in advance.
+75	underline	1504	1766	294	0.73	1624	2534	protocol.
+76	strikethrough	497	640	1556	3.89	1033	1284	(and 10years of watching Peter Schiff miss buying bitcoin
 #
 # BANKNOTE, measured at 600 dpi from the page images (2026-09-14):
 #   p74  bill right  serial CL 76841714 A, district L12  -- rotated, NOT mirrored
