@@ -233,8 +233,110 @@ def selftest():
     return ok
 
 
+# ------------------------------------------------- the PDF's own colour table
+# The scan is a Canon MRC file. Every piece of text it lifted off a page is a
+# 1-bit /ImageMask stencil, and the content stream paints each one with an
+# EXPLICIT DeviceRGB or DeviceGray fill that the scanner computed from the ink
+# it found there. 27 stencils across the 8 pages = 27 exact colours, stored as
+# numbers in the file. No pixel measurement, no JPEG, no thresholds. Nothing in
+# this project has ever read them.
+import re
+CM = re.compile(
+    r'q\s+(?:([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+rg|([\d.]+)\s+g)?\s*'
+    r'([\d.]+)\s+0\s+0\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+cm\s*/(\w+)\s+Do\s+Q')
+
+
+def stencils():
+    """(page, obj, xref, space, rgb, reading-orientation box in pt).
+
+    Geometry: the sheets were fed 180 degrees round, so a PDF box (x,y,w,h)
+    with y measured from the page bottom lands, once the render is turned back
+    the right way up, at reading-orientation top-left (612-(x+w), y).
+    """
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import extract_scan as E
+    d = E.open_pdf()
+    rows = []
+    for i, pg in enumerate(d):
+        pn = E.PAGE_MAP[i]
+        t = b"".join(d.xref_stream(x) for x in pg.get_contents()).decode("latin-1")
+        mark = "TEXTON" if "TEXTON" in t else ("TEXTOFF" if "TEXTOFF" in t else "?")
+        names = {x[7]: x[0] for x in pg.get_images(full=True)}
+        for m in CM.finditer(t):
+            r, g, b, gr, w, h, x, y, obj = m.groups()
+            if r is not None:
+                rgb, sp = (round(float(r) * 255), round(float(g) * 255),
+                           round(float(b) * 255)), "rg"
+            elif gr is not None:
+                rgb, sp = (round(float(gr) * 255),) * 3, "g"
+            else:
+                rgb, sp = None, "-"
+            w, h, x, y = float(w), float(h), float(x), float(y)
+            rows.append(dict(page=pn, mark=mark, obj=obj, xref=names.get(obj),
+                             space=sp, rgb=rgb, w=w, h=h,
+                             rx=612 - (x + w), ry=y, ctext=len(t)))
+    return rows
+
+
+def report_stencils():
+    rows = stencils()
+    print("\n== the 27 stencil fills the Canon MRC encoder wrote into the PDF ==")
+    print("page mark    obj   xref sp rgb                  wxh pt        read x,y pt")
+    for r in rows:
+        if r["space"] == "-":
+            continue
+        print(f"{r['page']}  {r['mark']:7s} {r['obj']:6s}{str(r['xref']):5s} "
+              f"{r['space']:2s} {str(r['rgb']):18s} "
+              f"{r['w']:7.2f}x{r['h']:6.2f}  {r['rx']:7.2f},{r['ry']:7.2f}")
+    print("\n  -- the OVERDOSE running head (232x32-ish stencil at the page top) --")
+    heads = [r for r in rows if r["space"] == "rg" and r["h"] < 8 and r["ry"] < 60]
+    for r in heads:
+        print(f"   p{r['page']} {r['obj']} {r['rgb']}  "
+              f"x={r['rx']:.2f} ({'left' if r['rx'] < 306 else 'right'})")
+    arr = np.array([r["rgb"] for r in heads])
+    print(f"   n={len(heads)} R {arr[:,0].min()}..{arr[:,0].max()} "
+          f"G {arr[:,1].min()}..{arr[:,1].max()} B {arr[:,2].min()}..{arr[:,2].max()}")
+    print("\n  -- the full-page body-text stencil, one per page --")
+    for r in rows:
+        if r["space"] != "-" and r["w"] > 400 and r["h"] > 400:
+            R, G, B = r["rgb"]
+            print(f"   p{r['page']} {r['obj']} {r['rgb']}  R-G={R-G:+4d}  G-B={G-B:+4d}")
+    print("\n  -- pages with no text separation at all --")
+    for pn in PAGES:
+        s = [r for r in rows if r["page"] == pn]
+        n = len([r for r in s if r["space"] != "-"])
+        print(f"   p{pn}: {s[0]['mark']:7s} content={s[0]['ctext']:6d}B  stencils={n}")
+
+
+def report_clipping(rows):
+    """How much of the orange is even measurable? R is pinned at the white point."""
+    bars = [o for o in rows if o["kind"] in ("bar", "display")]
+    arr = np.array([o["rgb"] for o in bars])
+    n255 = int((arr[:, 0] == 255).sum())
+    print(f"\n== channel clipping ==\n  bars with core R = 255 (clipped): "
+          f"{n255}/{len(bars)}; G and B are the only live channels")
+    ys = np.array([o["y0"] for o in bars], float)
+    for c, nm in ((1, "G"), (2, "B")):
+        v = arr[:, c].astype(float)
+        r = float(np.corrcoef(ys, v)[0, 1])
+        print(f"  corr(bar y on page, {nm}) = {r:+.3f}")
+    # within page, to remove any page-level offset
+    rs = []
+    for p in PAGES:
+        s = [o for o in bars if o["page"] == p]
+        if len(s) < 4:
+            continue
+        y = np.array([o["y0"] for o in s], float)
+        b = np.array([o["rgb"][2] for o in s], float)
+        rr = float(np.corrcoef(y, b)[0, 1])
+        rs.append((p, len(s), rr))
+        print(f"  p{p}: n={len(s)} corr(y, B) = {rr:+.3f}")
+    return rs
+
+
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--stencils", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--objects", action="store_true")
@@ -244,8 +346,10 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         sys.exit(0 if selftest() else 1)
+    if a.all or a.stencils:
+        report_stencils()
     if a.all or a.objects:
-        report_objects()
+        report_clipping(report_objects())
     if a.all or a.ground:
         report_ground()
         report_ground_flatness()
