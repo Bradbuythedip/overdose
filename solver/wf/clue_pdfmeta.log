@@ -1,0 +1,259 @@
+== A. document level ==
+pymupdf 1.28.2
+file bytes 1384544
+metadata {"format": "PDF 1.3", "title": "", "author": "", "subject": "", "keywords": "", "creator": "Canon ", "producer": " ", "creationDate": "D:20260913200134-05'00'", "modDate": "", "trapped": "", "encryption": null}
+xref_length 85 pages 8
+is_form_pdf False embfile_count 0 encrypted False has_links False has_annots False
+xml_metadata(XMP) len 0
+toc entries 0
+trailer: << /Size 85 /Info 1 0 R /Root 2 0 R /ID [ <15F0E4A1805CD80B0566B6D91BFBCF24> <15F0E4A1805CD80B0566B6D91BFBCF24> ] >>
+header b'%PDF-1.3\n'
+'%%EOF' count 1  'startxref' count 1  'xref' count 1
+Linearized present: False
+  raw occurrences of /Metadata       0
+  raw occurrences of /Annots         0
+  raw occurrences of /AcroForm       0
+  raw occurrences of /EmbeddedFile   0
+  raw occurrences of /JavaScript     0
+  raw occurrences of /OpenAction     0
+  raw occurrences of /Names          0
+  raw occurrences of /OCProperties   0
+  raw occurrences of /Rotate         0
+  raw occurrences of /CropBox        0
+  raw occurrences of /SMask          0
+  raw occurrences of /Decode         27
+  raw occurrences of /Mask           0
+object census: {'<untyped stream>': 31, 'Catalog': 1, 'Pages': 1, 'XObject/Image': 35, 'Font/Type1': 1, '<bare integer>': 7, 'Page': 8}  streams: 65
+reachable from /Root: 83  unreachable: [] (1 = /Info, reached from trailer)
+
+== B. page tree ==
+idx printed  MediaBox  CropBox  Rotate  keys
+  0      73  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj4', 'Obj5', 'Obj6', 'Obj7', 'Obj8', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 13 0 R 14 0 R 9 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj4', 'Obj5', 'Obj6', 'Obj7', 'Obj8', 'Subtype']
+  1      72  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj16', 'Obj17', 'Obj18', 'Obj19', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 23 0 R 24 0 R 20 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj16', 'Obj17', 'Obj18', 'Obj19', 'Subtype']
+  2      74  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj26', 'Obj27', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 31 0 R 32 0 R 28 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj26', 'Obj27', 'Subtype']
+  3      75  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj34', 'Obj35', 'Obj36', 'Obj37', 'Obj38', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 42 0 R 43 0 R 39 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj34', 'Obj35', 'Obj36', 'Obj37', 'Obj38', 'Subtype']
+  4      77  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'MediaBox', 'Obj45', 'Parent', 'ProcSet', 'Resources', 'Type', 'XObject']
+      Contents: 46 0 R 47 0 R
+      Resources keys: ['XObject', 'Obj45']
+  5      76  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj49', 'Obj50', 'Obj51', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 55 0 R 56 0 R 52 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj49', 'Obj50', 'Obj51', 'Subtype']
+  6      79  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj58', 'Obj59', 'Obj60', 'Obj61', 'Obj62', 'Obj63', 'Obj64', 'Obj65', 'Obj66', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 70 0 R 71 0 R 67 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj58', 'Obj59', 'Obj60', 'Obj61', 'Obj62', 'Obj63', 'Obj64', 'Obj65', 'Obj66', 'Subtype']
+  7      78  (0.0, 0.0, 612.0, 792.0) (0.0, 0.0, 612.0, 792.0) rot=0  ['Contents', 'F3', 'Font', 'MediaBox', 'Obj73', 'Obj74', 'Obj75', 'Obj76', 'Obj77', 'Obj78', 'Parent', 'ProcSet', 'Resources', 'Subtype', 'Type', 'XObject']
+      Contents: 82 0 R 83 0 R 79 0 R
+      Resources keys: ['Font', 'F3', 'XObject', 'Obj73', 'Obj74', 'Obj75', 'Obj76', 'Obj77', 'Obj78', 'Subtype']
+
+== C. CANON_PFINF marker (first content stream of each page) ==
+  idx 0 printed 73: contents=[13, 14, 9] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+  idx 1 printed 72: contents=[23, 24, 20] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+  idx 2 printed 74: contents=[31, 32, 28] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+  idx 3 printed 75: contents=[42, 43, 39] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+  idx 4 printed 77: contents=[46, 47] first=b'% CANON_PFINF_TYPE2_TEXTOFF\n' (28 bytes)
+  idx 5 printed 76: contents=[55, 56, 52] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+  idx 6 printed 79: contents=[70, 71, 67] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+  idx 7 printed 78: contents=[82, 83, 79] first=b'% CANON_PFINF_TYPE2_TEXTON\n' (27 bytes)
+
+== D. /Resources /Subtype -> stream  (illegal key; plain-text OCR) ==
+  idx 0 printed 73: /Subtype 11 0 R  /Length ('xref', '12 0 R')  raw 72 bytes  filter=('null', 'null')
+      head: b'EL\n*\no!,(o(!aUJ;.sN(Ect)GcooP-@\nrasTex xEn t{T-r/\\\nESOCTtTE/\\O\nlsooutno\n'
+  idx 1 printed 72: /Subtype 21 0 R  /Length ('xref', '22 0 R')  raw 749 bytes  filter=('null', 'null')
+      head: b"t tovgoz(, lzL I t o I Lzoz I asealar -sMau/uroc'ar rMsMau aq ol6'MMM]a)J etjl -acuellruraJ/uro3 r.lcr eoserla"
+  idx 2 printed 74: /Subtype 29 0 R  /Length ('xref', '30 0 R')  raw 9 bytes  filter=('null', 'null')
+      head: b'3SOOUtnO\n'
+  idx 3 printed 75: /Subtype 40 0 R  /Length ('xref', '41 0 R')  raw 1564 bytes  filter=('null', 'null')
+      head: b"9L\n'peloTun puts eTqTTTnF er{+ .rog: Surue+srT fsea e.resJeuroc+Trts pue ueu uoc uroJJ spJon +ueseaTd 3ec111 ."
+  idx 4 printed 77: NO /Subtype key
+  idx 5 printed 76: /Subtype 53 0 R  /Length ('xref', '54 0 R')  raw 1517 bytes  filter=('null', 'null')
+      head: b"9L\n@o9.f=0)Gtq)N.fotraor_o)o-o-\n\x80 srer{ esnecoq eq.felq\n.'tn8 +er{+ +snJ+ ^(11ee.r }ruop f '?T uo peAoul +ruse"
+  idx 6 printed 79: /Subtype 68 0 R  /Length ('xref', '69 0 R')  raw 1023 bytes  filter=('null', 'null')
+      head: b'r\n.eaoT puts ectsed qlTA 1T soctsTder puts eltsq putsr\x80oJ slenbuoc uToc+T8 sts - .dselsce puts .ttuo8e eq+ -no'
+  idx 7 printed 78: /Subtype 80 0 R  /Length ('xref', '81 0 R')  raw 1174 bytes  filter=('null', 'null')
+      head: b'8L\nlI:llllIiIiII<ll11..1)II!Iijll\\,lllIllI1!\x80rJtIl!)I\nI\ng.o9.==o(q0,N=omao)eo)CLo\n.{coTE sTseuec eq+ uT ereq+ '
+  total plain-text bytes: 6108
+
+  -- does it equal page.get_text()? --
+  idx 0 printed 73: subtype 72 chars, get_text 83 chars, identical=False, same-after-strip=False, set-equal=False
+  idx 1 printed 72: subtype 749 chars, get_text 790 chars, identical=False, same-after-strip=False, set-equal=False
+  idx 2 printed 74: subtype 9 chars, get_text 9 chars, identical=True, same-after-strip=True, set-equal=True
+  idx 3 printed 75: subtype 1564 chars, get_text 1597 chars, identical=False, same-after-strip=False, set-equal=False
+  idx 4 printed 77: subtype 0 chars, get_text 0 chars, identical=True, same-after-strip=True, set-equal=True
+  idx 5 printed 76: subtype 1517 chars, get_text 1553 chars, identical=False, same-after-strip=False, set-equal=False
+  idx 6 printed 79: subtype 1023 chars, get_text 1049 chars, identical=False, same-after-strip=False, set-equal=False
+  idx 7 printed 78: subtype 1174 chars, get_text 1234 chars, identical=False, same-after-strip=False, set-equal=False
+
+== E. OCR text layer, exact counts, PAGE-MAP CORRECTED ==
+printed pdfidx  chars  nonNL lines non-ascii  codes
+     72      1    790    738    52         1  ['0x20ac']
+     73      0     83     66    17         0  []
+     74      2      9      8     1         0  []
+     75      3   1597   1549    48         6  ['0x20ac']
+     76      5   1553   1508    45         7  ['0x20ac']
+     77      4      0      0     0         0  []
+     78      7   1234   1156    78        11  ['0x20ac']
+     79      6   1049   1013    36         5  ['0x20ac']
+
+  naive map (printed = 72 + pdf_index) would report:
+      printed 72 -> 83 chars (TRUE page for that count is 73)
+      printed 73 -> 790 chars (TRUE page for that count is 72)
+      printed 74 -> 9 chars (TRUE page for that count is 74)
+      printed 75 -> 1597 chars (TRUE page for that count is 75)
+      printed 76 -> 0 chars (TRUE page for that count is 77)
+      printed 77 -> 1553 chars (TRUE page for that count is 76)
+      printed 78 -> 1049 chars (TRUE page for that count is 79)
+      printed 79 -> 1234 chars (TRUE page for that count is 78)
+
+== F. OCR span geometry (Tf size + Tm baseline), un-rotated ==
+  printed 73 (idx 0): 24 spans, 66 glyph bytes, Tf 4.5-78.0pt (15 distinct), x 29.5-546.1pt  y 40.9-749.2pt
+  printed 72 (idx 1): 129 spans, 738 glyph bytes, Tf 2.5-25.5pt (39 distinct), x 231.3-593.5pt  y 64.4-749.5pt
+  printed 74 (idx 2): 1 spans, 8 glyph bytes, Tf 7.5-7.5pt (1 distinct), x 562.9-562.9pt  y 748.8-748.8pt
+  printed 75 (idx 3): 257 spans, 1549 glyph bytes, Tf 4.5-27.0pt (24 distinct), x 28.4-487.6pt  y 40.7-749.2pt
+  printed 77 (idx 4): 0 spans
+  printed 76 (idx 5): 252 spans, 1508 glyph bytes, Tf 4.0-16.5pt (23 distinct), x 101.9-584.6pt  y 40.3-748.6pt
+  printed 79 (idx 6): 191 spans, 1013 glyph bytes, Tf 3.0-17.0pt (24 distinct), x 31.1-611.8pt  y 20.9-747.7pt
+  printed 78 (idx 7): 252 spans, 1156 glyph bytes, Tf 2.0-38.5pt (35 distinct), x 7.0-587.7pt  y 15.3-780.8pt
+  document-wide Tf histogram (pt: spans):
+    {2.0: 1, 2.5: 1, 3.0: 1, 3.5: 3, 4.0: 4, 4.5: 13, 5.0: 14, 5.5: 17, 6.0: 24, 6.5: 8, 7.0: 10, 7.5: 22, 8.0: 26, 8.5: 26, 9.0: 22, 9.5: 38, 10.0: 79, 10.5: 120, 11.0: 156, 11.5: 133, 12.0: 113, 12.5: 63, 13.0: 44, 13.5: 26, 14.0: 17, 14.5: 18, 15.0: 24, 15.5: 7, 16.0: 7, 16.5: 20, 17.0: 4, 17.5: 10, 18.0: 4, 18.5: 9, 19.0: 2, 19.5: 1, 20.0: 2, 20.5: 2, 21.0: 5, 22.0: 1, 22.5: 1, 24.0: 1, 25.0: 1, 25.5: 2, 27.0: 1, 31.5: 1, 38.5: 1, 78.0: 1}
+  distinct gaps between adjacent sizes: [0.5, 1.0, 1.5, 4.5, 7.0, 39.5]
+
+== G. declared ink colour per placed XObject ==
+printed  xref    w x h (px)       placed pt        declared colour  sRGB
+     73     4     1700x2200  612.00x792.00             (inherited)              None 
+     73     5     2912x3732  524.16x671.76                 0.196 g      (50, 50, 50) h=  0 s=0.0   NEUTRAL
+     73     6       288x164   51.84x29.52     0.635 0.404 0.294 rg    (162, 103, 75) h= 19 s=0.367 ORANGE
+     73     7       912x112  164.16x20.16                  0.345 g      (88, 88, 88) h=  0 s=0.0   NEUTRAL
+     73     8        224x32   40.32x5.76      0.988 0.533 0.251 rg    (252, 136, 64) h= 23 s=0.969 ORANGE
+     72    16     1700x2200  612.00x792.00             (inherited)              None 
+     72    17     3280x3832  590.40x689.76    0.412 0.416 0.357 rg    (105, 106, 91) h= 64 s=0.076 NEUTRAL
+     72    18      1080x868  194.40x156.24                 0.196 g      (50, 50, 50) h=  0 s=0.0   NEUTRAL
+     72    19       80x1064   14.40x191.52    0.616 0.565 0.529 rg   (157, 144, 135) h= 25 s=0.101 NEUTRAL
+     74    26     1700x2200  612.00x792.00             (inherited)              None 
+     74    27        224x32   40.32x5.76      1.000 0.537 0.322 rg    (255, 137, 82) h= 19 s=1.0   ORANGE
+     75    34     1700x2200  612.00x792.00             (inherited)              None 
+     75    35     2592x3456  466.56x622.08    0.404 0.337 0.361 rg     (103, 86, 92) h=339 s=0.09  NEUTRAL
+     75    36       56x1536   10.08x276.48    0.651 0.608 0.604 rg   (166, 155, 154) h=  5 s=0.063 NEUTRAL
+     75    37      1488x152  267.84x27.36                  0.196 g      (50, 50, 50) h=  0 s=0.0   NEUTRAL
+     75    38        232x32   41.76x5.76      0.992 0.537 0.255 rg    (253, 137, 65) h= 23 s=0.979 ORANGE
+     77    45     1700x2200  612.00x792.00             (inherited)              None 
+     76    49     1700x2200  612.00x792.00             (inherited)              None 
+     76    50     2720x3584  489.60x645.12    0.396 0.357 0.373 rg     (101, 91, 95) h=336 s=0.052 NEUTRAL
+     76    51        232x32   41.76x5.76      1.000 0.533 0.318 rg    (255, 136, 81) h= 19 s=1.0   ORANGE
+     79    58     1700x2200  612.00x792.00             (inherited)              None 
+     79    59        48x280    8.64x50.40     0.667 0.678 0.612 rg   (170, 173, 156) h= 71 s=0.094 NEUTRAL
+     79    60     2728x2800  491.04x504.00    0.416 0.353 0.365 rg     (106, 90, 93) h=349 s=0.082 NEUTRAL
+     79    61        40x180    7.20x32.40     0.910 0.514 0.647 rg   (232, 131, 165) h=340 s=0.687 PINK/MAGENTA
+     79    62        56x128   10.08x23.04     0.839 0.643 0.710 rg   (214, 164, 181) h=340 s=0.379 PINK/MAGENTA
+     79    63        56x128   10.08x23.04     0.686 0.627 0.584 rg   (175, 160, 149) h= 25 s=0.14  ORANGE
+     79    64      1736x172  312.48x30.96     0.420 0.353 0.376 rg     (107, 90, 96) h=339 s=0.086 NEUTRAL
+     79    65      1736x172  312.48x30.96     0.616 0.514 0.361 rg    (157, 131, 92) h= 36 s=0.261 ORANGE
+     79    66        232x36   41.76x6.48      0.992 0.537 0.255 rg    (253, 137, 65) h= 23 s=0.979 ORANGE
+     78    73     1700x2200  612.00x792.00             (inherited)              None 
+     78    74     2720x3672  489.60x660.96    0.420 0.357 0.365 rg     (107, 91, 93) h=352 s=0.081 NEUTRAL
+     78    75       72x2648   12.96x476.64                 0.702 g   (179, 179, 179) h=  0 s=0.0   NEUTRAL
+     78    76       72x2648   12.96x476.64    0.792 0.659 0.706 rg   (202, 168, 180) h=339 s=0.243 PINK/MAGENTA
+     78    77       80x1316   14.40x236.88    0.749 0.682 0.706 rg   (191, 174, 180) h=339 s=0.117 NEUTRAL
+     78    78        232x36   41.76x6.48      0.996 0.541 0.259 rg    (254, 138, 66) h= 23 s=0.989 ORANGE
+
+== H. image object census ==
+ xref printed     w     h bpc colorspace                     filter  mask      len
+    4      73  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null   143454
+    5      73  2912  3732   1       null            /CCITTFaxDecode  true     4008
+    6      73   288   164   1       null            /CCITTFaxDecode  true      240
+    7      73   912   112   1       null            /CCITTFaxDecode  true     1012
+    8      73   224    32   1       null            /CCITTFaxDecode  true      204
+   16      72  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null   171088
+   17      72  3280  3832   1       null            /CCITTFaxDecode  true    18508
+   18      72  1080   868   1       null            /CCITTFaxDecode  true     3080
+   19      72    80  1064   1       null            /CCITTFaxDecode  true      180
+   26      74  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null   267492
+   27      74   224    32   1       null            /CCITTFaxDecode  true      212
+   34      75  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null    82322
+   35      75  2592  3456   1       null            /CCITTFaxDecode  true    44804
+   36      75    56  1536   1       null            /CCITTFaxDecode  true      296
+   37      75  1488   152   1       null            /CCITTFaxDecode  true     1632
+   38      75   232    32   1       null            /CCITTFaxDecode  true      220
+   45      77  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null   192681
+   49      76  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null    96796
+   50      76  2720  3584   1       null            /CCITTFaxDecode  true    43264
+   51      76   232    32   1       null            /CCITTFaxDecode  true      216
+   58      79  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null    89136
+   59      79    48   280   1       null            /CCITTFaxDecode  true       60
+   60      79  2728  2800   1       null            /CCITTFaxDecode  true    28212
+   61      79    40   180   1       null            /CCITTFaxDecode  true       80
+   62      79    56   128   1       null            /CCITTFaxDecode  true       48
+   63      79    56   128   1       null            /CCITTFaxDecode  true       40
+   64      79  1736   172   1       null            /CCITTFaxDecode  true     1556
+   65      79  1736   172   1       null            /CCITTFaxDecode  true       28
+   66      79   232    36   1       null            /CCITTFaxDecode  true      212
+   73      78  1700  2200   8 /DeviceRGB   [/FlateDecode/DCTDecode]  null    80350
+   74      78  2720  3672   1       null            /CCITTFaxDecode  true    29956
+   75      78    72  2648   1       null            /CCITTFaxDecode  true     1868
+   76      78    72  2648   1       null            /CCITTFaxDecode  true      392
+   77      78    80  1316   1       null            /CCITTFaxDecode  true     1088
+   78      78   232    36   1       null            /CCITTFaxDecode  true      208
+  filter histogram: {'[/FlateDecode/DCTDecode]': 8, '/CCITTFaxDecode': 27}
+  images carrying /SMask: 0
+  images carrying /Decode: 0
+  images carrying /Mask: 0
+  images carrying /Interpolate: 0
+  images carrying /Intent: 0
+
+== I. OCR content vs article_transcript.txt ==
+  printed 73: 83 chars, 3 reversed tokens>=5, 0 of them literally present in the transcript
+  printed 72: 790 chars, 51 reversed tokens>=5, 0 of them literally present in the transcript
+  printed 74: 9 chars, 1 reversed tokens>=5, 0 of them literally present in the transcript
+  printed 75: 1597 chars, 86 reversed tokens>=5, 1 of them literally present in the transcript
+      e.g. ['r.ne.']
+  printed 77: EMPTY text layer
+  printed 76: 1553 chars, 99 reversed tokens>=5, 0 of them literally present in the transcript
+  printed 79: 1049 chars, 59 reversed tokens>=5, 0 of them literally present in the transcript
+  printed 78: 1234 chars, 69 reversed tokens>=5, 0 of them literally present in the transcript
+
+== J. stream storage: plaintext vs compressed ==
+  filter census over all streams: {'[/FlateDecode/DCTDecode]': 8, '/CCITTFaxDecode': 27, 'null': 22, '/FlateDecode': 8}
+  UNFILTERED (plaintext) streams: [9, 11, 13, 20, 21, 23, 28, 29, 31, 39, 40, 42, 46, 52, 53, 55, 67, 68, 70, 79, 80, 82]
+     total raw bytes: 64793
+  FlateDecode-only streams (the per-page graphics streams): [14, 24, 32, 43, 47, 56, 71, 83]
+  byte-grep of the raw PDF:
+     b'ESOCTtTE'                1
+     b'rasTex xEn'              1
+     b' cm'                     0
+     b' rg'                     0
+     b' Do'                     0
+     b'Tj'                      1121
+     b'0.988 0.533 0.251 rg'    0
+  => OCR text is plaintext and greppable; every placement matrix
+     and every declared ink colour is inside the 8 Flate streams
+     and is invisible to strings/grep.
+
+== K. orange ink, colour layer vs composite ==
+printed  colour-layer px  composite px    delta
+     73             7732          9124     1392
+     72                0             0        0
+     74                0           588      588
+     75            74756         74986      230
+     77            28580         28579       -1
+     76            55793         56072      279
+     79            98159         98256       97
+     78            65649         65780      131
+
+== L. line/block segmentation, two plaintext copies ==
+printed  /Subtype lines  get_text lines  Tj spans
+     73               6              17        24
+     72              11              52       129
+     74               1               1         1
+     75              15              48       257
+     77               0               0         0
+     76               9              45       252
+     79              10              36       191
+     78              18              78       252
+

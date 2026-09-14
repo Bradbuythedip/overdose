@@ -1,0 +1,14 @@
+  corpus: 244 phrases
+  underline #1 present: OK
+  struck line present:  OK
+  deletion removes exactly the struck line: OK (delta 58, line 57)
+  highlight catalogue reads 38 spans: OK (38)
+  planted phrase recovered: OK (1FAVFRHv1YFbWU5vK9BD7V51qXs9CA8ZgJ)
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+phrases 244  paths 72
+
+phrases 244  addresses 447,740 in 57s
+marks hits: 0

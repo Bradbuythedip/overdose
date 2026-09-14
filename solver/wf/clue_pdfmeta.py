@@ -251,8 +251,18 @@ def sec_G():
                 col = "(inherited)"; rgb = None
             W = d.xref_get_key(xr, "Width")[1]
             H = d.xref_get_key(xr, "Height")[1]
+            cls = ""
+            if rgb:
+                import colorsys
+                hh, ll, ss = colorsys.rgb_to_hls(*[c/255 for c in rgb])
+                hue, sat = round(hh*360), round(ss, 3)
+                cls = ("NEUTRAL" if sat < 0.12 else
+                       "ORANGE" if 15 <= hue <= 45 else
+                       "PINK/MAGENTA" if (hue >= 300 or hue < 15) else
+                       f"OTHER h={hue}")
+                cls = f"h={hue:>3} s={sat:<5} {cls}"
             print(f"{PAGE_MAP[i]:>7} {xr:>5} {W+'x'+H:>13} "
-                  f"{float(w):>7.2f}x{float(h):<7.2f} {col:>22}  {rgb}")
+                  f"{float(w):>7.2f}x{float(h):<7.2f} {col:>22}  {str(rgb):>16} {cls}")
 
 
 # ---------------------------------------------------------------- H
