@@ -22,3 +22,12 @@ solver/*_state.json
 solver/*.log
 solver/mega_hits_*.tsv
 solver/*.out
+
+# Workflow lens working dirs (overdose-violent-sweep). The GENERATORS are the
+# reproducible method and are committed; the candidate lists they emit are
+# megabytes of regenerable derived data. .hits files are kept -- a non-empty
+# one is evidence.
+solver/bedin/*.txt
+solver/bedin/*.log
+solver/numlens/*.txt
+solver/numlens/*.log
