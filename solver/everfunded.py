@@ -415,7 +415,7 @@ def main():
 
     fh = open(a.out, "w")
     fh.write("phrase\taddress\tfunded_txo_count\treceived_btc\tbalance_btc\n")
-    state = {"done": 0, "hits": 0, "err": 0}
+    state = {"done": 0, "hits": 0, "err": 0, "fetched": 0}
     lock = threading.Lock()
     t0 = time.time()
 
@@ -432,12 +432,20 @@ def main():
             n = state["done"]
             if n % 250 == 0:
                 el = max(time.time() - t0, 1e-9)
-                extra = (f"  rate {ad.rate:6.1f}/s  peak {ad.peak:.0f}  "
-                         f"throttled {ad.throttles}") if ad else ""
-                eta = (len(todo) - n) / max(n / el, 1e-9) / 60
-                sys.stderr.write(f"  {n:,}/{len(todo):,}  {state['hits']} "
-                                 f"ever-funded  {n/el:5.1f}/s actual  "
-                                 f"eta {eta:4.0f}m{extra}\n")
+                # progress is against everything being EVALUATED; rate and eta
+                # only make sense for the part actually being FETCHED, so they
+                # are suppressed when the run is served from cache
+                total = len(cached) + len(todo)
+                if state["fetched"]:
+                    r = state["fetched"] / el
+                    eta = (len(todo) - state["fetched"]) / max(r, 1e-9) / 60
+                    extra = (f"  {r:5.1f}/s  eta {eta:4.0f}m" +
+                             (f"  rate {ad.rate:6.1f}/s peak {ad.peak:.0f} "
+                              f"throttled {ad.throttles}" if ad else ""))
+                else:
+                    extra = "  (from cache)"
+                sys.stderr.write(f"  {n:,}/{total:,}  {state['hits']} "
+                                 f"ever-funded{extra}\n")
 
     # replay the cache first, so a resumed or fully-cached run reports every
     # hit it already knows about
@@ -452,6 +460,7 @@ def main():
         for src, addr in todo:
             try:
                 fc, fs, bal = api.stats(addr)
+                state["fetched"] += 1
                 record(src, addr, fc, fs, bal)
             except Exception as e:
                 state["err"] += 1
@@ -469,6 +478,8 @@ def main():
                     return
                 try:
                     fc, fs, bal = api.stats(addr)
+                    with lock:
+                        state["fetched"] += 1
                     record(src, addr, fc, fs, bal)
                 except Exception as e:
                     with lock:
@@ -490,9 +501,9 @@ def main():
                              "in the cache; re-run to resume\n")
     fh.close()
     el = max(time.time() - t0, 1e-9)
-    sys.stderr.write(f"\n  {state['done']:,} evaluated ({len(todo):,} fetched) "
-                     f"in {el/60:.1f} min "
-                     f"({state['done']/el:.1f}/s average"
+    sys.stderr.write(f"\n  {state['done']:,} evaluated "
+                     f"({state['fetched']:,} fetched) in {el/60:.1f} min "
+                     f"({state['fetched']/el:.1f}/s fetch rate"
                      + (f", peak rate {ad.peak:.0f}/s, {ad.throttles} throttles"
                         if ad else "") + f"), {state['err']} errors\n")
     hits = state["hits"]
