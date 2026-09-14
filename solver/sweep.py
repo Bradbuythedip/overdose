@@ -565,6 +565,74 @@ def find_control_txs(chain, back=6, per_block=25,
     return list(found.values()), missing
 
 
+def cross_check():
+    """Compare every sighash against a SECOND, independent implementation.
+
+    The chain-grounded controls are the stronger evidence where they apply, but
+    they cannot reach bare P2PK: spends of bare-pubkey outputs are a 2009-era
+    artefact and essentially absent from modern blocks, so no confirmed
+    transaction exists to validate that path against.
+
+    embit is an unrelated BIP-174/BIP-143 implementation. If two independently
+    written codebases derive the same 32-byte hash for the same transaction,
+    the remaining possibility is that both are wrong in the same way — which is
+    a far smaller space than one being wrong on its own.
+
+    Optional by design: if embit is not installed the run says the paths are
+    uncorroborated rather than pretending they were checked.
+        pip install embit
+    """
+    try:
+        from embit.transaction import Transaction
+        from embit.script import Script
+    except ImportError:
+        sys.stderr.write("  cross-check: embit not installed — sighashes are "
+                         "uncorroborated by a second implementation\n"
+                         "               (pip install embit)\n")
+        return None
+
+    import hashlib as _h
+    from coincurve import PrivateKey
+    from full_sweep import spks_for_key
+    from spk_extra import sc_p2pk
+    from index_oracle import spk_from_address
+
+    k = _h.sha256(b"sweep cross-check").digest()
+    pub = PrivateKey(k).public_key.format(True)
+    f = dict(spks_for_key(k))
+    dest = spk_from_address("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4")
+    plan = [("p2pkh_c", f["p2pkh_c"]), ("p2wpkh", f["p2wpkh"]),
+            ("p2sh_p2wpkh", f["p2sh_p2wpkh"]), ("p2pk_c", sc_p2pk(pub))]
+    u = [{"kind": kd, "spk": spk, "key": k, "pub": pub,
+          "txid": "%064x" % (i + 1), "vout": i, "value": 500_000_000}
+         for i, (kd, spk) in enumerate(plan)]
+
+    tx, _fee = build_and_sign(u, dest, 20.0, DEFAULT_MAX_FEE)
+    et = Transaction.parse(tx.ser())
+    ok = et.txid().hex() == tx.txid()
+    sys.stderr.write(f"  cross-check: embit parses our signed tx and agrees on "
+                     f"the txid: {'OK' if ok else 'FAIL'}\n")
+
+    hp = h160(pub)
+    for n, x in enumerate(u):
+        bare = Tx([TxIn(i.txid, i.vout, b"", i.sequence) for i in tx.vin],
+                  [TxOut(o.value, o.spk) for o in tx.vout],
+                  tx.version, tx.locktime)
+        if x["kind"] in ("p2wpkh", "p2sh_p2wpkh"):
+            sc = b"\x76\xa9\x14" + hp + b"\x88\xac"
+            mine = sighash_bip143(bare, n, sc, x["value"])
+            theirs = et.sighash_segwit(n, Script(sc), x["value"])
+        else:
+            sc = x["spk"]
+            mine = sighash_legacy(bare, n, sc)
+            theirs = et.sighash_legacy(n, Script(sc))
+        same = mine == theirs
+        ok &= same
+        sys.stderr.write(f"    {x['kind']:12} sighash matches embit: "
+                         f"{'OK' if same else 'MISMATCH'}\n")
+    return ok
+
+
 def run_controls(chain, txids):
     sys.stderr.write("\n  CHAIN-GROUNDED CONTROLS — confirmed transactions as "
                      "the oracle\n")
@@ -721,6 +789,9 @@ def selftest():
     sys.stderr.write(f"  fee caps (absolute and proportional): "
                      f"{'OK' if good else 'FAIL'}\n")
 
+    xc = cross_check()
+    if xc is False:
+        ok = False
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
