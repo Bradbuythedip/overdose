@@ -156,7 +156,7 @@ def main():
     good = H.addrs_for_priv(k)["p2pkh_u"] == "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T"
     print(f"  derivation vector: {'OK' if good else 'FAIL'}")
     ok &= good
-    o = H.Oracle()
+    o = H.Oracle(use_full=False)   # rich list in memory; full index batched below
     g = o.funded("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
     print(f"  oracle genesis: {'OK' if g else 'FAIL'}")
     ok &= g

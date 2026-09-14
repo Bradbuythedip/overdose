@@ -165,6 +165,30 @@ def run(oracle, A, B, verbose=True):
 
     hits, n = [], 0
     t1 = time.time()
+    pend = []          # (i, j, type, addr) queued for the batched full-index pass
+
+    def flush(force=False):
+        """One vectorized pass over the full 56.8M index per batch. The
+        per-address form cost stage A of seed_windows 34,011s against 12s."""
+        if not pend or (len(pend) < 50000 and not force):
+            return
+        full = H.full_index()
+        if full is None:
+            pend.clear(); return
+        from index_oracle import spk_from_address
+        spks, meta = [], []
+        for i, j, t, a in pend:
+            spk = spk_from_address(a)
+            if spk is not None:
+                spks.append(spk); meta.append((i, j, t, a))
+        for q, bal in full.contains_spks(spks):
+            i, j, t, a = meta[q]
+            priv = (ka[i][1] + kb[j][1]) % CURVE_N
+            hits.append((ka[i][0], kb[j][0], t, a, f"{priv:064x}", bal))
+            print(f"*** HIT(fullindex) split {ka[i][0]!r} + {kb[j][0]!r} -> "
+                  f"{t} {a} {bal/1e8:.8f} BTC", flush=True)
+        pend.clear()
+
     for i, PA in enumerate(ptsA):
         for j, PB in enumerate(ptsB):
             try:
@@ -173,11 +197,14 @@ def run(oracle, A, B, verbose=True):
                 continue
             n += 1
             for t, a in addrs_from_pub(S).items():
-                if oracle.funded(a):
+                if oracle.funded(a):                      # in-memory rich list
                     priv = (ka[i][1] + kb[j][1]) % CURVE_N
                     hits.append((ka[i][0], kb[j][0], t, a, f"{priv:064x}"))
-                    print(f"*** HIT split {ka[i][0]!r} + {kb[j][0]!r} -> {t} {a}",
-                          flush=True)
+                    print(f"*** HIT(richlist) split {ka[i][0]!r} + {kb[j][0]!r} "
+                          f"-> {t} {a}", flush=True)
+                pend.append((i, j, t, a))
+            flush()
+    flush(force=True)
     if verbose:
         sys.stderr.write(f"  {n:,} point additions, {n*4:,} addresses, "
                          f"{time.time()-t1:.1f}s\n")
@@ -223,7 +250,7 @@ def main():
     A, B = setA(), setB()
     print(f"\nhalf A: {len(A)} components   half B: {len(B)} components")
     print(f"product space: {len(A)*len(B):,} splits, {len(A)*len(B)*4:,} addresses")
-    o = H.Oracle()
+    o = H.Oracle(use_full=False)   # rich list in memory; full index batched below
     hits, n = run(o, A, B)
     print(f"\nadditive-split hits: {len(hits)}")
     for h in hits:

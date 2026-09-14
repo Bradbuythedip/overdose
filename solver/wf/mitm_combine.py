@@ -106,7 +106,7 @@ def main():
     A, B = setA(), setB()
     print(f"\nhalf A: {len(A)}  half B: {len(B)}")
 
-    o = H.Oracle()
+    o = H.Oracle(use_full=False)   # rich list in memory; full index batched below
     hits = []
     n_keys = 0
     t0 = time.time()
