@@ -4,3 +4,6 @@
 Oracle: full 56.8M index ACTIVE (checks both sets)
   oracle genesis:  OK
 SELFTEST PASS
+
+keys 290,000 in 127s, addresses ~1,450,000
+serial-tail hits: 0

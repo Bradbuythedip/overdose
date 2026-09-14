@@ -1153,6 +1153,19 @@ def orangesplit():
             print(f"  p{pn} {tag:24s} {len(ids)} regions, {ys.size:6d} px, "
                   f"median RGB {list(med)}")
             print(f"  {'':29s} per region: {per}")
+    # the OVERDOSE running head is printed spot orange and sits on p73 too
+    print("  the printed 'OVERDOSE' running head (top-left of each page):")
+    for pn in (73, 79):
+        a = page(pn)
+        r, g, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
+        o = (r - b > 60) & (r > 140) & (g < r - 30)
+        m = np.zeros(o.shape, bool)
+        m[200:320, 250:600] = True
+        sel = o & m
+        ys, xs = np.nonzero(sel)
+        print(f"    p{pn} running head: {int(sel.sum())} orange px, bbox "
+              f"x[{xs.min()},{xs.max()}] y[{ys.min()},{ys.max()}], median RGB "
+              f"{list(np.median(a[ys,xs],axis=0).astype(int))}")
     print("  -> the two oranges differ on the SAME sheet, so this is not a scan or")
     print("     paper effect; the capsule orange is a photographed object, the bar")
     print("     orange is the article's spot ink.")
