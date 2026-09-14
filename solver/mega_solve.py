@@ -25,6 +25,13 @@ WHAT IS GENUINELY NEW HERE
              search that recovers from a transcription error, and no amount of
              re-hashing the transcript AS WRITTEN ever could. ~1.6M candidates.
   edit1_all  The same over every n-gram too. ~126M candidates, an overnight run.
+  edit1_unverified
+             Edits ONLY at characters the 400dpi scan never confirmed. The scan
+             agrees with the transcript on 3,642 of 3,642 glyphs it could read,
+             so 58% of characters are already proven right and mutating them is
+             wasted work. The remaining 42% concentrate in the highlighted
+             blocks and display type - which are also the most quotable strings
+             in the article. Cheaper AND better aimed than edit1.
   serial     The 10^8 serial keyspace under several readings.
 
 ON GPUs, MEASURED RATHER THAN ASSUMED
@@ -158,6 +165,47 @@ def fam_edit1_all(_p=None):
             yield v
 
 
+def fam_edit1_unverified(_p=None):
+    """Single-character edits, but ONLY at positions the scan never confirmed.
+
+    verified_map.py established that every one of 3,642 glyphs the 400dpi scan
+    could read matches the transcript exactly — 97 of 97 lines pass a
+    subsequence test. So 58% of the transcript's characters are confirmed, and a
+    transcription error can only live in the other 42%.
+
+    Mutating a VERIFIED character is wasted work: the scan already says that
+    character is right. This family edits only the unverified ones, which is
+    ~2.4x cheaper than edit1 and strictly better aimed.
+
+    And the aim is better than the ratio suggests. The unverified characters are
+    not scattered — they concentrate in the HIGHLIGHTED blocks and display type
+    that a black-on-white glyph extractor cannot read:
+
+        BITCOIN IS TOXIC AF
+        Don't fall for shitcoinery.
+        Keep your dignity.
+        Fact:          It's Layer 1 for every great thing
+
+    which are also the most memorable, most quotable strings in the article and
+    so the highest-prior brainwallet candidates in it. The region of lowest
+    verification is the region of highest prior.
+    """
+    import verified_map
+    for _pg, _ln, line, ver in verified_map.build():
+        if not line.strip():
+            continue
+        yield line
+        unver = [i for i, c in enumerate(line)
+                 if not c.isspace() and i not in ver]
+        for i in unver:
+            for c in EDIT_ALPHABET:                      # substitution
+                if c != line[i]:
+                    yield line[:i] + c + line[i + 1:]
+            yield line[:i] + line[i + 1:]                 # deletion
+            for c in EDIT_ALPHABET:                       # insertion before
+                yield line[:i] + c + line[i:]
+
+
 def fam_deep(_p=None):
     """Phrases for the HD path sweep; depth comes from the derivation side."""
     return iter(phrases())
@@ -188,7 +236,8 @@ def fam_serial(params):
 
 FAMILIES = {"mutate": fam_mutate, "deep": fam_deep,
             "combo": fam_combo, "serial": fam_serial,
-            "edit1": fam_edit1, "edit1_all": fam_edit1_all}
+            "edit1": fam_edit1, "edit1_all": fam_edit1_all,
+            "edit1_unverified": fam_edit1_unverified}
 DEEP_FAMILIES = {"deep"}          # these use all 72 HD paths, not just direct
 
 
