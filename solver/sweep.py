@@ -1065,8 +1065,15 @@ def keys_from_ledger(path):
         phrase = lab.split("|")[0] if lab else ""
         if not phrase:
             continue
+        # NEVER put the phrase in the label. For a brainwallet the phrase IS
+        # the private key, and labels are printed to the terminal. An audit
+        # found this leaking up to 30 characters of key material into scrollback
+        # while the docstring above promised the opposite. The digest is enough
+        # to identify which ledger row a result came from; the phrase itself
+        # stays in the sqlite file the user already has.
+        tag = hashlib.sha256(phrase.encode()).hexdigest()[:8]
         for n, k in direct_keys(phrase).items():
-            out.append((f"ledger:{phrase[:30]}|{n}", k))
+            out.append((f"ledger:{tag}|{n}", k))
         for sn, seed in seeds_from(phrase).items():
             for p in build_paths()[:8]:
                 try:
@@ -1074,7 +1081,7 @@ def keys_from_ledger(path):
                 except Exception:
                     continue
                 if k:
-                    out.append((f"ledger:{phrase[:30]}|{sn}:{p}", k))
+                    out.append((f"ledger:{tag}|{sn}:{p}", k))
     sys.stderr.write(f"  ledger: {len(rows)} hit label(s) -> "
                      f"{len(out):,} candidate keys\n")
     return out
@@ -1271,15 +1278,23 @@ def verify_before_broadcast(tx, dest_spk, total_in, fee, max_fee):
                 pub = r.take(r.take(1)[0])
                 sh = sighash_legacy(tx, n, b"\x76\xa9\x14" + h160(pub) + b"\x88\xac")
             elif i.kind in ("p2pk_c", "p2pk_u"):
+                # The pubkey lives in the OUTPUT being spent, not the input.
+                # This branch used to set pub=None and skip the check, so a
+                # p2pk input silently PASSED "every signature verifies" without
+                # any signature being verified — a check that cannot fail is
+                # worse than no check, because it reports confidence it does
+                # not have. The scriptCode for p2pk is the whole scriptPubKey.
                 r = Reader(i.script_sig)
                 sig = r.take(r.take(1)[0])
-                pub = None
-                sh = None
+                pub = i.spk[1:-1]
+                sh = sighash_legacy(tx, n, i.spk)
             else:
                 sigs_ok = False
                 continue
-            if pub is not None and sh is not None:
-                sigs_ok &= PublicKey(pub).verify(sig[:-1], sh, hasher=None)
+            if pub is None or sh is None:
+                sigs_ok = False          # unverifiable is not the same as valid
+                continue
+            sigs_ok &= PublicKey(pub).verify(sig[:-1], sh, hasher=None)
         except Exception:
             sigs_ok = False
     checks.append(("every input signature verifies against its own sighash",
