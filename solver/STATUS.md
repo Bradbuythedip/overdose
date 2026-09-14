@@ -31,11 +31,44 @@ Source material available here: seven iPhone photographs of pages 73-79,
 | bech32 / Taproot puzzle wallet | **earlier claim was overstated** | that rested on a 62-address bech32 sample now known to be ~12% complete; the real bech32 exactly-20 count is 505. Re-tested properly: the `bc1q3e…6gvskf` pattern matches none of the 505, and none of 435,312 bech32 addresses in a rich list reaching ~4 BTC — evidence, not disproof, since that dump is an Apr-2023 snapshot. See `window/exact20_enumerated.md` |
 | derivation from article text | 0 funded hits | see below |
 
+## Ever-funded search (the oracle the offline indices are not)
+
+Both offline indices are balance snapshots. `everfunded.py` over an Esplora
+endpoint answers "was this ever funded", verified by a live control in which
+`sha256("correct horse battery staple")` reports 15.9472 BTC received and
+0.0000 balance — invisible to both indices.
+
+| pass | addresses | ever-funded |
+|---|---|---|
+| article n-grams, sha256 -> P2PKH | 44,956 | 2, dust, Feb 2025 |
+| tier-1 phrases x 135 derivations | 44,777 | 0 |
+| generic corpora | 15,672 | 52, **all generic**, none article-specific |
+| HD paths / new corpora | 184,922 | in progress |
+
+Generic dictionary phrases are funded at ~0.33%; the article's own text is at
+**0%** across 89,733 addresses. If a solver had derived a correct article
+phrase and swept the prize, that address would be ever-funded. None is — so the
+swept-key reading is now evidence *against*, for the phrase space tested. See
+`window/everfunded_results.md`.
+
 ## Derivation search, cumulative
 
-All scored against the **full 56,795,328-address funded index** via the offline
-oracle, so a hit would register regardless of balance, spend history or funding
-date.
+Scored against the **56,795,328-address funded index** and, for later corpora,
+an April-2023 rich list.
+
+**READ THIS BEFORE TRUSTING THE TABLE.** Both oracles are BALANCE SNAPSHOTS, not
+an ever-funded record. `address_map.bin` answers "holds coins today"; the
+rich-list index answers "held a large balance in April 2023". Neither answers
+"was ever funded". Measured control: 32 canonical brainwallet phrases
+(`satoshi`, `password`, `correct horse battery staple`, ...) x 2 pubkey forms =
+64 addresses, every one of which demonstrably held coins once and was drained
+years ago — **0 of 64 appear in either index**, while the genesis control
+appears in both.
+
+So every "0 hits" below means *no address that still holds coins, or held a
+large balance in April 2023*. It does NOT rule out a key that was funded and
+swept before then — which for a magazine-printed key is the most likely history
+of all. See `window/the_oracle_blind_spot.md`.
 
 | corpus | phrases | addresses | hits |
 |---|---|---|---|

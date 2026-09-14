@@ -1,0 +1,38 @@
+{
+ "75": [
+  "solver/scan400/strips/p75_s0.png",
+  "solver/scan400/strips/p75_s1.png",
+  "solver/scan400/strips/p75_s2.png",
+  "solver/scan400/strips/p75_s3.png",
+  "solver/scan400/strips/p75_s4.png",
+  "solver/scan400/strips/p75_s5.png",
+  "solver/scan400/strips/p75_s6.png"
+ ],
+ "76": [
+  "solver/scan400/strips/p76_s0.png",
+  "solver/scan400/strips/p76_s1.png",
+  "solver/scan400/strips/p76_s2.png",
+  "solver/scan400/strips/p76_s3.png",
+  "solver/scan400/strips/p76_s4.png",
+  "solver/scan400/strips/p76_s5.png",
+  "solver/scan400/strips/p76_s6.png"
+ ],
+ "78": [
+  "solver/scan400/strips/p78_s0.png",
+  "solver/scan400/strips/p78_s1.png",
+  "solver/scan400/strips/p78_s2.png",
+  "solver/scan400/strips/p78_s3.png",
+  "solver/scan400/strips/p78_s4.png",
+  "solver/scan400/strips/p78_s5.png",
+  "solver/scan400/strips/p78_s6.png"
+ ],
+ "79": [
+  "solver/scan400/strips/p79_s0.png",
+  "solver/scan400/strips/p79_s1.png",
+  "solver/scan400/strips/p79_s2.png",
+  "solver/scan400/strips/p79_s3.png",
+  "solver/scan400/strips/p79_s4.png",
+  "solver/scan400/strips/p79_s5.png",
+  "solver/scan400/strips/p79_s6.png"
+ ]
+}

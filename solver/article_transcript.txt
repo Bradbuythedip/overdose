@@ -1,3 +1,9 @@
+# CORRECTION 2026-09-14: the page prints "10years" (no space) on p76 line 8.
+# This transcript normalised it to "10 years" for its whole life, so every hash
+# taken over a string spanning that point used a character that is not on the
+# page. Verified on the 400 dpi CCITT-G4 mask (scan400/p76_mask.png, band 5)
+# and on the 600 dpi render of the PDF colour layer. As a word list the space
+# was harmless; as a brainwallet input it was not.
 # Max Keiser, "Overdose" — Bitcoin Magazine, El Salvador issue, pages 75-79.
 # Transcribed by reading the page scans directly, line by line as printed.
 # Line breaks match the printed lines (they matter for line-based ciphers).
@@ -55,7 +61,7 @@ nailing the Vatican with ultimatums. It's the sound of skin being
 ripped off live central bankers tied to a burning stake.
 
 Gotta be this way. Forty years of dumb post-1971 fiat money
-nonsense (and 10 years of watching Peter Schiff miss buying bitcoin
+nonsense (and 10years of watching Peter Schiff miss buying bitcoin
 since I started honey-badgering him to buy some at $1 back in 2011)
 have dulled shitcoiners' and nocoiners' minds.
 The collective unconscious, controlled now by psychotic
