@@ -51,3 +51,5 @@ solver/zoom/
 solver/furniture.txt
 # regenerable from highlight_color.py
 solver/hlcolor.txt
+# regenerable from note_signatures.py
+solver/notesig.txt
