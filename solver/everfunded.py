@@ -47,7 +47,8 @@ USAGE
 Results are cached to --cache so a re-run costs nothing and an interrupted run
 resumes. Rate limited, retried with exponential backoff on 429/5xx.
 """
-import argparse, hashlib, json, os, sys, time, urllib.error, urllib.request
+import argparse, hashlib, json, os, queue, sys, threading, time
+import urllib.error, urllib.request
 
 # Brainwallets that were unquestionably funded and are unquestionably empty
 # now. They are the control: the endpoint must report funded_txo_count > 0.
@@ -108,8 +109,63 @@ def b58decode_h160(addr):
     return b[1:21]
 
 
+class Adaptive:
+    """AIMD rate control: ramp up until the endpoint pushes back, then back off.
+
+    Additive increase, multiplicative decrease — the same control law TCP uses,
+    for the same reason: it finds the ceiling without knowing it in advance and
+    it recovers politely when the ceiling moves. Every success nudges the rate
+    up a little; every 429/503 halves it and imposes a cooldown, so a burst of
+    throttles collapses the rate fast instead of hammering a limiter.
+
+    A token bucket rather than a sleep-per-request, so N worker threads share
+    one global rate instead of each keeping its own.
+    """
+
+    def __init__(self, start=8.0, cap=400.0, floor=0.5, step=0.5):
+        self.rate, self.cap, self.floor, self.step = start, cap, floor, step
+        self.tokens = start
+        self.last = time.time()
+        self.lock = threading.Lock()
+        self.ok_since_change = 0
+        self.throttles = 0
+        self.peak = start
+        self.cooldown_until = 0.0
+
+    def take(self):
+        while True:
+            with self.lock:
+                now = time.time()
+                self.tokens = min(self.rate,
+                                  self.tokens + (now - self.last) * self.rate)
+                self.last = now
+                if now >= self.cooldown_until and self.tokens >= 1.0:
+                    self.tokens -= 1.0
+                    return
+                need = max((1.0 - self.tokens) / max(self.rate, 1e-6),
+                           self.cooldown_until - now, 0.005)
+            time.sleep(min(need, 0.5))
+
+    def on_ok(self):
+        with self.lock:
+            self.ok_since_change += 1
+            # additive increase, and slower the higher we already are
+            if self.ok_since_change >= max(20, int(self.rate)):
+                self.rate = min(self.cap, self.rate + self.step)
+                self.peak = max(self.peak, self.rate)
+                self.ok_since_change = 0
+
+    def on_throttle(self):
+        with self.lock:
+            self.throttles += 1
+            self.rate = max(self.floor, self.rate * 0.5)
+            self.ok_since_change = 0
+            self.cooldown_until = time.time() + 1.0
+
+
 class Esplora:
-    def __init__(self, base, cache=None, qps=4.0, timeout=20, retries=5):
+    def __init__(self, base, cache=None, qps=4.0, timeout=20, retries=5,
+                 adaptive=None):
         self.base = base.rstrip("/")
         self.min_gap = 1.0 / max(qps, 0.01)
         self.timeout, self.retries = timeout, retries
@@ -126,11 +182,16 @@ class Esplora:
                         pass
         self.cache_fh = open(cache, "a") if cache else None
         self.calls = 0
+        self.adaptive = adaptive
+        self._iolock = threading.Lock()
 
     def _get(self, path):
-        gap = self.min_gap - (time.time() - self.last)
-        if gap > 0:
-            time.sleep(gap)
+        if self.adaptive is not None:
+            self.adaptive.take()
+        else:
+            gap = self.min_gap - (time.time() - self.last)
+            if gap > 0:
+                time.sleep(gap)
         url = f"{self.base}{path}"
         delay = 1.0
         for attempt in range(self.retries):
@@ -139,13 +200,19 @@ class Esplora:
                     url, headers={"User-Agent": "overdose-everfunded/1"})
                 with urllib.request.urlopen(req, timeout=self.timeout) as r:
                     self.last = time.time()
-                    self.calls += 1
+                    with self._iolock:
+                        self.calls += 1
+                    if self.adaptive is not None:
+                        self.adaptive.on_ok()
                     return json.loads(r.read().decode())
             except urllib.error.HTTPError as e:
-                if e.code in (429, 500, 502, 503, 504) and attempt < self.retries - 1:
-                    time.sleep(delay)
-                    delay *= 2
-                    continue
+                if e.code in (429, 500, 502, 503, 504):
+                    if self.adaptive is not None:
+                        self.adaptive.on_throttle()
+                    if attempt < self.retries - 1:
+                        time.sleep(delay)
+                        delay *= 2
+                        continue
                 raise
             except Exception:
                 if attempt < self.retries - 1:
@@ -166,10 +233,11 @@ class Esplora:
         fs = int(cs.get("funded_txo_sum", 0)) + int(ms.get("funded_txo_sum", 0))
         bal = fs - int(cs.get("spent_txo_sum", 0)) - int(ms.get("spent_txo_sum", 0))
         v = (fc, fs, bal)
-        self.cache[addr] = list(v)
-        if self.cache_fh:
-            self.cache_fh.write(json.dumps({"a": addr, "s": list(v)}) + "\n")
-            self.cache_fh.flush()
+        with self._iolock:
+            self.cache[addr] = list(v)
+            if self.cache_fh:
+                self.cache_fh.write(json.dumps({"a": addr, "s": list(v)}) + "\n")
+                self.cache_fh.flush()
         return v
 
 
@@ -240,6 +308,8 @@ def selftest():
     class Fake(Esplora):
         def __init__(self):
             self.cache, self.cache_fh, self.calls = {}, None, 0
+            self.adaptive = None
+            self._iolock = threading.Lock()
 
         def _get(self, path):
             return {"chain_stats": {"funded_txo_count": 3,
@@ -269,7 +339,15 @@ def main():
     ap.add_argument("--addresses")
     ap.add_argument("--phrases")
     ap.add_argument("--cache", default="everfunded_cache.jsonl")
-    ap.add_argument("--qps", type=float, default=4.0)
+    ap.add_argument("--qps", type=float, default=4.0,
+                    help="fixed rate; ignored when --auto is used")
+    ap.add_argument("--auto", action="store_true",
+                    help="ramp the rate up until the endpoint throttles, then "
+                         "back off and keep probing (AIMD)")
+    ap.add_argument("--workers", type=int, default=32,
+                    help="concurrent requests, with --auto")
+    ap.add_argument("--start-qps", type=float, default=8.0)
+    ap.add_argument("--cap-qps", type=float, default=400.0)
     ap.add_argument("--out", default="everfunded_hits.tsv")
     ap.add_argument("--control-only", action="store_true")
     ap.add_argument("--verify-controls", action="store_true",
@@ -296,7 +374,8 @@ def main():
     if not a.base:
         sys.exit("no endpoint: pass --base or set $ESPLORA")
 
-    api = Esplora(a.base, cache=a.cache, qps=a.qps)
+    ad = Adaptive(start=a.start_qps, cap=a.cap_qps) if a.auto else None
+    api = Esplora(a.base, cache=a.cache, qps=a.qps, adaptive=ad)
     if not run_control(api):
         sys.exit("control failed — refusing to sweep, a null here would be "
                  "meaningless")
@@ -315,27 +394,90 @@ def main():
     else:
         sys.exit("give --addresses or --phrases")
 
-    sys.stderr.write(f"\n  querying {len(items):,} addresses at {a.qps}/s "
-                     f"(~{len(items)/max(a.qps,0.01)/60:.0f} min)\n")
+    todo = [(s_, x) for s_, x in items if x not in api.cache]
+    sys.stderr.write(f"\n  {len(items):,} addresses, {len(items)-len(todo):,} "
+                     f"already cached, {len(todo):,} to fetch\n")
+    if ad:
+        sys.stderr.write(f"  ADAPTIVE: starting {a.start_qps}/s, {a.workers} "
+                         f"workers, ramping until the endpoint throttles then "
+                         f"halving. Ctrl-C is safe, progress is cached.\n")
+    else:
+        sys.stderr.write(f"  fixed {a.qps}/s "
+                         f"(~{len(todo)/max(a.qps,0.01)/60:.0f} min)\n")
+
     fh = open(a.out, "w")
     fh.write("phrase\taddress\tfunded_txo_count\treceived_btc\tbalance_btc\n")
-    hits = 0
-    for i, (src, ad) in enumerate(items, 1):
+    state = {"done": 0, "hits": 0, "err": 0}
+    lock = threading.Lock()
+    t0 = time.time()
+
+    def record(src, addr, fc, fs, bal):
+        with lock:
+            state["done"] += 1
+            if fc > 0:
+                state["hits"] += 1
+                fh.write(f"{src}\t{addr}\t{fc}\t{fs/1e8:.8f}\t{bal/1e8:.8f}\n")
+                fh.flush()
+                sys.stderr.write(f"  *** EVER-FUNDED {addr}  received "
+                                 f"{fs/1e8:.8f} BTC, balance {bal/1e8:.8f} "
+                                 f":: {src}\n")
+            n = state["done"]
+            if n % 250 == 0:
+                el = max(time.time() - t0, 1e-9)
+                extra = (f"  rate {ad.rate:6.1f}/s  peak {ad.peak:.0f}  "
+                         f"throttled {ad.throttles}") if ad else ""
+                eta = (len(todo) - n) / max(n / el, 1e-9) / 60
+                sys.stderr.write(f"  {n:,}/{len(todo):,}  {state['hits']} "
+                                 f"ever-funded  {n/el:5.1f}/s actual  "
+                                 f"eta {eta:4.0f}m{extra}\n")
+
+    if not ad or a.workers <= 1:
+        for src, addr in todo:
+            try:
+                fc, fs, bal = api.stats(addr)
+                record(src, addr, fc, fs, bal)
+            except Exception as e:
+                state["err"] += 1
+                sys.stderr.write(f"  {addr} error: {e}\n")
+    else:
+        q = queue.Queue()
+        for it in todo:
+            q.put(it)
+
+        def worker():
+            while True:
+                try:
+                    src, addr = q.get_nowait()
+                except queue.Empty:
+                    return
+                try:
+                    fc, fs, bal = api.stats(addr)
+                    record(src, addr, fc, fs, bal)
+                except Exception as e:
+                    with lock:
+                        state["err"] += 1
+                        if state["err"] <= 10:
+                            sys.stderr.write(f"  {addr} error: {e}\n")
+                finally:
+                    q.task_done()
+
+        ts = [threading.Thread(target=worker, daemon=True)
+              for _ in range(a.workers)]
+        for t in ts:
+            t.start()
         try:
-            fc, fs, bal = api.stats(ad)
-        except Exception as e:
-            sys.stderr.write(f"  [{i}] {ad} error: {e}\n")
-            continue
-        if fc > 0:
-            hits += 1
-            fh.write(f"{src}\t{ad}\t{fc}\t{fs/1e8:.8f}\t{bal/1e8:.8f}\n")
-            fh.flush()
-            sys.stderr.write(f"  *** EVER-FUNDED {ad}  received "
-                             f"{fs/1e8:.8f} BTC, balance {bal/1e8:.8f} "
-                             f":: {src}\n")
-        if i % 200 == 0:
-            sys.stderr.write(f"  {i:,}/{len(items):,}  {hits} ever-funded\n")
+            for t in ts:
+                t.join()
+        except KeyboardInterrupt:
+            sys.stderr.write("\n  interrupted — everything fetched so far is "
+                             "in the cache; re-run to resume\n")
     fh.close()
+    el = max(time.time() - t0, 1e-9)
+    sys.stderr.write(f"\n  {state['done']:,} fetched in {el/60:.1f} min "
+                     f"({state['done']/el:.1f}/s average"
+                     + (f", peak rate {ad.peak:.0f}/s, {ad.throttles} throttles"
+                        if ad else "") + f"), {state['err']} errors\n")
+    hits = state["hits"]
     sys.stderr.write(f"\n  DONE. {len(items):,} addresses, {hits} EVER-FUNDED "
                      f"-> {a.out}\n")
     sys.stderr.write("  Note: 'ever-funded' includes dust and unrelated "
