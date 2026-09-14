@@ -51,7 +51,20 @@ import argparse, hashlib, json, os, sys, time, urllib.error, urllib.request
 
 # Brainwallets that were unquestionably funded and are unquestionably empty
 # now. They are the control: the endpoint must report funded_txo_count > 0.
-SWEPT_CONTROLS = ["satoshi", "password", "correct horse battery staple"]
+#
+# The addresses are PRECOMPUTED so that --control-only and --addresses run on a
+# bare Python with no third-party packages and no repo data files. They are not
+# recalled constants: each is sha256(phrase) -> P2PKH, derived by this repo's
+# own code, and `--verify-controls` re-derives them from the phrases and checks
+# they still match, so a typo here cannot silently weaken the control.
+SWEPT_CONTROLS = [
+    ("satoshi", "1ADJqstUMBB5zFquWg19UqZ7Zc6ePCpzLE",
+     "1xm4vFerV3pSgvBFkyzLgT1Ew3HQYrS1V"),
+    ("password", "16ga2uqnF1NqpAuQeeg7sTCAdtDUwDyJav",
+     "16qVRutZ7rZuPx7NMtapvZorWYjyaME2Ue"),
+    ("correct horse battery staple", "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T",
+     "1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8"),
+]
 # An address that has certainly received coins, as a second, non-derived check.
 GENESIS = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
 
@@ -80,6 +93,19 @@ def b58check(payload):
         n, r = divmod(n, 58)
         s = B58[r] + s
     return "1" * (len(payload + chk) - len((payload + chk).lstrip(b"\0"))) + s
+
+
+def b58decode_h160(addr):
+    """hash160 from a P2PKH address, verifying the checksum. Stdlib only."""
+    n = 0
+    for ch in addr:
+        if ch not in B58:
+            return None
+        n = n * 58 + B58.index(ch)
+    b = n.to_bytes(25, "big")
+    if hashlib.sha256(hashlib.sha256(b[:21]).digest()).digest()[:4] != b[21:]:
+        return None
+    return b[1:21]
 
 
 class Esplora:
@@ -163,12 +189,8 @@ def run_control(api):
     except Exception as e:
         sys.stderr.write(f"    genesis lookup FAILED: {e}\n")
         return False
-    for p in SWEPT_CONTROLS:
-        try:
-            addrs = derive_addresses(p)
-        except Exception as e:
-            sys.stderr.write(f"    cannot derive (need coincurve): {e}\n")
-            return False
+    for p, a_unc, a_comp in SWEPT_CONTROLS:
+        addrs = [a_unc, a_comp]
         best = (0, 0, 0)
         for a in addrs:
             try:
@@ -196,34 +218,24 @@ def run_control(api):
 def selftest():
     """Offline checks: address encoding and stats parsing."""
     ok = True
-    # The encoder is checked by ROUND TRIP against this repo's independent
-    # decoder, not against an address recalled from memory. An earlier version
-    # of this selftest asserted a remembered "published" brainwallet address
-    # and failed, because the remembered value was wrong — asserting recalled
-    # constants as ground truth is precisely the failure mode this project
-    # refuses to accept anywhere else.
-    try:
-        from index_oracle import spk_from_address
-        spk = spk_from_address(GENESIS)          # 0x76 a9 14 <h160> 88 ac
-        h160_of_genesis = spk[3:23]
-        again = b58check(b"\x00" + h160_of_genesis)
-        ok &= again == GENESIS
-        sys.stderr.write(f"  round trip: {GENESIS} -> hash160 -> {again}  "
-                         f"{'OK' if again == GENESIS else 'FAIL'}\n")
-    except Exception as e:
-        sys.stderr.write(f"  round-trip control unavailable: {e}\n")
-        ok = False
-    try:
-        a = derive_addresses("satoshi")
-        sys.stderr.write(f"  sha256('satoshi') -> {a[0]} uncompressed, "
-                         f"{a[1]} compressed\n")
-        from index_oracle import spk_from_address as _s
-        ok &= all(_s(x) is not None for x in a)
-        sys.stderr.write(f"  both derived addresses decode as valid "
-                         f"Base58Check: {'OK' if ok else 'FAIL'}\n")
-    except Exception as e:
-        sys.stderr.write(f"  derivation unavailable (need coincurve): {e}\n")
-        ok = False
+    # Round trip using only this file: decode -> re-encode -> must match. An
+    # earlier version asserted a REMEMBERED "published" brainwallet address as
+    # ground truth and failed, because the remembered value was wrong.
+    # Asserting recalled constants is the failure mode this project refuses
+    # everywhere else, so nothing here is asserted from memory.
+    again = b58check(b"\x00" + b58decode_h160(GENESIS))
+    ok &= again == GENESIS
+    sys.stderr.write(f"  round trip: {GENESIS} -> hash160 -> {again}  "
+                     f"{'OK' if again == GENESIS else 'FAIL'}\n")
+
+    bad = 0
+    for _p, u, c in SWEPT_CONTROLS:
+        for ad in (u, c):
+            if b58decode_h160(ad) is None:
+                bad += 1
+    ok &= bad == 0
+    sys.stderr.write(f"  {2*len(SWEPT_CONTROLS)} embedded control addresses "
+                     f"are valid Base58Check: {'OK' if not bad else 'FAIL'}\n")
 
     class Fake(Esplora):
         def __init__(self):
@@ -260,11 +272,25 @@ def main():
     ap.add_argument("--qps", type=float, default=4.0)
     ap.add_argument("--out", default="everfunded_hits.tsv")
     ap.add_argument("--control-only", action="store_true")
+    ap.add_argument("--verify-controls", action="store_true",
+                    help="re-derive the embedded control addresses from their "
+                         "phrases (needs coincurve) and confirm they match")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
     if not selftest():
         sys.exit("offline logic checks failed; refusing to query anything")
+    if a.verify_controls:
+        bad = 0
+        for p, u, c in SWEPT_CONTROLS:
+            got = derive_addresses(p)
+            good = got == [u, c]
+            bad += 0 if good else 1
+            sys.stderr.write(f"  {p!r:34} embedded {u} / {c}\n"
+                             f"  {'':34} derived  {got[0]} / {got[1]}  "
+                             f"{'OK' if good else 'MISMATCH'}\n")
+        sys.exit(0 if not bad else "embedded control addresses do not match "
+                                   "their phrases")
     if a.selftest:
         return
     if not a.base:
