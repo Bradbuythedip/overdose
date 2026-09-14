@@ -59,3 +59,6 @@ solver/notesig.txt
 solver/hires/
 # regenerable from page72.py
 solver/p72.txt
+# 240 KB of per-glyph metadata, regenerable from oddity/glyph_mirror.py
+solver/oddity/glyph_meta.json
+solver/*/__pycache__/
