@@ -421,6 +421,12 @@ def main():
                 elif time.time() - last[0] > 30:
                     last[0] = time.time()
                     sys.stderr.write(line + "\n")
+                    # Python block-buffers stderr when it is redirected to a
+                    # file, so without this the throttled progress sits in a
+                    # buffer and a long run looks hung — precisely when seeing
+                    # it move matters most. The TTY branch above is fine
+                    # because it flushes already.
+                    sys.stderr.flush()
     except KeyboardInterrupt:
         sys.stderr.write("\n  interrupted\n")
     finally:
