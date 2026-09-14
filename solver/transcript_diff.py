@@ -63,10 +63,39 @@ def strip_html(raw):
 
 
 def load_other(path):
+    import os
+    if not os.path.exists(path):
+        near = sorted(f for f in os.listdir(".")
+                      if f.startswith("publisher") or f.endswith(".html"))
+        sys.exit(f"no such file: {path}\n"
+                 + (f"  HTML files here: {', '.join(near[:8])}\n"
+                    if near else "  no .html files in this directory\n")
+                 + "  Save the article page first; a failed download leaves\n"
+                   "  nothing behind, so check the fetch actually returned 200.")
     raw = open(path, encoding="utf-8", errors="replace").read()
     if "<" in raw[:2000] and ">" in raw[:2000]:
         return strip_html(raw)
     return [l.strip() for l in raw.splitlines() if l.strip()]
+
+
+def article_links(path):
+    """Every plausible article link in a saved index or archive page.
+
+    The slug guesses missed, so the archive page is the way to the real URL.
+    This saves grepping HTML by hand.
+    """
+    raw = open(path, encoding="utf-8", errors="replace").read()
+    out = {}
+    for m in re.finditer(r'href="([^"]+)"[^>]*>(.*?)</a>', raw,
+                         re.I | re.S):
+        href, text = m.group(1), re.sub(r"(?s)<[^>]+>", " ", m.group(2))
+        text = norm(html.unescape(text))
+        if not text or len(text) < 4:
+            continue
+        if re.search(r"/(print|culture|markets|technical|business)/", href) \
+                or re.search(r"toxic|overdose|salvador|keiser", href, re.I):
+            out.setdefault(href, text)
+    return out
 
 
 def load_ours():
@@ -167,6 +196,10 @@ def selftest():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--other", help="the publisher's text or saved HTML")
+    ap.add_argument("--links", metavar="FILE",
+                    help="list every article link in a saved archive or index "
+                         "page and exit — for finding the real URL when the "
+                         "slug is unknown")
     ap.add_argument("--max", type=int, default=400000)
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
@@ -175,6 +208,21 @@ def main():
     if not selftest():
         sys.exit("diff logic fails its own checks; refusing")
     if a.selftest:
+        return
+    if a.links:
+        found = article_links(a.links)
+        sys.stderr.write(f"\n  {len(found)} candidate article link(s) in "
+                         f"{a.links}\n\n")
+        hot = [(h, t) for h, t in found.items()
+               if re.search(r"toxic|overdose|salvador", h + " " + t, re.I)]
+        for h, t in hot:
+            sys.stderr.write(f"  >>> {t[:70]}\n      {h}\n")
+        if hot:
+            sys.stderr.write(f"\n  ({len(found)-len(hot)} other links not "
+                             f"shown)\n")
+        else:
+            for h, t in list(found.items())[:40]:
+                sys.stderr.write(f"      {t[:66]}\n        {h}\n")
         return
     if not a.other:
         sys.exit("--other is required: save the publisher's article first.\n"
