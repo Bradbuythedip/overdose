@@ -1,0 +1,25 @@
+  38 highlight spans: OK (38)
+  3 marks: OK (3)
+  binary over 38 symbols: OK
+  bacon decodes a planted word: OK (BACON)
+  englishness separates real English: OK (z=+8.27)
+SELFTEST PASS
+
+controls: English prose z=+21.26   shuffled prose z=-0.06
+
+60 decodes, ranked by englishness z:
+  z= +4.60  highlights+marks[orange=0,marks=1] bacon24 off=4 COMMZPE
+  z= +0.00  highlights[orange=1] bacon26 off=4           ??TCEO
+  z= +0.00  highlights[orange=1] bacon26 off=3           ??JRCHP
+  z= +0.00  highlights[orange=1] bacon26 off=1           PXKMIR?
+  z= +0.00  highlights[orange=1] bacon24 off=4           ??UCEP
+  z= +0.00  highlights[orange=1] bacon24 off=3           ??KSCHQ
+  z= +0.00  highlights[orange=1] bacon24 off=2           ?PW?SDZ
+  z= +0.00  highlights[orange=1] bacon24 off=1           QZLNIS?
+  z= +0.00  highlights[orange=1] bacon24 off=0           Z?XGEI?
+  z= +0.00  highlights[orange=0] bacon26 off=4           CFM??R
+  z= +0.00  highlights[orange=0] bacon26 off=3           BCWO?YQ
+  z= +0.00  highlights[orange=0] bacon26 off=2           ARLHO?I
+
+highest decode z = +4.60; English control z = +21.26
+VERDICT: no decode reads as English. The highlight/mark binary sequence does not carry a Baconian plaintext.
