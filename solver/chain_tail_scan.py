@@ -23,7 +23,13 @@ TWO THINGS THIS LOOKS FOR
      matching the puzzle's vocabulary. A solver boasting, Keiser marking the
      wallet, anyone naming the serial.
 
-  2. A SWEEP, which is the one that matters. window/Tnew_exact_20.tsv holds 795
+  2. A FULL OUTPUT — the one that matters. Any output paying exactly
+     20.00000000 BTC, or within 19.9-20.1. The prize, if it exists and is
+     unspent, is an address HOLDING that, and Tnew_exact_20.tsv is a SNAPSHOT:
+     anything funded after it was taken is simply absent from every list this
+     project has. Each hit is marked known or NEW against those 795.
+
+  3. A SPEND of one of the 795. window/Tnew_exact_20.tsv holds 795
      scripthashes that each held exactly 20.00000000 BTC. A raw block does not
      say what an input spent, so a scripthash cannot be matched directly — but
      a standard spend REVEALS ITS PUBKEY in the scriptSig or witness. From the
@@ -83,6 +89,29 @@ PROTOCOL_NOISE = ["request_realm", "bitworkc", "request_subrealm", "atomicals",
 PUBLISHER = ["bitcoin magazine", "bitcoinmagazine", "btc media", "btcmedia"]
 ISSUE_HINTS = ["el salvador", "issue 24", "issue24", "overdose",
                "inscription issue", "the el salvador issue", "volume", "vol."]
+
+
+# THE ONE THAT MATTERS. The prize, if it exists and is unspent, is an address
+# HOLDING 20 BTC — not one that was emptied. window/Tnew_exact_20.tsv already
+# lists 795 such addresses, but it is a SNAPSHOT: an address funded after it was
+# taken is simply absent. 136,917 unscanned blocks is exactly where a
+# newly-funded 20 BTC output would be sitting, unseen by every list this project
+# has ever built.
+#
+# The first version of this scanner read each output's value and discarded it,
+# then hunted for SPENDS of the old snapshot. It walked past the answer to look
+# for evidence the answer was gone.
+PRIZE_SATS = 2_000_000_000                 # 20.00000000 BTC
+BAND_LO, BAND_HI = 1_990_000_000, 2_010_000_000    # 19.9 .. 20.1
+
+
+def classify_value(value):
+    """(report?, tag) for an output's value. Exact first, near-miss second."""
+    if value == PRIZE_SATS:
+        return True, "EXACT_20"
+    if BAND_LO <= value <= BAND_HI:
+        return True, "NEAR_20"
+    return False, ""
 
 
 def classify_publisher(text):
@@ -235,9 +264,9 @@ def scan_block(raw):
             ins.append(ss)
             yield "in", ss
         for _j in range(r.varint()):
-            r.u64()
+            value = r.u64()
             spk = r.take(r.varint())
-            yield "out", spk
+            yield "out", (value, spk)
         wits = [[] for _ in ins]
         if segwit:
             for j in range(n_in):
@@ -327,6 +356,26 @@ def selftest():
     sys.stderr.write(f"    an issue-24 inscription would be flagged with its "
                      f"hints {g2}: {'OK' if 'issue 24' in g2 else 'FAIL'}\n")
 
+    # THE DETECTOR THAT MATTERS: a block carrying an output of exactly 20 BTC
+    # must be caught, with its value read out of the block rather than discarded.
+    import sweep as _S
+    _out = b"\x00\x14" + b"\x5a" * 20
+    _blk = (b"\x00" * 80 + _S.varint(1)
+            + _S.Tx([_S.TxIn(b"\x33" * 32, 0, b"\x51", 0xFFFFFFFF)],
+                    [_S.TxOut(PRIZE_SATS, _out),
+                     _S.TxOut(12345, b"\x00\x14" + b"\x01" * 20)]).ser())
+    vals = [pl for kd, pl in scan_block(_blk) if kd == "out"]
+    caught = [(v, classify_value(v)) for v, _spk in vals]
+    got20 = [c for v, c in caught if c[0] and c[1] == "EXACT_20"]
+    ok &= len(vals) == 2 and len(got20) == 1
+    sys.stderr.write(f"  a block with a 20.00000000 BTC output: "
+                     f"{len(vals)} outputs parsed, {len(got20)} flagged "
+                     f"EXACT_20 {'OK' if len(got20)==1 else 'FAIL'}\n")
+    ok &= not classify_value(12345)[0]
+    ok &= classify_value(1_999_500_000) == (True, "NEAR_20")
+    sys.stderr.write(f"  19.995 BTC flagged NEAR_20, dust ignored: "
+                     f"{'OK' if classify_value(1_999_500_000)[1]=='NEAR_20' else 'FAIL'}\n")
+
     t = load_targets()
     sys.stderr.write(f"  {len(t):,} exactly-20-BTC scripthashes loaded as "
                      f"sweep targets\n")
@@ -374,6 +423,7 @@ def main():
 
     fh = open(a.out, "a", encoding="utf-8")
     t0, nblk, ntext, nsweep, nsupp, npub = time.time(), 0, 0, 0, 0, 0
+    nfull = nnew = 0
     h = start
     try:
         while h <= tip:
@@ -403,6 +453,22 @@ def main():
                                         f"\n  *** SWEEP of an exactly-20 "
                                         f"address in block {ht}: {s}\n")
                         continue
+                    if kind == "out":
+                        value, payload = payload
+                        vrep, vtag = classify_value(value)
+                        if vrep:
+                            nfull += 1
+                            sh = hashlib.sha256(payload).hexdigest()
+                            known = "known" if sh in targets else "NEW"
+                            fh.write(f"FULL\t{ht}\t{vtag}\t{value}\t{sh}\t"
+                                     f"{payload.hex()}\t{known}\n")
+                            fh.flush()
+                            if known == "NEW":
+                                nnew += 1
+                                sys.stderr.write(
+                                    f"\n  >>> {vtag} block {ht}: "
+                                    f"{value/1e8:.8f} BTC to a scripthash NOT "
+                                    f"in the 795 — {sh[:32]}…\n")
                     for run in ASCII_RUN.findall(payload):
                         txt = run.decode("ascii", "replace")
                         prep, pgot = classify_publisher(txt)
@@ -432,7 +498,8 @@ def main():
             json.dump({"next": h}, open(a.state, "w"))
             el = time.time() - t0
             sys.stderr.write(f"\r  {nblk:,} blocks  {ntext} text  "
-                             f"{nsweep} sweeps  {npub} pub  {nsupp} suppressed  "
+                             f"{nfull} full({nnew} new)  {nsweep} spent  "
+                             f"{npub} pub  {nsupp} supp  "
                              f"{nblk/max(el,1e-9):.1f} blk/s  "
                              f"at {h:,}   ")
             sys.stderr.flush()
@@ -442,8 +509,9 @@ def main():
         fh.close()
     sys.stderr.write(f"\n\n  {nblk:,} blocks, {ntext} reportable text "
                      f"hits, {nsupp} suppressed as noise, "
-                     f"{npub} Bitcoin Magazine artifacts, "
-                     f"{nsweep} sweeps of exactly-20 addresses\n")
+                     f"{npub} Bitcoin Magazine artifacts,\n"
+                     f"  {nfull} outputs at ~20 BTC of which {nnew} are NOT in "
+                     f"the 795, {nsweep} spends of known ones\n")
 
 
 if __name__ == "__main__":
