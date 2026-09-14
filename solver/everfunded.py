@@ -96,8 +96,18 @@ def b58check(payload):
     return "1" * (len(payload + chk) - len((payload + chk).lstrip(b"\0"))) + s
 
 
-def scripthash(spk):
-    """Esplora scripthash: sha256(scriptPubKey), hex, BYTE-REVERSED.
+SH_REVERSED = True          # set by probe_scripthash() against the endpoint
+
+
+def scripthash(spk, reverse=None):
+    """Esplora scripthash: sha256(scriptPubKey), hex.
+
+    Byte order is NOT universal. Electrum and Esplora historically display the
+    digest little-endian, but implementations differ, and a wrong order returns
+    an empty never-funded result for every script — a flawless-looking null
+    manufactured by the plumbing. So the order is PROBED against the endpoint
+    rather than assumed, and callers get whichever one the live control agreed
+    with.
 
     The reversal is not cosmetic — Esplora and Electrum display the digest in
     little-endian, and querying the forward hex silently returns an empty,
@@ -106,7 +116,9 @@ def scripthash(spk):
     so the control below checks a scripthash lookup against the address lookup
     for the same script and requires them to agree.
     """
-    return "sh:" + hashlib.sha256(spk).digest()[::-1].hex()
+    rev = SH_REVERSED if reverse is None else reverse
+    d = hashlib.sha256(spk).digest()
+    return "sh:" + (d[::-1] if rev else d).hex()
 
 
 def b58decode_h160(addr):
@@ -296,24 +308,40 @@ def run_control(api):
                          + f" funded_txo_count={best[0]:<6} "
                            f"received={best[1]/1e8:.4f} BTC  balance="
                            f"{best[2]/1e8:.4f}  {'OK' if good else 'FAIL'}\n")
-    # Scripthash agreement: the same output queried two ways must agree, or
-    # every scripthash result in the run is meaningless.
+    # Scripthash support is PROBED, not assumed, and its failure is reported
+    # separately from the ever-funded control. An endpoint can be perfectly
+    # good at /address and simply not expose /scripthash — that must not block
+    # the address-only stages, which is exactly what an earlier version did.
+    global SH_REVERSED
+    api.sh_ok = False
     try:
         h = b58decode_h160(GENESIS)
         spk = b"\x76\xa9\x14" + h + b"\x88\xac"
         by_addr = api.stats(GENESIS)
-        by_sh = api.stats(scripthash(spk))
-        agree = by_addr == by_sh
-        ok &= agree
-        sys.stderr.write(f"\n    scripthash path: genesis by address "
-                         f"{by_addr[0]} fundings, by scripthash {by_sh[0]} "
-                         f"-> {'AGREE, scripthash queries are valid' if agree else 'DISAGREE (FAIL)'}\n")
-        if not agree:
-            sys.stderr.write("    (a mismatch usually means the digest needs "
-                             "the opposite byte order)\n")
+        for rev in (True, False):
+            try:
+                by_sh = api.stats(scripthash(spk, reverse=rev))
+            except Exception:
+                continue
+            if by_sh == by_addr:
+                SH_REVERSED = rev
+                api.sh_ok = True
+                sys.stderr.write(
+                    f"\n    scripthash: WORKS with "
+                    f"{'reversed' if rev else 'forward'} byte order "
+                    f"(genesis agrees, {by_sh[0]} fundings both ways)\n")
+                break
+        if not api.sh_ok:
+            sys.stderr.write(
+                "\n    scripthash: NOT SUPPORTED by this endpoint (tried both "
+                "byte orders; genesis returns 0 either way while /address "
+                "returns "
+                f"{by_addr[0]}).\n"
+                "    Address-based stages are unaffected and will run. Stages "
+                "that need raw scriptPubKeys (bare P2PK, the wrapped and "
+                "multisig forms) cannot run here.\n")
     except Exception as e:
-        sys.stderr.write(f"\n    scripthash control FAILED: {e}\n")
-        ok = False
+        sys.stderr.write(f"\n    scripthash probe errored: {e}\n")
 
     sys.stderr.write(f"\n  CONTROL {'PASSED' if ok else 'FAILED'} "
                      f"({api.calls} API calls)\n")
@@ -443,6 +471,11 @@ def main():
     # CALL; it never decides what gets reported.
     cached = [(s_, x) for s_, x in items if x in api.cache]
     todo = [(s_, x) for s_, x in items if x not in api.cache]
+    need_sh = sum(1 for _s, x in items if x.startswith("sh:"))
+    if need_sh and not getattr(api, "sh_ok", False):
+        sys.exit(f"this list is {need_sh:,} scripthash queries and the "
+                 f"endpoint does not support /scripthash — refusing, every "
+                 f"result would be a false 'never funded'")
     sys.stderr.write(f"\n  {len(items):,} addresses, {len(cached):,} "
                      f"already cached (reported from cache, no API call), "
                      f"{len(todo):,} to fetch\n")
