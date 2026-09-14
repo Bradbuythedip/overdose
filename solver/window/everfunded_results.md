@@ -80,6 +80,15 @@ is exactly what a generic brainwallet dictionary contains.
 
 ## What this does to the swept-key hypothesis
 
+**SUPERSEDED 2026-09-14 — see `swept_key_untested.md`.** The comparison below
+is confounded twice: 23 of the ~25 ever-funded phrases are single words and the
+article corpus is 0.6% single words, and the rate is counted per address when a
+cracker works per phrase (the deep manifest applies 98.6 derivations to each of
+454 phrases). Stratified and counted per phrase, the article's expected hit
+count was 1.74 and observing 0 gives p = 0.402. In the prose stratum the
+generic base rate is itself zero, so no comparison is possible at any sample
+size. The swept-key hypothesis is NOT demoted. The original text follows.
+
 It argues against it, and that reverses the expectation this oracle was built
 on.
 
