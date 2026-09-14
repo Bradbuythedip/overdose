@@ -462,11 +462,69 @@ def control_sighash(chain, txid):
     return True
 
 
+def find_control_txs(chain, back=6, per_block=25, need=("p2pkh", "p2wpkh")):
+    """Discover confirmed transactions to validate the signer against.
+
+    The alternative is for a human (or me) to supply txids from memory, and
+    this project has already been bitten once by a selftest that asserted a
+    remembered value as ground truth. Nothing here is remembered: the chain is
+    walked, transactions are fetched, and their own bytes decide. A wrong guess
+    cannot pass — it can only fail to be found.
+    """
+    tip = int(chain._req("/blocks/tip/height"))
+    found, seen = {}, 0
+    sys.stderr.write(f"  searching for control transactions from block {tip} "
+                     f"backwards\n")
+    for h in range(tip - 1, tip - 1 - back, -1):
+        if all(k in found for k in need):
+            break
+        try:
+            bh = chain._req(f"/block-height/{h}")
+            txids = chain.get_json(f"/block/{bh}/txids")
+        except RuntimeError as e:
+            sys.stderr.write(f"    block {h}: {e}\n")
+            continue
+        for txid in txids[1:per_block + 1]:          # [0] is the coinbase
+            if all(k in found for k in need):
+                break
+            try:
+                meta = chain.tx(txid)
+            except RuntimeError:
+                continue
+            seen += 1
+            raw = None
+            for v in meta.get("vin", []):
+                pv = v.get("prevout") or {}
+                kind = classify_spk(bytes.fromhex(pv.get("scriptpubkey") or ""))
+                if kind not in need or kind in found:
+                    continue
+                # only SIGHASH_ALL spends are modelled by this signer
+                if raw is None:
+                    try:
+                        raw = parse_tx(chain.raw_tx(txid))
+                    except Exception:
+                        break
+                n = meta["vin"].index(v)
+                i = raw.vin[n]
+                sig = (i.witness[0] if len(i.witness) == 2
+                       else (i.script_sig[1:i.script_sig[0] + 1]
+                             if i.script_sig else b""))
+                if sig and sig[-1] == SIGHASH_ALL:
+                    found[kind] = txid
+                    sys.stderr.write(f"    {kind:8} <- {txid[:16]}… "
+                                     f"(block {h}, input {n})\n")
+    missing = [k for k in need if k not in found]
+    if missing:
+        sys.stderr.write(f"    no confirmed {', '.join(missing)} spend found in "
+                         f"{seen} transactions across {back} blocks\n")
+    return list(found.values()), missing
+
+
 def run_controls(chain, txids):
     sys.stderr.write("\n  CHAIN-GROUNDED CONTROLS — confirmed transactions as "
                      "the oracle\n")
     ok = True
-    for t in txids:
+    for t in dict.fromkeys(txids):          # dedupe, keep order
         try:
             ok &= control_serializer(chain, t)
             ok &= control_sighash(chain, t)
@@ -815,6 +873,10 @@ def main():
                          "repeatable. Use one legacy and one segwit spend")
     ap.add_argument("--control", action="store_true",
                     help="run the chain-grounded controls and stop")
+    ap.add_argument("--auto-control", action="store_true",
+                    help="find control transactions from recent blocks rather "
+                         "than being told which. Nothing is remembered; the "
+                         "chain supplies both the vectors and the answers")
     ap.add_argument("--no-exotic", action="store_true",
                     help="skip the 20 wrapped/multisig forms. They cannot be "
                          "signed here anyway, and checking them multiplies the "
@@ -824,6 +886,17 @@ def main():
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
+    try:
+        import coincurve                                       # noqa: F401
+    except ImportError:
+        venv = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            ".venv", "bin", "python")
+        hint = (f"\n  This box has a venv. Use it:\n    {venv} "
+                f"{os.path.basename(__file__)} ...\n"
+                if os.path.exists(venv) else
+                "\n  Create one:  ./setup_box.sh\n")
+        sys.exit(f"coincurve is not importable under {sys.executable}{hint}")
+
     sys.stderr.write("\n  OFFLINE SELFTEST\n")
     if not selftest():
         sys.exit("the signer fails its own offline checks; refusing to run")
@@ -832,18 +905,33 @@ def main():
 
     chain = Chain(a.base) if a.base else None
     controls_passed = False
-    if a.control_tx:
+    txids = list(a.control_tx)
+    if a.auto_control:
+        if not chain:
+            sys.exit("--auto-control needs --base")
+        sys.stderr.write("\n  FINDING CONTROL TRANSACTIONS\n")
+        try:
+            found, missing = find_control_txs(chain)
+        except RuntimeError as e:
+            sys.exit(f"  {e}")
+        if missing:
+            sys.exit(f"  could not find a confirmed spend of: "
+                     f"{', '.join(missing)}.\n  Pass --control-tx <txid> "
+                     f"explicitly, or widen the search.")
+        txids += found
+    if txids:
         if not chain:
             sys.exit("--control-tx needs --base")
-        controls_passed = run_controls(chain, a.control_tx)
+        controls_passed = run_controls(chain, txids)
         if not controls_passed:
             sys.exit("controls did not pass. Either the endpoint was "
                      "unreachable (see the reason above) or this signer does "
                      "not match consensus.\nEither way nothing is signed until "
                      "they pass.")
     if a.control:
-        if not a.control_tx:
-            sys.exit("--control needs at least one --control-tx <txid>")
+        if not txids:
+            sys.exit("--control needs --auto-control, or at least one "
+                     "--control-tx TXID")
         return
 
     if not a.to:
