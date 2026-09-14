@@ -33,8 +33,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import harness as H
 from hd_sweep import direct_keys, CURVE_N
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SOLVER = os.path.join(ROOT, "solver")
+# this file lives in solver/wf/, so one dirname up IS the solver dir
+SOLVER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(SOLVER)
 
 P72 = ("165 WESTERN UNION LOCATIONS IN PALESTINE "
        "572 WESTERN UNION LOCATIONS IN EL SALVADOR "
