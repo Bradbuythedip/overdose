@@ -688,7 +688,11 @@ def selftest():
            "pub": pub, "txid": "cc" * 32},
           {"kind": "p2pkh_c", "spk": b"\x76\xa9\x14" + h160(pub) + b"\x88\xac",
            "value": 50000, "pub": pub, "txid": "bb" * 32}]
-    p = build_psbt(tp, us, chain=None)
+    prev = Tx([TxIn(b"\x99" * 32, 0, b"\x51", 0xFFFFFFFF)],
+              [TxOut(0, b""), TxOut(50000, us[1]["spk"])])
+    us[1]["txid"] = prev.txid()
+    tp.vin[1].txid = bytes.fromhex(prev.txid())[::-1]
+    p = build_psbt(tp, us, chain=None, prevtxs={prev.txid(): prev.ser()})
     good = p[:5] == PSBT_MAGIC
     try:
         ptx, pins, pouts = parse_psbt(p)
@@ -696,6 +700,11 @@ def selftest():
                  == unsigned_clone(tp).ser(witness=False))
         good &= len(pins) == 2 and len(pouts) == 1
         good &= PSBT_IN_WITNESS_UTXO in pins[0]
+        # the legacy input's non_witness_utxo must hash to its own outpoint,
+        # which is what a strict decoder checks and the easiest thing to botch
+        good &= PSBT_IN_NON_WITNESS_UTXO in pins[1]
+        good &= (parse_tx(pins[1][PSBT_IN_NON_WITNESS_UTXO]).txid()
+                 == ptx.vin[1].txid[::-1].hex())
         good &= all(not i.script_sig and not i.witness for i in ptx.vin)
     except Exception as e:
         sys.stderr.write(f"  psbt round trip raised {e}\n")
@@ -764,8 +773,13 @@ def unsigned_clone(tx):
               tx.version, tx.locktime)
 
 
-def build_psbt(tx, utxos, chain=None):
-    """Serialize an unsigned transaction plus its input context as a PSBT."""
+def build_psbt(tx, utxos, chain=None, prevtxs=None):
+    """Serialize an unsigned transaction plus its input context as a PSBT.
+
+    prevtxs maps txid -> raw previous transaction, for callers that already
+    have them (the demo synthesizes its own). Otherwise they are fetched.
+    """
+    prevtxs = prevtxs or {}
     out = PSBT_MAGIC
     out += _kv(PSBT_GLOBAL_UNSIGNED_TX, unsigned_clone(tx).ser(witness=False))
     out += PSBT_SEPARATOR
@@ -785,13 +799,19 @@ def build_psbt(tx, utxos, chain=None):
         else:
             # legacy inputs need the FULL previous transaction so a verifier can
             # confirm the amount for itself rather than taking our word
-            if chain is not None:
+            prev = prevtxs.get(u["txid"])
+            if prev is None and chain is not None:
                 try:
-                    m += _kv(PSBT_IN_NON_WITNESS_UTXO, chain.raw_tx(u["txid"]))
+                    prev = chain.raw_tx(u["txid"])
                 except Exception as e:
                     sys.stderr.write(f"    psbt: could not fetch prev tx for "
-                                     f"{u['txid'][:16]}… ({e}); input left "
-                                     f"without its utxo record\n")
+                                     f"{u['txid'][:16]}… ({e})\n")
+            if prev is not None:
+                m += _kv(PSBT_IN_NON_WITNESS_UTXO, prev)
+            else:
+                sys.stderr.write(f"    psbt: input {u['txid'][:16]}… "
+                                 f"({kind}) has no utxo record; a strict "
+                                 f"decoder will call this PSBT incomplete\n")
         out += m + PSBT_SEPARATOR
 
     for _o in tx.vout:
@@ -824,6 +844,64 @@ def parse_psbt(raw):
     if r.i != len(raw):
         raise ValueError(f"PSBT has {len(raw) - r.i} trailing bytes")
     return tx, ins, outs
+
+
+def emit_psbt(path, tx, utxos, chain, prevtxs=None):
+    """Write a PSBT and print it base64, refusing if it does not round-trip."""
+    import base64
+    p = build_psbt(tx, utxos, chain, prevtxs)
+    ptx, pins, pouts = parse_psbt(p)              # our own round trip: a floor
+    if ptx.ser(witness=False) != unsigned_clone(tx).ser(witness=False):
+        sys.exit("  psbt does not round-trip to the same unsigned transaction; "
+                 "refusing to emit it")
+    with open(path, "wb") as fh:
+        fh.write(p)
+    b64 = base64.b64encode(p).decode()
+    sys.stderr.write(
+        f"\n  PSBT  {len(p)} bytes -> {path}\n"
+        f"    {len(pins)} input record(s), {len(pouts)} output record(s)\n"
+        f"\n  Check it with something that is NOT this script:\n"
+        f"    bitcoin-cli decodepsbt 'PASTE_THE_BASE64_BELOW'\n"
+        f"    or open {path} in Sparrow, or Electrum's Tools > Load "
+        f"transaction.\n"
+        f"    Confirm the destination and the amounts THERE.\n"
+        f"\n  PSBT BASE64\n{b64}\n")
+    return p
+
+
+def demo_utxos():
+    """A throwaway key and four invented UTXOs, one of each signable type.
+
+    The point is that verifying the PSBT encoding against a real decoder should
+    not require a private key, funds, or a solved puzzle. This makes that test
+    runnable today. The outpoints are fabricated, so nothing built from them
+    can ever be broadcast.
+    """
+    from coincurve import PrivateKey
+    from full_sweep import spks_for_key
+    from spk_extra import sc_p2pk
+    k = hashlib.sha256(b"overdose sweep demo key - throwaway").digest()
+    pk = PrivateKey(k).public_key
+    pc, pu = pk.format(True), pk.format(False)
+    forms = dict(spks_for_key(k))
+    plan = [("p2pkh_c", forms["p2pkh_c"], pc, 500_000_000),
+            ("p2wpkh", forms["p2wpkh"], pc, 500_000_000),
+            ("p2sh_p2wpkh", forms["p2sh_p2wpkh"], pc, 500_000_000),
+            ("p2pk_c", sc_p2pk(pc), pc, 500_000_000)]
+    utxos, prevtxs = [], {}
+    for n, (kind, spk, pub, val) in enumerate(plan):
+        # synthesize the funding transaction, then take the outpoint FROM it.
+        # A PSBT whose non_witness_utxo does not hash to the input's txid is
+        # rejected by a strict decoder, which would make this demo useless as
+        # a test of the encoding.
+        prev = Tx([TxIn(hashlib.sha256(kind.encode()).digest(), n,
+                        b"\x51", 0xFFFFFFFF)],
+                  [TxOut(val, spk)])
+        txid = prev.txid()
+        prevtxs[txid] = prev.ser()
+        utxos.append({"label": "demo", "kind": kind, "spk": spk, "key": k,
+                      "pub": pub, "txid": txid, "vout": 0, "value": val})
+    return utxos, sum(u["value"] for u in utxos), prevtxs
 
 
 # ---------------------------------------------------------------- key input ---
@@ -1071,6 +1149,11 @@ def main():
                     help="skip the 20 wrapped/multisig forms. They cannot be "
                          "signed here anyway, and checking them multiplies the "
                          "query count by ~5x")
+    ap.add_argument("--demo", action="store_true",
+                    help="dress rehearsal with a throwaway key and invented "
+                         "UTXOs. No key, no funds and no network needed — it "
+                         "exists so the PSBT encoding can be checked against a "
+                         "real decoder TODAY rather than on the day it matters")
     ap.add_argument("--psbt", metavar="FILE",
                     help="also write a BIP-174 PSBT and print it base64, so an "
                          "independent decoder (bitcoin-cli decodepsbt, Sparrow, "
@@ -1139,6 +1222,22 @@ def main():
     sys.stderr.write(f"    scriptPubKey {dest_spk.hex()}\n")
     sys.stderr.write(f"    type         {classify_spk(dest_spk)}\n")
 
+    if a.demo:
+        spendable, total, prevtxs = demo_utxos()
+        sys.stderr.write(
+            f"\n  DEMO — a throwaway key and four INVENTED UTXOs.\n"
+            f"    The inputs do not exist, so this transaction can never be\n"
+            f"    broadcast. It exists so the PSBT below can be handed to a\n"
+            f"    real decoder and checked while nothing is at stake.\n")
+        for u in spendable:
+            sys.stderr.write(f"    {u['kind']:14} {u['value']:>15,} sat\n")
+        sys.stderr.write(f"    {total:,} sat = {total/1e8:.8f} BTC\n")
+        tx, fee = build_and_sign(spendable, dest_spk, a.fee_rate, a.max_fee)
+        emit_psbt(a.psbt or "demo.psbt", tx, spendable, None, prevtxs)
+        verify_before_broadcast(tx, dest_spk, total, fee, a.max_fee)
+        sys.stderr.write(f"\n  DEMO ONLY. Nothing here is spendable.\n")
+        return
+
     if not chain:
         sys.exit("no endpoint: pass --base or set $ESPLORA")
 
@@ -1177,23 +1276,7 @@ def main():
     raw = tx.ser().hex()
 
     if a.psbt:
-        import base64
-        p = build_psbt(tx, spendable, chain)
-        ptx, pins, pouts = parse_psbt(p)          # our own round-trip, a floor
-        if ptx.ser(witness=False) != unsigned_clone(tx).ser(witness=False):
-            sys.exit("  psbt does not round-trip to the same unsigned tx; "
-                     "refusing to emit it")
-        with open(a.psbt, "wb") as fh:
-            fh.write(p)
-        b64 = base64.b64encode(p).decode()
-        sys.stderr.write(
-            f"\n  PSBT  {len(p)} bytes -> {a.psbt}\n"
-            f"    {len(pins)} input record(s), {len(pouts)} output record(s)\n"
-            f"    Verify it with something that is NOT this script:\n"
-            f"      bitcoin-cli decodepsbt {b64[:24]}...\n"
-            f"    or open {a.psbt} in Sparrow or Electrum. Confirm the\n"
-            f"    destination and amount there before you trust the hex below.\n")
-        sys.stderr.write(f"\n  PSBT BASE64\n{b64}\n")
+        emit_psbt(a.psbt, tx, spendable, chain)
     sys.stderr.write(f"\n  BUILT  txid {tx.txid()}\n")
     sys.stderr.write(f"    vsize {tx.vsize()} vB, fee {fee:,} sat "
                      f"({fee/tx.vsize():.1f} sat/vB), "
