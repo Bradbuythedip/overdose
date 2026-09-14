@@ -431,6 +431,10 @@ def main():
                     help="comma-separated subset to run, e.g. checksum_mine. "
                          "Default: whatever this machine can actually do.")
     ap.add_argument("--status", action="store_true")
+    ap.add_argument("--hits", action="store_true",
+                    help="print every recorded hit with its verdict. Hits were "
+                         "only visible in the scrolling log before this, so a "
+                         "finding could be lost to a closed terminal.")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
@@ -440,6 +444,21 @@ def main():
         return
 
     led = Ledger(a.db)
+    if a.hits:
+        rows = list(led.db.execute(
+            "SELECT family,oracle,label,address,value,found FROM hits "
+            "ORDER BY found"))
+        if not rows:
+            sys.stderr.write("\n  no hits recorded\n")
+            return
+        sys.stderr.write(f"\n  {len(rows)} recorded hit(s)\n\n")
+        for fam, orc, label, addr, val, _t in rows:
+            sys.stderr.write(f"  [{fam} / {orc}] {addr}"
+                             + (f"  {val} sats" if val else "") + "\n")
+            for part in str(label).split("|"):
+                sys.stderr.write(f"      {part}\n")
+            sys.stderr.write("\n")
+        return
     if a.status:
         t = led.totals()
         sys.stderr.write(f"\n  {t['done']:,} units done, {t['addresses']:,} "
