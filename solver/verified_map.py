@@ -129,6 +129,9 @@ def selftest():
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--json", default="unverified_lines.json",
+                    help="write every line carrying an unverified character, "
+                         "with the fraction of it the scan confirmed")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     sys.stderr.write("\n  SELFTEST\n")
@@ -158,6 +161,22 @@ def main():
                      f"also where the most quotable phrases are:\n")
     for p, i, t in zero[:12]:
         sys.stderr.write(f"    p{p} L{i:<3} {t[:60]}\n")
+
+    if a.json:
+        import json
+        recs = []
+        for pg, i, t, v in rows:
+            n = len([c for c in t if not c.isspace()])
+            if not n or len(v) == n:
+                continue            # fully verified lines are not the target
+            recs.append({"page": pg, "line": i, "text": t,
+                         "chars": n, "verified": len(v),
+                         "verified_frac": len(v) / n})
+        recs.sort(key=lambda r: (r["verified_frac"], r["page"], r["line"]))
+        json.dump(recs, open(a.json, "w", encoding="utf-8"),
+                  indent=1, ensure_ascii=False)
+        sys.stderr.write(f"\n  {len(recs)} lines carrying an unverified "
+                         f"character -> {a.json}\n")
 
 
 if __name__ == "__main__":
