@@ -419,6 +419,12 @@ def main():
     ap.add_argument("--cap-qps", type=float, default=400.0)
     ap.add_argument("--out", default="everfunded_hits.tsv")
     ap.add_argument("--control-only", action="store_true")
+    ap.add_argument("--debug-url", metavar="PATH",
+                    help="fetch ONE path, print status and raw body, query "
+                         "nothing else. Use it before believing a capability "
+                         "is missing: an endpoint answering 200 with an error "
+                         "body parses as funded_txo_count=0 and is "
+                         "indistinguishable from 'never funded'.")
     ap.add_argument("--verify-controls", action="store_true",
                     help="re-derive the embedded control addresses from their "
                          "phrases (needs coincurve) and confirm they match")
@@ -442,6 +448,34 @@ def main():
         return
     if not a.base:
         sys.exit("no endpoint: pass --base or set $ESPLORA")
+
+    if a.debug_url:
+        url = a.base.rstrip("/") + a.debug_url
+        sys.stderr.write(f"\n  GET {url}\n")
+        req = urllib.request.Request(
+            url, headers={"User-Agent": "overdose-everfunded/1"})
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                body = r.read().decode(errors="replace")
+                sys.stderr.write(f"  HTTP {r.status} "
+                                 f"{r.headers.get('Content-Type','')}\n")
+        except urllib.error.HTTPError as e:
+            body = e.read().decode(errors="replace")
+            sys.stderr.write(f"  HTTP {e.code} (error)\n")
+        except Exception as e:
+            sys.exit(f"  request failed: {e}")
+        sys.stderr.write(f"  {len(body)} bytes\n\n{body[:2000]}\n")
+        try:
+            d = json.loads(body)
+            cs = d.get("chain_stats")
+            sys.stderr.write(f"\n  chain_stats present: {cs is not None}\n")
+            if cs is None and isinstance(d, dict):
+                sys.stderr.write(f"  top-level keys: {list(d)[:12]}\n")
+                sys.stderr.write("  ^ if this is an error object, the endpoint "
+                                 "is REFUSING, not reporting 'never funded'\n")
+        except Exception:
+            sys.stderr.write("\n  body is not JSON\n")
+        return
 
     ad = Adaptive(start=a.start_qps, cap=a.cap_qps) if a.auto else None
     api = Esplora(a.base, cache=a.cache, qps=a.qps, adaptive=ad)
