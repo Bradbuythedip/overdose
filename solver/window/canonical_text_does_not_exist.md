@@ -27,6 +27,25 @@ The Wayback result is the strongest of the four: its index contains URLs that
 have since been **deleted**, so this is not "it was taken down". The column was
 never at a bitcoinmagazine.com URL at all.
 
+## Sharpened: OVERDOSE is never published, as a category
+
+A follow-up grep settles what the absence means. The sitemap DOES contain:
+
+```
+https://bitcoinmagazine.com/2022-orange-party-issue          <- issue page
+https://bitcoinmagazine.com/print/bitcoin-is-a-mirror-that-reveals-all
+```
+
+So issue landing pages are published, and the `/print/` path does carry some
+columns. What it does not contain is the Orange Party issue's OVERDOSE column,
+"Who is The Banana Republic Now, Biatch?" — no banana slug, no overdose slug,
+nothing.
+
+That rules out the reading that the El Salvador column was singled out or
+quietly removed. **OVERDOSE is not published digitally as a category.** Its
+absence is editorial policy about that column, not a fact about this puzzle,
+and therefore carries no information about whether a key is hidden in it.
+
 ## A correction to something I said earlier
 
 I wrote that "the Orange Party issue's OVERDOSE column is published digitally"
