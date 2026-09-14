@@ -5,3 +5,4 @@ __pycache__/
 # session-generated large/derived artifacts
 solver/strips/
 solver/wf/__pycache__/
+solver/solver_ledger.sqlite
