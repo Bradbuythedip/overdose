@@ -7,3 +7,6 @@
 Oracle: full 56.8M index ACTIVE (checks both sets)
   oracle genesis: OK
 SELFTEST PASS
+
+line-parity addresses 524,090 in 80s
+hits: 0
