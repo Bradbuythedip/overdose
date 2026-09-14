@@ -21,3 +21,4 @@ solver/*_state.json
 # with the run context rather than letting these patterns hide it.
 solver/*.log
 solver/mega_hits_*.tsv
+solver/*.out
