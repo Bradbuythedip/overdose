@@ -362,6 +362,81 @@ def blanks():
                   + "#%02X%02X%02X" % tuple(int(round(v*255)) for v in s["col"]))
 
 
+ORANGE = (lambda a: (a[..., 0] > 150) & (a[..., 1] > 40) & (a[..., 1] < 175)
+          & (a[..., 2] < 110) & (a[..., 0].astype(int) - a[..., 2] > 70))
+
+
+def _colour_layer(page):
+    d = doc()
+    idx = [k for k, v in PAGE_MAP.items() if v == page][0]
+    xr = [x[0] for x in d[idx].get_images(full=True)
+          if d.extract_image(x[0]).get("bpc") == 8][0]
+    return np.array(Image.open(io.BytesIO(d.extract_image(xr)["image"])).convert("RGB"))
+
+
+def highlights_vs_stencil():
+    """Is the orange-bar (highlighted) text in the 400 dpi stencil layer at all?"""
+    from scipy import ndimage
+    for p in (75, 76, 78, 79):
+        J = _colour_layer(p)
+        G = np.array(Image.fromarray(J).convert("L"))
+        O = ndimage.binary_closing(ORANGE(J), np.ones((15, 15), bool))
+        lab, n = ndimage.label(O)
+        sizes = ndimage.sum(O, lab, range(1, n + 1))
+        S = stencil_raster(p, 200)
+        boxpix = boxink = jdark = nb = 0
+        for k, o in enumerate(ndimage.find_objects(lab), 1):
+            if sizes[k - 1] < 800:
+                continue
+            h = o[0].stop - o[0].start; w = o[1].stop - o[1].start
+            if w < 40 or h < 10:
+                continue
+            nb += 1; boxpix += h * w
+            boxink += int(S[o].sum()); jdark += int((G[o] < 120).sum())
+        print(f"p{p}: {nb} highlight-bar boxes, {boxpix} px @200dpi; "
+              f"STENCIL ink inside = {boxink}; COLOUR-layer dark(<120) inside = "
+              f"{jdark} ({100*jdark/max(boxpix,1):.2f}%)")
+
+
+def orange_layers():
+    """Orange ink in the colour layer vs in the fully rendered page."""
+    import pymupdf as _pm
+    d = doc()
+    for i in range(8):
+        p = PAGE_MAP[i]
+        pix = d[i].get_pixmap(matrix=_pm.Matrix(200/72, 200/72))
+        C = np.array(Image.frombytes("RGB", (pix.width, pix.height), pix.samples))
+        J = _colour_layer(p)
+        oc, oj = int(ORANGE(C).sum()), int(ORANGE(J).sum())
+        extra = ""
+        if oc > oj:
+            ys, xs = np.where(ORANGE(C))
+            extra = (f"  stencil-only orange bbox x{xs.min()}-{xs.max()} "
+                     f"y{ys.min()}-{ys.max()} mean {C[ORANGE(C)].mean(0).round(0)}")
+        print(f"p{p}: colour-layer orange {oj:7d}   rendered-page orange {oc:7d}{extra}")
+
+
+def p72_split():
+    """Which of page 72's text lives ONLY in the 200 dpi colour layer."""
+    keep, J, S = jpeg_only_text(72)
+    H, W = J.shape
+    pts = sorted([(W - (x + w), H - (y + h), w, h) for x, y, w, h, a in keep],
+                 key=lambda t: (t[1], t[0]))
+    rows = []
+    for x, y, w, h in pts:
+        if rows and abs(rows[-1][-1][1] - y) < 12:
+            rows[-1].append((x, y, w, h))
+        else:
+            rows.append([(x, y, w, h)])
+    print("clusters of colour-layer-only glyphs (reading orientation, 200 dpi px):")
+    for r in rows:
+        if len(r) < 3:
+            continue
+        xs = [q[0] for q in r]; ys = [q[1] for q in r]
+        print(f"  n={len(r):4d}  y {min(ys):4d}-{max(ys)+max(q[3] for q in r):4d}"
+              f"  x {min(xs):4d}-{max(q[0]+q[2] for q in r):4d}")
+
+
 if __name__ == "__main__":
     fn = sys.argv[1] if len(sys.argv) > 1 else "inventory"
     globals()[fn](*sys.argv[2:])
