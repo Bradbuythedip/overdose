@@ -24,6 +24,14 @@ So for each address this reports first-funding height, the sweep height, and
 the dormancy between them. Long dormancy across the announcement is the signal;
 a recent funding is ordinary flow.
 
+WHY THERE IS A CAPABILITY PROBE
+The first version of this ran against an endpoint that does not serve the
+history path, failed on all 64 with HTTP 400, and then printed "none predates
+the claim" — a confident negative derived from ZERO profiled addresses. A null
+from a test that never ran is the error this project exists to avoid, so the
+probe runs first and the verdict is gated on how many addresses actually
+resolved.
+
 WHAT IT DOES NOT DO
 It does not filter. An adversarial review of candidate filters for this exact
 problem returned `survived: []` — every proposed narrowing criterion either
@@ -42,6 +50,7 @@ PRINT_BLOCK = 700000         # ~Sept 2021, the El Salvador issue
 class Esplora:
     def __init__(self, base, timeout=30):
         self.base, self.timeout = base.rstrip("/"), timeout
+        self.hist_path = None          # discovered by probe()
 
     def get(self, path):
         import urllib.request, urllib.error
@@ -63,18 +72,36 @@ class Esplora:
                 raise RuntimeError(f"unreachable: {e.reason}") from None
         raise RuntimeError(f"gave up on {path}")
 
-    def history(self, sh, cap=40):
-        """All confirmed txs for a scripthash, oldest last. Pages backwards.
+    def probe(self, sample_sh):
+        """Find a history path this endpoint actually serves, or None.
 
-        Esplora returns the most recent 25 and pages with the last seen txid.
-        A dormant address has 2, so this almost always costs one call; the cap
-        stops a hot wallet from costing hundreds.
+        Sixty-four identical HTTP 400s followed by a verdict is worse than one
+        clear refusal, so this runs before any real work.
         """
+        for tmpl in ("/scripthash/{}/txs", "/scripthash/{}/txs/chain"):
+            p = tmpl.format(sample_sh)
+            try:
+                r = self.get(p)
+            except RuntimeError as e:
+                sys.stderr.write(f"    {tmpl}  ->  {e}\n")
+                continue
+            if isinstance(r, list):
+                sys.stderr.write(f"    {tmpl}  ->  OK ({len(r)} tx)\n")
+                self.hist_path = tmpl
+                return tmpl
+            sys.stderr.write(f"    {tmpl}  ->  unexpected shape "
+                             f"{type(r).__name__}\n")
+        return None
+
+    def history(self, sh, cap=40):
+        """All confirmed txs for a scripthash, oldest last. Pages backwards."""
+        if not self.hist_path:
+            raise RuntimeError("no history path; probe() found none")
         out, last = [], None
         while len(out) < cap:
-            p = f"/scripthash/{sh}/txs/chain"
+            p = self.hist_path.format(sh)
             if last:
-                p += f"/{last}"
+                p = f"/scripthash/{sh}/txs/chain/{last}"
             batch = self.get(p)
             if not batch:
                 break
@@ -114,6 +141,38 @@ def classify(first, sweep):
     return "RECENT", "funded after the claim"
 
 
+def verdict(rows, n_input):
+    """The summary. MUST NOT conclude anything from an empty result set."""
+    import collections
+    tally = collections.Counter(r[0] for r in rows)
+    out = []
+    if not rows:
+        out.append("NO VERDICT — 0 of %d addresses were profiled." % n_input)
+        out.append("  The endpoint could not answer the question, so this says")
+        out.append("  nothing about whether any address predates the claim.")
+        out.append("  An earlier version printed a confident negative here.")
+        return "\n".join(out), tally
+    hot = tally["PRE-PRINT"] + tally["PRE-ANNOUNCE"]
+    if hot:
+        out.append(f"{hot} address(es) were funded before Keiser's claim, sat, "
+                   f"and were emptied")
+        out.append("  in the window no oracle here can see. That is the profile "
+                   "of a prize being")
+        out.append("  claimed. It is not proof — verify each funding "
+                   "transaction by hand.")
+    elif len(rows) == n_input:
+        out.append("None of the %d predates the claim. Every address emptied in "
+                   "the blind" % n_input)
+        out.append("  window was funded after 2023-03-04, so none has the "
+                   "dormant-prize profile.")
+    else:
+        out.append(f"PARTIAL — {len(rows)} of {n_input} profiled, and none of "
+                   f"THOSE predates the")
+        out.append(f"  claim. The other {n_input - len(rows)} are unresolved "
+                   f"and this says nothing about them.")
+    return "\n".join(out), tally
+
+
 def selftest():
     ok = True
     for first, sweep, want in ((690000, 940000, "PRE-PRINT"),
@@ -128,24 +187,36 @@ def selftest():
                              f"want {want}  FAIL\n")
     sys.stderr.write(f"  classification over pre-print / pre-announce / "
                      f"transient / recent / unknown: {'OK' if ok else 'FAIL'}\n")
-    sys.stderr.write(f"  announcement block {ANNOUNCE_BLOCK:,} (2023-03-04), "
-                     f"print block {PRINT_BLOCK:,} (~Sept 2021)\n")
-    # the ordering must be strict: a pre-print address is also pre-announce,
-    # and must be reported as the STRONGER label
     got, _w = classify(650000, 940000)
     ok &= got == "PRE-PRINT"
     sys.stderr.write(f"  a very old funding reports PRE-PRINT, not "
                      f"PRE-ANNOUNCE: {'OK' if got=='PRE-PRINT' else 'FAIL'}\n")
+
+    # THE REGRESSION THAT MATTERS: an empty result set must NOT produce a
+    # negative conclusion. The first version of this file did exactly that.
+    msg, _t = verdict([], 64)
+    bad = "none predates" in msg.lower() or "every address" in msg.lower()
+    ok &= ("NO VERDICT" in msg) and not bad
+    sys.stderr.write(f"  0 profiled -> NO VERDICT, not a negative conclusion: "
+                     f"{'OK' if ('NO VERDICT' in msg and not bad) else 'FAIL'}\n")
+    msg2, _t = verdict([("RECENT", "x", 900000, 940000, 40000, 2, "", "")], 64)
+    ok &= "PARTIAL" in msg2
+    sys.stderr.write(f"  1 of 64 profiled -> PARTIAL, scoped to what ran: "
+                     f"{'OK' if 'PARTIAL' in msg2 else 'FAIL'}\n")
+    rows = [("RECENT", str(i), 900000, 940000, 40000, 2, "", "")
+            for i in range(64)]
+    msg3, _t = verdict(rows, 64)
+    ok &= "None of the 64" in msg3
+    sys.stderr.write(f"  64 of 64 profiled -> the negative IS allowed: "
+                     f"{'OK' if 'None of the 64' in msg3 else 'FAIL'}\n")
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--in", dest="inp", default="swept_once.txt",
-                    help="one scripthash per line")
-    ap.add_argument("--sweeps", default="chain_tail_hits.jsonl",
-                    help="the scan output, to recover each sweep's block")
+    ap.add_argument("--in", dest="inp", default="swept_once.txt")
+    ap.add_argument("--sweeps", default="chain_tail_hits.jsonl")
     ap.add_argument("--rpc", default=os.environ.get("B", ""))
     ap.add_argument("--out", default="age_profile.tsv")
     ap.add_argument("--selftest", action="store_true")
@@ -172,11 +243,28 @@ def main():
             if r.get("type") == "SWEEP":
                 sweep_block.setdefault(r["scripthash"], r["block"])
 
+    api = Esplora(a.rpc)
     sys.stderr.write(f"\n  {len(shs)} scripthash(es) swept once in the "
                      f"index-blind window\n")
-    sys.stderr.write(f"  asking the chain when each was FIRST funded\n\n")
+    sys.stderr.write("\n  PROBING the endpoint for a usable history path\n")
+    if not shs:
+        sys.exit("  no scripthashes in the input")
+    if not api.probe(shs[0]):
+        sys.stderr.write(
+            "\n  This endpoint serves /scripthash/{h} — filter_full.py depends\n"
+            "  on that — but NOT the transaction-history paths, so it cannot\n"
+            "  answer when an address was first funded.\n"
+            "\n  NO VERDICT. Nothing has been tested.\n"
+            "\n  Two ways forward:\n"
+            "    1. Point --rpc at a full Esplora instance (blockstream.info/api\n"
+            "       or a self-hosted one) which serves /scripthash/{h}/txs.\n"
+            "    2. Avoid history entirely: a SWEEP transaction's input names\n"
+            "       the funding txid, and /tx/{txid} gives its block height.\n"
+            "       That needs chain_tail_scan to record the spending txid in\n"
+            "       its SWEEP records, which it does not yet do.\n")
+        sys.exit(2)
 
-    api = Esplora(a.rpc)
+    sys.stderr.write(f"\n  using {api.hist_path}\n\n")
     rows = []
     for i, sh in enumerate(shs, 1):
         try:
@@ -207,24 +295,12 @@ def main():
         for r in rows:
             fh.write("\t".join("" if x is None else str(x) for x in r) + "\n")
 
-    import collections
-    tally = collections.Counter(r[0] for r in rows)
-    sys.stderr.write(f"\n\n  {len(rows)} profiled -> {a.out}\n")
+    msg, tally = verdict(rows, len(shs))
+    sys.stderr.write(f"\n\n  {len(rows)} of {len(shs)} profiled -> {a.out}\n")
     for k in ("PRE-PRINT", "PRE-ANNOUNCE", "RECENT", "TRANSIENT", "UNKNOWN"):
         if tally[k]:
             sys.stderr.write(f"    {k:14} {tally[k]:>4}\n")
-    hot = tally["PRE-PRINT"] + tally["PRE-ANNOUNCE"]
-    if hot:
-        sys.stderr.write(
-            f"\n  {hot} address(es) were funded before Keiser's claim, sat, and "
-            f"were emptied\n  in the window no oracle here can see. That is the "
-            f"profile of a prize being\n  claimed. It is not proof — verify each "
-            f"funding transaction by hand.\n")
-    else:
-        sys.stderr.write(
-            "\n  none predates the claim. Every address emptied in the blind "
-            "window was\n  funded after 2023-03-04, so none has the "
-            "dormant-prize profile.\n")
+    sys.stderr.write("\n  " + msg + "\n")
 
 
 if __name__ == "__main__":
