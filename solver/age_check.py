@@ -93,6 +93,30 @@ class Esplora:
                              f"{type(r).__name__}\n")
         return None
 
+    def probe_tx(self, sample_txid):
+        """Can this endpoint answer /tx/{txid}? That is all the prevout route
+        needs, and endpoints that refuse the history paths still serve it."""
+        try:
+            r = self.get(f"/tx/{sample_txid}")
+        except RuntimeError as e:
+            sys.stderr.write(f"    /tx/{{txid}}  ->  {e}\n")
+            return False
+        if isinstance(r, dict) and "status" in r:
+            h = r["status"].get("block_height")
+            sys.stderr.write(f"    /tx/{{txid}}  ->  OK (block {h})\n")
+            return True
+        sys.stderr.write(f"    /tx/{{txid}}  ->  unexpected shape "
+                         f"{type(r).__name__}\n")
+        return False
+
+    def tx_height(self, txid):
+        """Confirmed block height of a transaction, or None."""
+        tx = self.get(f"/tx/{txid}")
+        st = tx.get("status", {}) if isinstance(tx, dict) else {}
+        if not st.get("confirmed"):
+            return None
+        return st.get("block_height")
+
     def history(self, sh, cap=40):
         """All confirmed txs for a scripthash, oldest last. Pages backwards."""
         if not self.hist_path:
@@ -126,6 +150,26 @@ def profile(api, sh):
     if len(txs) >= 40:
         note = "history truncated at the cap; first funding may be older"
     return min(heights), max(heights), len(txs), note
+
+
+def profile_via_prevout(api, prev_txid):
+    """(funding_height, n_tx, note) from the SWEEP's own input.
+
+    THE ROUTE THAT DOES NOT NEED A HISTORY ENDPOINT. A spend names the outpoint
+    it consumes, and that outpoint's transaction is the one that funded the coin
+    — so `/tx/{txid}` dates the address directly. `chain_tail_scan` parses those
+    32 bytes on every input and, until now, discarded them.
+
+    SCOPE, stated rather than buried: this dates THE COIN THAT WAS SPENT, not
+    necessarily the address's first-ever funding. For the swept-once set — one
+    funding, one spend, which is the whole point of that list — they are the
+    same transaction. For a reused address they need not be, so the caller
+    marks such rows and the note travels with the row.
+    """
+    h = api.tx_height(prev_txid)
+    if h is None:
+        return None, 0, "funding tx unconfirmed or unknown"
+    return h, 2, "dated from the spent outpoint, not a full history"
 
 
 def classify(first, sweep):
@@ -209,6 +253,37 @@ def selftest():
     ok &= "None of the 64" in msg3
     sys.stderr.write(f"  64 of 64 profiled -> the negative IS allowed: "
                      f"{'OK' if 'None of the 64' in msg3 else 'FAIL'}\n")
+    # THE PREVOUT ROUTE, against a fake endpoint. It must read the height out
+    # of a confirmed tx and must refuse to invent one for an unconfirmed tx.
+    class _FakeAPI:
+        def __init__(self, payload):
+            self.payload = payload
+            self.asked = []
+
+        def tx_height(self, txid):
+            self.asked.append(txid)
+            st = self.payload.get("status", {})
+            return st.get("block_height") if st.get("confirmed") else None
+
+    api = _FakeAPI({"status": {"confirmed": True, "block_height": 771234}})
+    h, n, note = profile_via_prevout(api, "de" * 32)
+    good = h == 771234 and api.asked == ["de" * 32]
+    ok &= good
+    sys.stderr.write(f"  prevout route reads the funding height from "
+                     f"/tx/{{txid}}: {'OK' if good else 'FAIL'}\n")
+    tag, _w = classify(h, 940000)
+    ok &= tag == "PRE-ANNOUNCE"
+    sys.stderr.write(f"  and that height classifies as PRE-ANNOUNCE: "
+                     f"{'OK' if tag == 'PRE-ANNOUNCE' else 'FAIL'}\n")
+    h2, _n, note2 = profile_via_prevout(
+        _FakeAPI({"status": {"confirmed": False}}), "ab" * 32)
+    ok &= h2 is None
+    sys.stderr.write(f"  an unconfirmed funding tx yields None, not a height: "
+                     f"{'OK' if h2 is None else 'FAIL'}\n")
+    ok &= classify(h2, 940000)[0] == "UNKNOWN"
+    sys.stderr.write(f"  which classifies UNKNOWN rather than being dropped "
+                     f"silently: {'OK' if classify(h2,940000)[0]=='UNKNOWN' else 'FAIL'}\n")
+
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
@@ -233,7 +308,7 @@ def main():
         sys.exit("need --rpc (or $B)")
 
     shs = [l.strip().lower() for l in open(a.inp) if len(l.strip()) == 64]
-    sweep_block = {}
+    sweep_block, prev_txid = {}, {}
     if os.path.exists(a.sweeps):
         for line in open(a.sweeps, encoding="utf-8"):
             try:
@@ -242,33 +317,59 @@ def main():
                 continue
             if r.get("type") == "SWEEP":
                 sweep_block.setdefault(r["scripthash"], r["block"])
+                if r.get("prev_txid"):
+                    prev_txid.setdefault(r["scripthash"], r["prev_txid"])
 
     api = Esplora(a.rpc)
     sys.stderr.write(f"\n  {len(shs)} scripthash(es) swept once in the "
                      f"index-blind window\n")
-    sys.stderr.write("\n  PROBING the endpoint for a usable history path\n")
     if not shs:
         sys.exit("  no scripthashes in the input")
-    if not api.probe(shs[0]):
+    sys.stderr.write(f"  {len(prev_txid)} of them carry a prevout txid from "
+                     f"{a.sweeps}\n")
+    sys.stderr.write("\n  PROBING the endpoint\n")
+
+    mode = None
+    if api.probe(shs[0]):
+        mode = "history"
+    sample = next((prev_txid[s] for s in shs if s in prev_txid), None)
+    if sample and api.probe_tx(sample):
+        mode = mode or "prevout"
+
+    if mode is None:
         sys.stderr.write(
-            "\n  This endpoint serves /scripthash/{h} — filter_full.py depends\n"
-            "  on that — but NOT the transaction-history paths, so it cannot\n"
-            "  answer when an address was first funded.\n"
+            "\n  This endpoint serves neither the transaction-history paths nor\n"
+            "  /tx/{txid}, so it cannot say when any address was funded.\n"
             "\n  NO VERDICT. Nothing has been tested.\n"
             "\n  Two ways forward:\n"
             "    1. Point --rpc at a full Esplora instance (blockstream.info/api\n"
             "       or a self-hosted one) which serves /scripthash/{h}/txs.\n"
-            "    2. Avoid history entirely: a SWEEP transaction's input names\n"
-            "       the funding txid, and /tx/{txid} gives its block height.\n"
-            "       That needs chain_tail_scan to record the spending txid in\n"
-            "       its SWEEP records, which it does not yet do.\n")
+            "    2. Use the prevout route, which needs only /tx/{txid}: re-run\n"
+            "       chain_tail_scan (it now records prev_txid on every SWEEP)\n"
+            "       and pass its output with --sweeps.\n")
+        sys.exit(2)
+    if mode == "prevout" and not prev_txid:
+        sys.stderr.write(
+            "\n  /tx/{txid} works, but no SWEEP record carries a prev_txid.\n"
+            "  Re-run chain_tail_scan to collect them.\n"
+            "\n  NO VERDICT. Nothing has been tested.\n")
         sys.exit(2)
 
-    sys.stderr.write(f"\n  using {api.hist_path}\n\n")
-    rows = []
+    sys.stderr.write(f"\n  using the {mode} route"
+                     + (f" ({api.hist_path})" if mode == "history" else
+                        " (/tx/{txid} on each sweep's spent outpoint)") + "\n\n")
+    rows, unresolved = [], 0
     for i, sh in enumerate(shs, 1):
         try:
-            first, last, n, note = profile(api, sh)
+            if mode == "history":
+                first, last, n, note = profile(api, sh)
+            else:
+                pt = prev_txid.get(sh)
+                if not pt:
+                    unresolved += 1
+                    continue
+                first, n, note = profile_via_prevout(api, pt)
+                last = sweep_block.get(sh)
         except RuntimeError as e:
             sys.stderr.write(f"  {sh[:16]}…: {e}\n")
             continue
@@ -297,6 +398,9 @@ def main():
 
     msg, tally = verdict(rows, len(shs))
     sys.stderr.write(f"\n\n  {len(rows)} of {len(shs)} profiled -> {a.out}\n")
+    if unresolved:
+        sys.stderr.write(f"    ({unresolved} had no prevout txid on record and "
+                         f"were not tested)\n")
     for k in ("PRE-PRINT", "PRE-ANNOUNCE", "RECENT", "TRANSIENT", "UNKNOWN"):
         if tally[k]:
             sys.stderr.write(f"    {k:14} {tally[k]:>4}\n")

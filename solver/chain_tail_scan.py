@@ -181,7 +181,11 @@ def tsv_to_json(tsv_path, json_path):
         "FULL": ["type", "block", "tag", "value", "scripthash", "spk", "known"],
         "TEXT": ["type", "block", "kind", "why", "matched", "text"],
         "PUBLISHER": ["type", "block", "kind", "matched", "text"],
-        "SWEEP": ["type", "block", "scripthash", "pubkey"],
+        # prev_txid/prev_vout were added later; a TSV written before that has
+        # four columns and zip() simply stops there, so old files still convert
+        # rather than mis-assigning a column.
+        "SWEEP": ["type", "block", "scripthash", "pubkey",
+                  "prev_txid", "prev_vout"],
     }
     n = 0
     with open(json_path, "w", encoding="utf-8") as out:
@@ -196,6 +200,8 @@ def tsv_to_json(tsv_path, json_path):
             if "value" in rec:
                 rec["value"] = int(rec["value"])
                 rec["btc"] = rec["value"] / 1e8
+            if "prev_vout" in rec:
+                rec["prev_vout"] = int(rec["prev_vout"])
             if "matched" in rec:
                 rec["matched"] = rec["matched"].split(",")
             if "known" in rec:
@@ -316,10 +322,17 @@ def scan_block(raw):
             n_in = r.varint()
         ins = []
         for _j in range(n_in):
-            r.take(32); r.u32()
+            # THE PREVOUT. Earlier versions read these two fields and threw
+            # them away. The txid here IS the funding transaction of the coin
+            # being spent — for an address funded once and then swept, it is
+            # THE funding — so it dates the address without needing any
+            # transaction-history endpoint. Stored in internal byte order,
+            # exactly as it sits in the block; reverse it for display.
+            prev_txid = r.take(32)
+            prev_vout = r.u32()
             ss = r.take(r.varint())
             r.u32()
-            ins.append(ss)
+            ins.append((ss, prev_txid, prev_vout))
             yield "in", ss
         for _j in range(r.varint()):
             value = r.u64()
@@ -332,8 +345,8 @@ def scan_block(raw):
                 for w in wits[j]:
                     yield "wit", w
         r.u32()
-        for ss, w in zip(ins, wits):
-            yield "spend", (ss, w)
+        for (ss, ptxid, pvout), w in zip(ins, wits):
+            yield "spend", (ss, w, ptxid, pvout)
 
 
 def selftest():
@@ -434,6 +447,42 @@ def selftest():
     sys.stderr.write(f"  19.995 BTC flagged NEAR_20, dust ignored: "
                      f"{'OK' if classify_value(1_999_500_000)[1]=='NEAR_20' else 'FAIL'}\n")
 
+    # THE PREVOUT. It dates the address the sweep emptied, so it has to come
+    # back out of the block intact AND in the right byte order. A block stores
+    # a txid internally; every API wants it reversed. Getting that backwards
+    # yields a well-formed 64-hex string that no endpoint has ever heard of —
+    # which reads as "address not found", not as a bug.
+    _fund = hashlib.sha256(b"a funding transaction").digest()
+    _blk2 = (b"\x00" * 80 + _S.varint(1)
+             + _S.Tx([_S.TxIn(_fund, 7, b"\x51", 0xFFFFFFFF)],
+                     [_S.TxOut(1000, b"\x00\x14" + b"\x02" * 20)]).ser())
+    spends = [pl for kd, pl in scan_block(_blk2) if kd == "spend"]
+    good = len(spends) == 1 and spends[0][2] == _fund and spends[0][3] == 7
+    ok &= good
+    sys.stderr.write(f"  prevout recovered from a spend: "
+                     f"{'txid+vout intact' if good else 'FAIL'} "
+                     f"{'OK' if good else 'FAIL'}\n")
+    disp = spends[0][2][::-1].hex() if spends else ""
+    good = disp == _S.Tx([_S.TxIn(_fund, 7)], []).vin[0].txid[::-1].hex()
+    ok &= good and disp != _fund.hex()
+    sys.stderr.write(f"  and reversed to display order for the API "
+                     f"({disp[:16]}… != stored {_fund.hex()[:16]}…): "
+                     f"{'OK' if (good and disp != _fund.hex()) else 'FAIL'}\n")
+
+    # a 2-input tx must pair each prevout with ITS OWN scriptSig, not slide by
+    # one — the zip() over ins/wits is where that would break silently
+    _a, _b = b"\xaa" * 32, b"\xbb" * 32
+    _blk3 = (b"\x00" * 80 + _S.varint(1)
+             + _S.Tx([_S.TxIn(_a, 1, b"\x51", 0xFFFFFFFF),
+                      _S.TxIn(_b, 2, b"\x52", 0xFFFFFFFF)],
+                     [_S.TxOut(1000, b"\x00\x14" + b"\x03" * 20)]).ser())
+    sp = [pl for kd, pl in scan_block(_blk3) if kd == "spend"]
+    good = (len(sp) == 2 and sp[0][0] == b"\x51" and sp[0][2] == _a
+            and sp[1][0] == b"\x52" and sp[1][2] == _b)
+    ok &= good
+    sys.stderr.write(f"  two inputs keep their own prevout and scriptSig "
+                     f"(no off-by-one): {'OK' if good else 'FAIL'}\n")
+
     t = load_targets()
     sys.stderr.write(f"  {len(t):,} exactly-20-BTC scripthashes loaded as "
                      f"sweep targets\n")
@@ -509,7 +558,10 @@ def main():
                     continue
                 for kind, payload in items:
                     if kind == "spend":
-                        ss, wit = payload
+                        ss, wit, ptxid, pvout = payload
+                        # display order — the block stores it internally, every
+                        # API wants it reversed
+                        ptxid_hex = ptxid[::-1].hex()
                         for pub in pubkeys_in(ss, wit):
                             hit = scripthashes_for_pubkey(pub) & targets
                             if hit:
@@ -518,11 +570,15 @@ def main():
                                     sink.write(
                                         {"type": "SWEEP", "block": ht,
                                          "scripthash": s,
-                                         "pubkey": pub.hex()},
-                                        ["SWEEP", ht, s, pub.hex()])
+                                         "pubkey": pub.hex(),
+                                         "prev_txid": ptxid_hex,
+                                         "prev_vout": pvout},
+                                        ["SWEEP", ht, s, pub.hex(),
+                                         ptxid_hex, pvout])
                                     sys.stderr.write(
                                         f"\n  *** SWEEP of an exactly-20 "
-                                        f"address in block {ht}: {s}\n")
+                                        f"address in block {ht}: {s}\n"
+                                        f"      funded by {ptxid_hex}:{pvout}\n")
                         continue
                     if kind == "out":
                         value, payload = payload
