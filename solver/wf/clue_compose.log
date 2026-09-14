@@ -1,0 +1,8 @@
+  vigenere round trip: OK
+  atbash vector: OK
+  derivation vector: OK
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+units: 146 printed lines, 87 sentences, 1 page-72 sentences

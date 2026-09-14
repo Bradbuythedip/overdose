@@ -183,10 +183,13 @@ def report_blacks():
 
 
 # ---------------------------------------------------------------- head ghost
-GHOST = {75: (120, 100, 280, 150), 76: (120, 100, 280, 150),
-         78: (120, 100, 280, 150), 79: (120, 100, 280, 150),
-         73: (120, 100, 280, 150), 72: (120, 100, 280, 150),
-         74: (120, 100, 280, 150)}
+# The running head sits at reading-orientation (50.4 pt, 42.5 pt) on pages
+# 73/75/79 and (518-523 pt, 43 pt) on 74/76/78 -- i.e. 200 dpi pixel x=140 or
+# x=1440, y=118, 116x16 px. Boxes are padded by 6 px.
+GHOST = {73: (134, 112, 266, 146), 75: (134, 112, 266, 146),
+         79: (134, 112, 266, 146), 74: (1446, 112, 1578, 146),
+         76: (1434, 112, 1566, 146), 78: (1442, 112, 1574, 146),
+         72: (134, 112, 266, 146)}
 
 
 def report_head_ghost():
@@ -334,14 +337,107 @@ def report_clipping(rows):
     return rs
 
 
+def report_blackbars():
+    """The knocked-out highlight bars. The catalogue calls them black."""
+    print("\n== the knocked-out ('black') highlight bars, eroded core ==")
+    rows = []
+    for p in (75, 76, 78, 79):
+        a = load(p)
+        m = nd.binary_closing(a.mean(2) < 120, np.ones((5, 25), bool))
+        lab, n = nd.label(m)
+        objs = nd.find_objects(lab)
+        for i in range(1, n + 1):
+            sl = objs[i - 1]
+            h, w = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+            if not (26 <= h <= 44 and w >= 120):
+                continue
+            core = erode(lab == i, 7)
+            if core.sum() < 200:
+                continue
+            rgb = med(a, core)
+            if rgb[0] - rgb[2] > 20:      # an orange bar, not a knockout
+                continue
+            rows.append((p, sl[1].start, sl[0].start, w, h, rgb))
+            print(f" p{p} x={sl[1].start:5d} y={sl[0].start:5d} w={w:5d} h={h:3d} "
+                  f"{rgb}  R-G={rgb[0]-rgb[1]:+3d} R-B={rgb[0]-rgb[2]:+3d}")
+    arr = np.array([r[5] for r in rows])
+    print(f"  n={len(rows)} median={tuple(int(x) for x in np.median(arr,0))} "
+          f"L={arr.mean(1).mean():.1f}; nothing here is black. "
+          f"p77's dark ground is {med(load(77), (load(77).mean(2)>60)&(load(77).mean(2)<140)&(chroma(load(77))<40))}")
+    return rows
+
+
+def report_gradient():
+    """The bar-to-bar colour spread, and its control.
+
+    Bar blue falls as you go down every page.  If that is ink it is a second
+    orange; if it is the capture it is nothing.  Two neutral controls settle
+    it -- page 77's dark ground and page 72's paper, neither of which is ink
+    the designer chose, both measured in the same vertical fifths.
+    """
+    print("\n== a vertical blue droop, in three unrelated element classes ==")
+    a = load(77)
+    L, c = a.mean(2), chroma(a)
+    g = (L > 60) & (L < 140) & (c < 40)
+    print("  control 1 - p77 dark ground, median RGB per vertical fifth:")
+    for i in range(5):
+        y0, y1 = i * 440, (i + 1) * 440
+        s = g[y0:y1]
+        m = [int(np.median(a[y0:y1, :, k][s])) for k in range(3)]
+        print(f"    rows {y0:5d}-{y1:5d}: {m}  R-B={m[0]-m[2]}")
+    a = load(72)
+    L, c = a.mean(2), chroma(a)
+    g = (L > 200) & (c < 30)
+    print("  control 2 - p72 paper, median RGB per vertical fifth:")
+    for i in range(5):
+        y0, y1 = i * 440, (i + 1) * 440
+        s = g[y0:y1]
+        m = [int(np.median(a[y0:y1, :, k][s])) for k in range(3)]
+        print(f"    rows {y0:5d}-{y1:5d}: {m}  R-B={m[0]-m[2]}")
+
+
+def report_modal():
+    """How much of each colour layer is ONE exact triple (MRC flattening)."""
+    print("\n== share of the colour layer that is a single exact RGB triple ==")
+    for p in PAGES:
+        a = load(p).astype(np.uint32)
+        k = (a[..., 0] << 16) | (a[..., 1] << 8) | a[..., 2]
+        v, ct = np.unique(k, return_counts=True)
+        o = np.argsort(ct)[::-1][:3]
+        s = "  ".join(f"#{int(v[i]):06X} {100*ct[i]/k.size:5.2f}%" for i in o)
+        print(f" p{p}: {s}")
+
+
+def report_p77_head():
+    """p77 is the only page whose orange running head is in the colour layer."""
+    a = load(77)
+    sub = a[112:145, 128:262]
+    c = chroma(sub)
+    print("\n== p77 OVERDOSE running head, measured from pixels (no stencil) ==")
+    for t in (60, 90, 110, 130):
+        m = c >= t
+        if m.sum() < 5:
+            break
+        print(f"   chroma>={t}: n={int(m.sum()):5d} "
+              f"median={[int(np.median(sub[...,i][m])) for i in range(3)]}")
+    m = c >= 60
+    m2 = m & (c >= np.percentile(c[m], 90))
+    print(f"   top decile of chroma: n={int(m2.sum())} "
+          f"median={[int(np.median(sub[...,i][m2])) for i in range(3)]}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stencils", action="store_true")
+    ap.add_argument("--gradient", action="store_true")
+    ap.add_argument("--modal", action="store_true")
+    ap.add_argument("--p77head", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--objects", action="store_true")
     ap.add_argument("--ground", action="store_true")
     ap.add_argument("--blacks", action="store_true")
+    ap.add_argument("--bars", action="store_true")
     ap.add_argument("--ghost", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -355,6 +451,14 @@ def main():
         report_ground_flatness()
     if a.all or a.blacks:
         report_blacks()
+    if a.all or a.bars:
+        report_blackbars()
+    if a.all or a.gradient:
+        report_gradient()
+    if a.all or a.modal:
+        report_modal()
+    if a.all or a.p77head:
+        report_p77_head()
     if a.all or a.ghost:
         report_head_ghost()
 

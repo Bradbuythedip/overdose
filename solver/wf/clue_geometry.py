@@ -167,11 +167,358 @@ def line_stats(lines):
     return out
 
 
+# ---------------------------------------------------------------- driver
+PAGES_TEXT = [72, 75, 76, 77, 78, 79]
+COLW = {72: (900, 2750), 75: (440, 2790), 76: (505, 2955),
+        77: (430, 2990), 78: (525, 2955), 79: (575, 2895)}
+
+
+def prep(page):
+    """Cache the two rasters and the component list for one page."""
+    import os, pickle
+    os.makedirs("/tmp/geo", exist_ok=True)
+    cp = f"/tmp/geo/comps_{page}.pkl"
+    if os.path.exists(cp):
+        return pickle.load(open(cp, "rb"))
+    if page == 77:
+        ink = colour_ink(77)
+        np.save("/tmp/geo/colourink_77.npy", ink)
+        x0, x1 = COLW[77]
+        b = components(ink[:, x0:x1], min_area=25, max_area=40000)
+        for g in b:
+            g["x"] += x0; g["cx"] += x0; g["right"] += x0
+    else:
+        m, _ = ink_raster(page)
+        b = components(rot180(m))
+        ci = colour_ink(page)
+        np.save(f"/tmp/geo/colourink_{page}.npy", ci)
+    pickle.dump(b, open(cp, "wb"))
+    return b
+
+
+def main():
+    import math
+    for p in PAGES_TEXT:
+        b = prep(p)
+        L = merge_fragments(chain_lines(b), 96.0, strong_n=3 if p == 72 else 12)
+        fits = [f for f in (baseline_fit(Z) for Z in L) if f]
+        sl = np.array([f["slope"] for f in fits])
+        sg = np.array([abs(f["sag"]) for f in fits])
+        print("p%d  chained lines=%d  median slope %+.5f (%+.3f deg)  "
+              "median |sagitta| %.1f px  max %.1f px"
+              % (p, len(L), np.median(sl),
+                 math.degrees(math.atan(np.median(sl))),
+                 np.median(sg), sg.max()))
+
+
+def _run_report():
+    main()
+    return 0
+
+
+
+
+
+# ------------------------------------------- C2. colour-layer ink (complete)
+def colour_ink(page, k=81, thr=42):
+    """Ink from the 200 dpi colour layer, upsampled 2x by the 400 dpi render.
+
+    WHY NOT THE MASK. The PDF is mixed-raster: a bilevel text mask plus a
+    colour plate. The project's notes say the mask holds *all* black-on-white
+    text. It does not -- whole printed lines are missing from it (p78 line 10,
+    for one), and text sitting on the orange/charcoal highlight rectangles is
+    dropped wholesale. Anything counted off the mask undercounts the page.
+
+    Local-mean contrast catches both polarities at once: dark type on paper and
+    knockout type on a dark rule or on p77's brown ground.
+    """
+    from scipy import ndimage
+    im = Image.open(f"{RENDER}/p{page}_400dpi.png").convert("L")
+    a = np.asarray(im).astype(np.float32)
+    bg = ndimage.uniform_filter(a, size=k)
+    return np.abs(a - bg) > thr
+
+
+def bands(mask, x0, x1, min_rows=6, min_ink=400, gap=8):
+    """Horizontal ink bands = printed text lines, inside a column [x0,x1)."""
+    prof = mask[:, x0:x1].sum(axis=1)
+    on = prof > 3
+    out, st = [], None
+    run_off = 0
+    for y in range(len(on)):
+        if on[y]:
+            if st is None:
+                st = y
+            run_off = 0
+        else:
+            if st is not None:
+                run_off += 1
+                if run_off >= gap:
+                    e = y - run_off
+                    if e - st + 1 >= min_rows and prof[st:e + 1].sum() >= min_ink:
+                        out.append((st, e, int(prof[st:e + 1].sum())))
+                    st = None
+    if st is not None:
+        out.append((st, len(on) - 1, int(prof[st:].sum())))
+    return out
+
+
+# --------------------------------------------------- C3. lines, fragment-safe
+def merge_fragments(lines, pitch, strong_n=12):
+    """Chaining breaks a line at quotes, apostrophes and tall/short glyphs.
+
+    Rebuild: keep chains with >= strong_n glyphs as the lines, then attach each
+    leftover chain to whichever strong line passes closest to it VERTICALLY AT
+    THAT x. Interpolating the strong line's own bottom edge keeps this correct
+    on p79, whose baselines arc by more than a line's height across the page.
+    """
+    strong = [L for L in lines if len(L) >= strong_n]
+    weak = [L for L in lines if len(L) < strong_n]
+    if not strong:
+        return lines
+    prof = []
+    for L in strong:
+        xs = np.array([g["cx"] for g in L], float)
+        ys = np.array([g["bot"] for g in L], float)
+        o = np.argsort(xs)
+        prof.append((xs[o], ys[o]))
+    for W in weak:
+        wx = float(np.median([g["cx"] for g in W]))
+        wy = float(np.median([g["bot"] for g in W]))
+        best, bd = -1, 1e18
+        for i, (xs, ys) in enumerate(prof):
+            yi = float(np.interp(wx, xs, ys))
+            d = abs(yi - wy)
+            if d < bd:
+                best, bd = i, d
+        if best >= 0 and bd < 0.5 * pitch:
+            strong[best] = sorted(strong[best] + W, key=lambda z: z["x"])
+    strong.sort(key=lambda L: np.median([g["bot"] for g in L]))
+    return strong
+
+
+def est_pitch(lines):
+    b = sorted(float(np.median([g["bot"] for g in L])) for L in lines)
+    d = np.diff(b)
+    d = d[(d > 30) & (d < 400)]
+    if len(d) == 0:
+        return 96.0
+    # modal pitch: smallest cluster centre that most gaps are integer multiples of
+    cand = np.arange(60.0, 160.0, 0.05)
+    best, bs = 96.0, -1
+    for c in cand:
+        k = np.round(d / c)
+        k[k < 1] = 1
+        err = np.abs(d - k * c)
+        s = float(np.sum(err < 4.0))
+        if s > bs:
+            best, bs = float(c), s
+    return best
+
+
+# ------------------------------------------------- C4. baseline grid + slots
+def fit_grid(bases, pitch):
+    """Best phase for a constant-pitch grid through the measured baselines."""
+    b = np.asarray(sorted(bases), float)
+    ph = np.arange(0, pitch, 0.05)
+    err = [np.sum(np.abs(((b - p + pitch / 2) % pitch) - pitch / 2)) for p in ph]
+    return float(ph[int(np.argmin(err))])
+
+
+def slot_table(page, lines, pitch, x0, x1, ytop=None, ybot=None):
+    """Every baseline-grid slot in the text block, with mask ink and colour ink.
+
+    The point of the table: a slot with colour ink but no mask ink is a printed
+    line the bilevel layer dropped.
+    """
+    mk, _ = ink_raster(page)
+    mk = rot180(mk)
+    ci = np.load(f"/tmp/geo/colourink_{page}.npy")
+    bases = [float(np.median([g["bot"] for g in L])) for L in lines]
+    ph = fit_grid(bases, pitch)
+    lo = (ytop if ytop is not None else min(bases)) - 0.2 * pitch
+    hi = (ybot if ybot is not None else max(bases)) + 0.4 * pitch
+    k0 = int(np.ceil((lo - ph) / pitch))
+    k1 = int(np.floor((hi - ph) / pitch))
+    rows = []
+    for k in range(k0, k1 + 1):
+        base = ph + k * pitch
+        a, b = int(base - 0.80 * pitch), int(base + 0.18 * pitch)
+        if a < 0 or b >= mk.shape[0]:
+            continue
+        m = int(mk[a:b, x0:x1].sum())
+        c = int(ci[a:b, x0:x1].sum())
+        near = min((abs(base - z) for z in bases), default=999)
+        rows.append(dict(k=k, base=round(base, 1), mask=m, colour=c,
+                         matched=near < 0.35 * pitch))
+    return rows
+
+
+# ------------------------------------------------- C5. leading by regression
+def leading(bases):
+    """Line pitch by least squares over integer line indices.
+
+    A modal gap is too coarse: paragraph gaps are 2x the pitch and the blocks
+    on a page need not share a phase. Assign each baseline an integer index by
+    rounding its gap to the running median, then regress y on index.
+    """
+    b = np.asarray(sorted(bases), float)
+    d = np.diff(b)
+    m = float(np.median(d[d < np.percentile(d, 75) * 1.3])) if len(d) else 96.0
+    for _ in range(4):
+        idx = np.concatenate([[0], np.cumsum(np.round(d / m))])
+        A = np.vstack([idx, np.ones_like(idx)]).T
+        sol, *_ = np.linalg.lstsq(A, b, rcond=None)
+        m = float(sol[0])
+    resid = b - (sol[0] * idx + sol[1])
+    return float(sol[0]), float(sol[1]), idx.astype(int), resid
+
+
+def mode_baseline(L, bw=4.0):
+    """Baseline = modal bottom edge, not the median.
+
+    The median moves with how many descenders a line happens to contain; the
+    mode sits on the run of x-height and cap-height glyphs that all share one
+    bottom, which is the baseline.
+    """
+    b = np.array([g["bot"] for g in L], float)
+    if len(b) < 3:
+        return float(np.median(b))
+    grid = np.arange(b.min() - 1, b.max() + 1, 0.5)
+    cnt = [np.sum(np.abs(b - g) <= bw) for g in grid]
+    return float(grid[int(np.argmax(cnt))])
+
+
+def blocks_of(bases, pitch, factor=1.55):
+    out, cur = [], [0]
+    for i in range(1, len(bases)):
+        if bases[i] - bases[i - 1] > factor * pitch:
+            out.append(cur)
+            cur = []
+        cur.append(i)
+    out.append(cur)
+    return out
+
+
+def baseline_fit(L, nbin=6, bw=4.0):
+    """Per-line baseline: modal glyph bottom inside x-bins, then a fit.
+
+    Returns (slope px/px, intercept, sagitta, rms_line, rms_quad, pts).
+    Sagitta is the quadratic's largest departure from its own chord: it
+    separates a genuine arc from a straight line that is merely tilted.
+    """
+    xs = np.array([g["cx"] for g in L], float)
+    ys = np.array([g["bot"] for g in L], float)
+    if len(xs) < 12:
+        return None
+    qs = np.quantile(xs, np.linspace(0, 1, nbin + 1))
+    px, py = [], []
+    for j in range(nbin):
+        s = (xs >= qs[j]) & (xs <= qs[j + 1])
+        if s.sum() < 3:
+            continue
+        b = ys[s]
+        grid = np.arange(b.min() - 1, b.max() + 1, 0.5)
+        cnt = [np.sum(np.abs(b - g) <= bw) for g in grid]
+        px.append(float(np.mean(xs[s])))
+        py.append(float(grid[int(np.argmax(cnt))]))
+    px, py = np.array(px), np.array(py)
+    if len(px) < 4:
+        return None
+    c1 = np.polyfit(px, py, 1)
+    r1 = py - np.polyval(c1, px)
+    c2 = np.polyfit(px, py, 2)
+    r2 = py - np.polyval(c2, px)
+    xa, xb = px.min(), px.max()
+    xx = np.linspace(xa, xb, 200)
+    yy = np.polyval(c2, xx)
+    ch = np.interp(xx, [xa, xb], [np.polyval(c2, xa), np.polyval(c2, xb)])
+    sag = float((yy - ch)[np.argmax(np.abs(yy - ch))])
+    return dict(slope=float(c1[0]), b=float(c1[1]), sag=sag,
+                rms1=float(np.sqrt((r1 ** 2).mean())),
+                rms2=float(np.sqrt((r2 ** 2).mean())),
+                x0=float(xa), x1=float(xb), n=len(L))
+
+
+def line_extent(ink, base, slope, xref, pitch, x0, x1, up=0.80, dn=0.18,
+                min_col=2):
+    """Left and right ink edge of one line, following its own tilted baseline.
+
+    A horizontal band cannot measure p79's opening block, which is rotated
+    ~2.7 deg: over its 1,600 px measure the band would slide a third of a line.
+    So the window is sheared to sit on the fitted baseline.
+    """
+    H = ink.shape[0]
+    xs = np.arange(x0, x1)
+    yb = base + slope * (xs - xref)
+    lo = np.clip((yb - up * pitch).astype(int), 0, H - 1)
+    hi = np.clip((yb + dn * pitch).astype(int), 1, H)
+    cnt = np.array([ink[lo[i]:hi[i], xs[i]].sum() for i in range(len(xs))])
+    hit = np.where(cnt >= min_col)[0]
+    if len(hit) == 0:
+        return None
+    return int(xs[hit[0]]), int(xs[hit[-1]]), int(cnt.sum())
+
+
+def fill_gaps(rows, ci, pitch, x0, x1, thresh=1500):
+    """Every baseline slot between two detected lines, tested for colour ink.
+
+    Chaining only sees lines the bilevel mask kept. A gap of n pitches hides
+    n-1 slots; each is either a blank (paragraph space) or a printed line the
+    mask dropped. The colour plate settles which.
+    """
+    out = []
+    for i, r in enumerate(rows):
+        out.append(dict(kind="mask", base=r[1], slope=r[2], ext=r[3]))
+        if i + 1 < len(rows):
+            b0, b1 = r[1], rows[i + 1][1]
+            n = int(round((b1 - b0) / pitch))
+            for j in range(1, max(n, 1)):
+                bb = b0 + (b1 - b0) * j / n
+                sl = (r[2] + rows[i + 1][2]) / 2
+                e = line_extent(ci, bb, sl, 1700, pitch, x0, x1)
+                ink = e[2] if e else 0
+                out.append(dict(kind="colour" if ink >= thresh else "blank",
+                                base=bb, slope=sl, ext=e, ink=ink))
+    return out
+
+
+# ---------------------------------------------------------------- C6. report
+BLOCKS = {                      # printed-line index ranges per typographic block
+    75: [(0, 2), (2, 3), (3, 12), (12, 32)],
+    76: [(0, 6), (6, 17), (17, 31)],
+    78: [(0, 5), (5, 14), (14, 18), (18, 22)],
+    79: [(0, 16), (16, 19), (19, 21), (21, 25)],
+}
+
+
+def alignment(lines, theta=0.0, base0=0.0):
+    """Flush or ragged, per edge, as numbers.
+
+    On p79 the block is rotated, so the edges are de-rotated before the spread
+    is taken: a rotated flush-right block has a right edge that walks left by
+    tan(theta) x leading per line, which reads as 'ragged' if ignored.
+    """
+    L = np.array([z[2] for z in lines], float)
+    R = np.array([z[3] for z in lines], float)
+    B = np.array([z[0] for z in lines], float)
+    L = L + theta * (B - base0)
+    R = R + theta * (B - base0)
+    return dict(n=len(lines),
+                left_min=float(L.min()), left_max=float(L.max()),
+                left_sd=float(L.std()), right_min=float(R.min()),
+                right_max=float(R.max()), right_sd=float(R.std()),
+                lefts=[round(v, 1) for v in L], rights=[round(v, 1) for v in R])
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", default="C")
     ap.add_argument("--page", type=int, default=0)
+    ap.add_argument("--report", action="store_true")
     a = ap.parse_args()
+    if a.report:
+        raise SystemExit(_run_report())
     pages = [a.page] if a.page else [72, 73, 74, 75, 76, 77, 78, 79]
     for p in pages:
         if a.stage == "A":
