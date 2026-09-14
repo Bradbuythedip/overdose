@@ -1,0 +1,436 @@
+
+=== TRANSCRIPT ===
+
+  [masthead]
+    NUMBERS
+
+  [stat1]
+    165
+    WESTERN UNION
+    LOCATIONS IN
+    PALESTINE
+
+  [stat2]
+    572
+    WESTERN UNION
+    LOCATIONS IN
+    EL SALVADOR
+
+  [revenue]
+    In 2020,
+    WESTERN
+    UNION
+    GENERATED REVENUE
+    OF $4.8 BILLION
+
+  [market]
+    The global
+    REMITTANCE
+    MARKET SIZE
+    is projected to reach
+    $930.44 BILLION BY 2026
+
+  [cagr]
+    Based on a compound
+    annual growth rate of 3.9%
+    (taken from historical
+    remittance industry
+    growth data).
+
+  [digital]
+    The global
+    DIGITAL
+    REMITTANCE
+    MARKET
+    is estimated to reach
+    $35.8 BILLION BY 2026
+    This is up from
+    $14.5 BILLION BY 2019
+
+  [footer]
+    Sources:
+
+  [footerL]
+    www.knomad.org/publication/migration-and-development-brief-34
+    www.migrationdataportal.org/themes/remittances
+    www.worldbank.org/en/news/press-release/2021/05/12/defying-predictions-remittance-flows-remain-strong-during-covid-19-crisis
+    www.wise.com/documents/Public_Research_and_Survey_-_US_Hidden_Fees
+
+  [footerR]
+    www.repository.upenn.edu/sire/75/
+    www.westernunion.com/sv/en/receive-money.html
+    ir.westernunion.com/investor-relations/financial-information/
+    www.alliedmarketresearch.com/remittance-market
+    www.globenewswire.com/news-release/2021/04/12/2208403/
+
+  [sidebar]
+    Bitcoin Magazine | El Salvador
+
+  [folio]
+    72
+
+  44 lines, 996 characters
+
+=== MASKS ===
+  embedded images per page (get_images, no size filter):
+    pdf idx 0  printed 73  5 images
+    pdf idx 1  printed 72  4 images
+    pdf idx 2  printed 74  2 images
+    pdf idx 3  printed 75  5 images
+    pdf idx 4  printed 77  1 images
+    pdf idx 5  printed 76  3 images
+    pdf idx 6  printed 79  9 images
+    pdf idx 7  printed 78  6 images
+
+  page 72, every embedded image with its placement (pt, 612x792):
+    x16  1700x2200 bpc=8 bbox=(0.0,0.0,612.0,792.0) ink_frac=nan
+    x17  3280x3832 bpc=1 bbox=(17.3,59.8,607.7,749.5) ink_frac=0.0273
+    x18  1080x868 bpc=1 bbox=(154.1,566.6,348.5,722.9) ink_frac=0.0697
+    x19  80x1064 bpc=1 bbox=(589.0,555.8,603.4,747.4) ink_frac=0.0017
+
+  ink present in each separation, per printed region:
+    region       x17  x18  x19
+    masthead     12.93%   0.00%   0.00%
+    stat1        13.36%   0.00%   0.00%
+    stat2         0.00%  13.05%   0.00%
+    revenue      12.04%   7.95%   0.00%
+    market       10.49%   0.00%   0.00%
+    cagr         11.65%   0.00%   0.00%
+    digital      10.30%   0.00%   0.00%
+    keylinebox   16.98%   0.00%   0.00%
+    footerL       0.00%   0.00%   0.00%
+    footerR      11.36%   0.00%   0.00%
+    sidebar      14.41%   0.00%   0.00%
+    folio         0.00%   0.00%   0.00%
+
+=== RULE ===
+  region (1330, 2760, 2170, 3050)  840x290px at 400 dpi
+  threshold: a run >= 100px (12% of width) is a rule
+  ROWS with a long run: 12
+    y=2803  longest_run=115px  ink spans x=2027..2141
+    y=2804  longest_run=116px  ink spans x=1383..2142
+    y=2805  longest_run=116px  ink spans x=1382..2142
+    y=2806  longest_run=116px  ink spans x=1382..2142
+    y=2807  longest_run=116px  ink spans x=1382..2142
+    y=2808  longest_run=116px  ink spans x=1382..2142
+    y=3020  longest_run=116px  ink spans x=1382..2142
+    y=3021  longest_run=116px  ink spans x=1382..2142
+    y=3022  longest_run=117px  ink spans x=1382..2142
+    y=3023  longest_run=117px  ink spans x=1382..2142
+    y=3024  longest_run=117px  ink spans x=1382..2142
+    y=3025  longest_run=116px  ink spans x=1382..1497
+  COLUMNS with a long run: 285
+    x=1382  longest_run=115px  ink spans y=2805..3025
+    x=1383  longest_run=223px  ink spans y=2804..3026
+    x=1384  longest_run=223px  ink spans y=2804..3026
+    x=1385  longest_run=223px  ink spans y=2804..3026
+    x=1386  longest_run=223px  ink spans y=2804..3026
+    x=1419  longest_run=48px  ink spans y=2804..3025
+    x=1420  longest_run=50px  ink spans y=2804..3025
+    x=1421  longest_run=50px  ink spans y=2804..3025
+    x=1422  longest_run=50px  ink spans y=2804..3025
+    x=1423  longest_run=50px  ink spans y=2804..3025
+    x=1424  longest_run=50px  ink spans y=2804..3025
+    x=1425  longest_run=50px  ink spans y=2804..3025
+    x=1426  longest_run=50px  ink spans y=2804..3025
+    x=1427  longest_run=50px  ink spans y=2804..3025
+    x=1428  longest_run=50px  ink spans y=2804..3025
+    x=1429  longest_run=50px  ink spans y=2804..3025
+    x=1430  longest_run=50px  ink spans y=2804..3025
+    x=1431  longest_run=50px  ink spans y=2804..3025
+    x=1432  longest_run=49px  ink spans y=2804..3025
+    x=1433  longest_run=49px  ink spans y=2804..3025
+    x=1434  longest_run=49px  ink spans y=2804..3025
+    x=1466  longest_run=49px  ink spans y=2804..3025
+    x=1467  longest_run=49px  ink spans y=2804..3025
+    x=1468  longest_run=49px  ink spans y=2804..3025
+    x=1469  longest_run=49px  ink spans y=2804..3025
+    x=1470  longest_run=49px  ink spans y=2804..3025
+    x=1471  longest_run=49px  ink spans y=2804..3025
+    x=1472  longest_run=48px  ink spans y=2804..3025
+    x=1473  longest_run=48px  ink spans y=2804..3025
+    x=1474  longest_run=49px  ink spans y=2804..3025
+    x=1493  longest_run=48px  ink spans y=2804..3025
+    x=1494  longest_run=49px  ink spans y=2804..3025
+    x=1495  longest_run=49px  ink spans y=2804..3025
+    x=1496  longest_run=49px  ink spans y=2804..3025
+    x=1497  longest_run=49px  ink spans y=2804..3025
+    x=1498  longest_run=49px  ink spans y=2838..3024
+    x=1499  longest_run=49px  ink spans y=2838..2886
+    x=1500  longest_run=49px  ink spans y=2838..2886
+    x=1501  longest_run=49px  ink spans y=2838..2886
+    x=1502  longest_run=49px  ink spans y=2838..2886
+    x=1503  longest_run=49px  ink spans y=2838..2886
+    x=1504  longest_run=49px  ink spans y=2838..2886
+    x=1505  longest_run=49px  ink spans y=2838..2886
+    x=1506  longest_run=49px  ink spans y=2838..2886
+    x=1507  longest_run=49px  ink spans y=2838..2886
+    x=1508  longest_run=49px  ink spans y=2838..2886
+    x=1534  longest_run=49px  ink spans y=2838..2986
+    x=1535  longest_run=49px  ink spans y=2838..2986
+    x=1536  longest_run=49px  ink spans y=2838..2986
+    x=1537  longest_run=49px  ink spans y=2838..2986
+    x=1538  longest_run=49px  ink spans y=2838..2986
+    x=1539  longest_run=49px  ink spans y=2838..2986
+    x=1540  longest_run=49px  ink spans y=2838..2986
+    x=1541  longest_run=49px  ink spans y=2838..2986
+    x=1542  longest_run=49px  ink spans y=2838..2986
+    x=1543  longest_run=49px  ink spans y=2838..2986
+    x=1544  longest_run=49px  ink spans y=2838..2986
+    x=1545  longest_run=49px  ink spans y=2838..2986
+    x=1546  longest_run=49px  ink spans y=2838..2986
+    x=1547  longest_run=49px  ink spans y=2838..2986
+    x=1548  longest_run=49px  ink spans y=2876..2986
+    x=1559  longest_run=49px  ink spans y=2838..2969
+    x=1560  longest_run=49px  ink spans y=2838..2971
+    x=1561  longest_run=49px  ink spans y=2760..2972
+    x=1562  longest_run=49px  ink spans y=2760..2975
+    x=1563  longest_run=49px  ink spans y=2760..2976
+    x=1564  longest_run=49px  ink spans y=2760..2979
+    x=1565  longest_run=49px  ink spans y=2760..2980
+    x=1566  longest_run=49px  ink spans y=2760..2982
+    x=1567  longest_run=49px  ink spans y=2760..2983
+    x=1568  longest_run=49px  ink spans y=2760..2985
+    x=1569  longest_run=49px  ink spans y=2760..2986
+    x=1570  longest_run=49px  ink spans y=2760..2986
+    x=1571  longest_run=49px  ink spans y=2760..2986
+    x=1572  longest_run=49px  ink spans y=2760..2986
+    x=1573  longest_run=49px  ink spans y=2760..2986
+    x=1602  longest_run=49px  ink spans y=2775..2986
+    x=1603  longest_run=49px  ink spans y=2775..2986
+    x=1604  longest_run=49px  ink spans y=2775..2986
+    x=1605  longest_run=49px  ink spans y=2775..2986
+    x=1606  longest_run=49px  ink spans y=2774..2986
+    x=1607  longest_run=49px  ink spans y=2774..2986
+    x=1608  longest_run=49px  ink spans y=2773..2986
+    x=1609  longest_run=49px  ink spans y=2772..2986
+    x=1610  longest_run=49px  ink spans y=2767..2986
+    x=1611  longest_run=49px  ink spans y=2760..2986
+    x=1612  longest_run=49px  ink spans y=2760..2986
+    x=1613  longest_run=49px  ink spans y=2760..2986
+    x=1614  longest_run=49px  ink spans y=2760..2986
+    x=1615  longest_run=48px  ink spans y=2760..2985
+    x=1616  longest_run=48px  ink spans y=2760..2985
+    x=1627  longest_run=49px  ink spans y=2838..2986
+    x=1628  longest_run=49px  ink spans y=2838..2986
+    x=1629  longest_run=49px  ink spans y=2838..2986
+    x=1630  longest_run=49px  ink spans y=2838..2986
+    x=1631  longest_run=49px  ink spans y=2838..2986
+    x=1632  longest_run=49px  ink spans y=2838..2986
+    x=1633  longest_run=49px  ink spans y=2838..2986
+    x=1634  longest_run=49px  ink spans y=2838..2986
+    x=1635  longest_run=49px  ink spans y=2838..2986
+    x=1636  longest_run=49px  ink spans y=2838..2986
+    x=1637  longest_run=49px  ink spans y=2838..2986
+    x=1638  longest_run=49px  ink spans y=2760..2986
+    x=1639  longest_run=49px  ink spans y=2760..2986
+    x=1640  longest_run=49px  ink spans y=2760..2986
+    x=1641  longest_run=49px  ink spans y=2760..2986
+    x=1650  longest_run=36px  ink spans y=2760..2977
+    x=1651  longest_run=38px  ink spans y=2760..2977
+    x=1652  longest_run=39px  ink spans y=2760..2977
+    x=1653  longest_run=40px  ink spans y=2760..2977
+    x=1655  longest_run=48px  ink spans y=2838..2977
+    x=1656  longest_run=49px  ink spans y=2838..2977
+    x=1657  longest_run=49px  ink spans y=2838..2977
+    x=1658  longest_run=49px  ink spans y=2838..2977
+    x=1659  longest_run=49px  ink spans y=2838..2977
+    x=1660  longest_run=49px  ink spans y=2838..2977
+    x=1661  longest_run=49px  ink spans y=2838..2977
+    x=1662  longest_run=49px  ink spans y=2838..2977
+    x=1663  longest_run=49px  ink spans y=2838..2977
+    x=1664  longest_run=49px  ink spans y=2838..2977
+    x=1665  longest_run=49px  ink spans y=2762..2977
+    x=1666  longest_run=49px  ink spans y=2760..2977
+    x=1667  longest_run=49px  ink spans y=2760..2977
+    x=1668  longest_run=49px  ink spans y=2760..2977
+    x=1669  longest_run=49px  ink spans y=2760..2977
+    x=1672  longest_run=41px  ink spans y=2760..2977
+    x=1673  longest_run=40px  ink spans y=2760..2977
+    x=1674  longest_run=39px  ink spans y=2760..2977
+    x=1675  longest_run=38px  ink spans y=2760..2977
+    x=1701  longest_run=48px  ink spans y=2760..2884
+    x=1702  longest_run=50px  ink spans y=2760..2886
+    x=1703  longest_run=49px  ink spans y=2760..2886
+    x=1704  longest_run=49px  ink spans y=2760..2886
+    x=1705  longest_run=49px  ink spans y=2760..2886
+    x=1706  longest_run=49px  ink spans y=2760..2886
+    x=1707  longest_run=49px  ink spans y=2760..2986
+    x=1708  longest_run=50px  ink spans y=2760..2986
+    x=1709  longest_run=50px  ink spans y=2760..2986
+    x=1710  longest_run=50px  ink spans y=2760..2986
+    x=1711  longest_run=50px  ink spans y=2760..2986
+    x=1712  longest_run=50px  ink spans y=2760..2986
+    x=1713  longest_run=50px  ink spans y=2760..2986
+    x=1714  longest_run=50px  ink spans y=2760..2986
+    x=1715  longest_run=50px  ink spans y=2760..2986
+    x=1716  longest_run=50px  ink spans y=2760..2986
+    x=1717  longest_run=50px  ink spans y=2760..2986
+    x=1718  longest_run=50px  ink spans y=2760..2986
+    x=1719  longest_run=50px  ink spans y=2760..2986
+    x=1720  longest_run=50px  ink spans y=2760..2986
+    x=1721  longest_run=50px  ink spans y=2760..2986
+    x=1753  longest_run=50px  ink spans y=2760..2986
+    x=1754  longest_run=49px  ink spans y=2760..2986
+    x=1755  longest_run=49px  ink spans y=2760..2986
+    x=1756  longest_run=49px  ink spans y=2760..2986
+    x=1757  longest_run=49px  ink spans y=2837..2986
+    x=1758  longest_run=49px  ink spans y=2837..2986
+    x=1759  longest_run=49px  ink spans y=2837..2986
+    x=1760  longest_run=49px  ink spans y=2837..2986
+    x=1761  longest_run=49px  ink spans y=2837..2986
+    x=1762  longest_run=48px  ink spans y=2837..2986
+    x=1768  longest_run=50px  ink spans y=2837..2985
+    x=1769  longest_run=50px  ink spans y=2837..2886
+    x=1770  longest_run=50px  ink spans y=2837..2886
+    x=1771  longest_run=50px  ink spans y=2837..2886
+    x=1772  longest_run=49px  ink spans y=2837..2885
+    x=1773  longest_run=49px  ink spans y=2837..2885
+    x=1774  longest_run=49px  ink spans y=2837..2885
+    x=1775  longest_run=49px  ink spans y=2837..2885
+    x=1776  longest_run=49px  ink spans y=2837..2885
+    x=1777  longest_run=50px  ink spans y=2837..2886
+    x=1778  longest_run=50px  ink spans y=2837..2886
+    x=1779  longest_run=50px  ink spans y=2837..2886
+    x=1780  longest_run=50px  ink spans y=2837..2886
+    x=1781  longest_run=50px  ink spans y=2837..2985
+    x=1782  longest_run=49px  ink spans y=2837..2985
+    x=1783  longest_run=50px  ink spans y=2837..2986
+    x=1784  longest_run=50px  ink spans y=2837..2986
+    x=1785  longest_run=50px  ink spans y=2837..2986
+    x=1786  longest_run=50px  ink spans y=2837..2986
+    x=1787  longest_run=50px  ink spans y=2837..2986
+    x=1788  longest_run=50px  ink spans y=2760..2986
+    x=1789  longest_run=50px  ink spans y=2760..2986
+    x=1790  longest_run=50px  ink spans y=2760..2986
+    x=1791  longest_run=50px  ink spans y=2760..2986
+    x=1792  longest_run=50px  ink spans y=2760..2986
+    x=1793  longest_run=50px  ink spans y=2760..2986
+    x=1794  longest_run=50px  ink spans y=2760..2986
+    x=1795  longest_run=50px  ink spans y=2760..2986
+    x=1816  longest_run=35px  ink spans y=2858..2978
+    x=1817  longest_run=37px  ink spans y=2856..2979
+    x=1825  longest_run=36px  ink spans y=2779..2985
+    x=1826  longest_run=37px  ink spans y=2778..2985
+    x=1827  longest_run=40px  ink spans y=2776..2985
+    x=1828  longest_run=41px  ink spans y=2773..2985
+    x=1847  longest_run=41px  ink spans y=2760..2877
+    x=1848  longest_run=41px  ink spans y=2760..2877
+    x=1849  longest_run=39px  ink spans y=2760..2877
+    x=1850  longest_run=38px  ink spans y=2760..2877
+    x=1851  longest_run=36px  ink spans y=2760..2877
+    x=1852  longest_run=35px  ink spans y=2760..2877
+    x=1856  longest_run=49px  ink spans y=2767..2985
+    x=1857  longest_run=49px  ink spans y=2767..2985
+    x=1858  longest_run=49px  ink spans y=2767..2985
+    x=1859  longest_run=50px  ink spans y=2767..2986
+    x=1860  longest_run=50px  ink spans y=2767..2986
+    x=1861  longest_run=50px  ink spans y=2767..2986
+    x=1862  longest_run=49px  ink spans y=2767..2985
+    x=1863  longest_run=49px  ink spans y=2767..2985
+    x=1864  longest_run=49px  ink spans y=2760..2985
+    x=1865  longest_run=49px  ink spans y=2760..2985
+    x=1866  longest_run=49px  ink spans y=2760..2985
+    x=1867  longest_run=49px  ink spans y=2760..2985
+    x=1868  longest_run=49px  ink spans y=2760..2985
+    x=1869  longest_run=49px  ink spans y=2760..2985
+    x=1881  longest_run=43px  ink spans y=2762..2985
+    x=1882  longest_run=49px  ink spans y=2763..2985
+    x=1883  longest_run=49px  ink spans y=2764..2985
+    x=1884  longest_run=49px  ink spans y=2767..2985
+    x=1885  longest_run=49px  ink spans y=2768..2985
+    x=1886  longest_run=49px  ink spans y=2770..2985
+    x=1887  longest_run=49px  ink spans y=2771..2985
+    x=1888  longest_run=49px  ink spans y=2775..2985
+    x=1889  longest_run=49px  ink spans y=2776..2985
+    x=1890  longest_run=49px  ink spans y=2777..2985
+    x=1891  longest_run=49px  ink spans y=2779..2985
+    x=1892  longest_run=49px  ink spans y=2782..2985
+    x=1893  longest_run=49px  ink spans y=2783..2985
+    x=1894  longest_run=49px  ink spans y=2837..2985
+    x=1895  longest_run=49px  ink spans y=2837..2985
+    x=1934  longest_run=49px  ink spans y=2774..2949
+    x=1935  longest_run=49px  ink spans y=2774..2949
+    x=1936  longest_run=49px  ink spans y=2774..2949
+    x=1937  longest_run=49px  ink spans y=2774..2949
+    x=1938  longest_run=49px  ink spans y=2774..2949
+    x=1939  longest_run=49px  ink spans y=2774..2949
+    x=1940  longest_run=49px  ink spans y=2774..2984
+    x=1941  longest_run=49px  ink spans y=2774..2985
+    x=1942  longest_run=49px  ink spans y=2774..2985
+    x=1943  longest_run=49px  ink spans y=2774..2985
+    x=1944  longest_run=49px  ink spans y=2774..2985
+    x=1945  longest_run=49px  ink spans y=2774..2985
+    x=1946  longest_run=49px  ink spans y=2774..2985
+    x=1947  longest_run=49px  ink spans y=2774..2985
+    x=1948  longest_run=49px  ink spans y=2774..2985
+    x=1949  longest_run=49px  ink spans y=2774..2985
+    x=1950  longest_run=49px  ink spans y=2774..2985
+    x=1951  longest_run=49px  ink spans y=2937..2985
+    x=1952  longest_run=49px  ink spans y=2937..2985
+    x=1953  longest_run=49px  ink spans y=2937..2985
+    x=1954  longest_run=49px  ink spans y=2937..2985
+    x=1955  longest_run=48px  ink spans y=2937..2984
+    x=1962  longest_run=35px  ink spans y=2844..2949
+    x=1963  longest_run=36px  ink spans y=2844..2949
+    x=1964  longest_run=40px  ink spans y=2842..2949
+    x=1965  longest_run=41px  ink spans y=2842..2949
+    x=1966  longest_run=42px  ink spans y=2841..2949
+    x=1967  longest_run=44px  ink spans y=2840..2949
+    x=1968  longest_run=45px  ink spans y=2839..2949
+    x=1969  longest_run=46px  ink spans y=2839..2949
+    x=1970  longest_run=47px  ink spans y=2838..2949
+    x=1971  longest_run=47px  ink spans y=2838..2949
+    x=1972  longest_run=47px  ink spans y=2838..2949
+    x=1973  longest_run=49px  ink spans y=2837..2949
+    x=1974  longest_run=49px  ink spans y=2837..2949
+    x=1975  longest_run=49px  ink spans y=2837..2949
+    x=2035  longest_run=49px  ink spans y=2803..3024
+    x=2036  longest_run=49px  ink spans y=2803..3024
+    x=2037  longest_run=49px  ink spans y=2803..3024
+    x=2038  longest_run=49px  ink spans y=2803..3024
+    x=2039  longest_run=49px  ink spans y=2803..3024
+    x=2040  longest_run=49px  ink spans y=2803..3024
+    x=2041  longest_run=49px  ink spans y=2803..3024
+    x=2042  longest_run=49px  ink spans y=2803..3024
+    x=2043  longest_run=49px  ink spans y=2803..3024
+    x=2044  longest_run=49px  ink spans y=2803..3024
+    x=2045  longest_run=49px  ink spans y=2803..3024
+    x=2046  longest_run=49px  ink spans y=2803..3024
+    x=2047  longest_run=49px  ink spans y=2803..3024
+    x=2048  longest_run=49px  ink spans y=2803..3024
+    x=2049  longest_run=49px  ink spans y=2803..3024
+    x=2138  longest_run=222px  ink spans y=2803..3024
+    x=2139  longest_run=222px  ink spans y=2803..3024
+    x=2140  longest_run=222px  ink spans y=2803..3024
+    x=2141  longest_run=222px  ink spans y=2803..3024
+    x=2142  longest_run=221px  ink spans y=2804..3024
+
+  same test, whole page 72, run >= 400px (11.8% of page width):
+    none
+
+=== GLOBES ===
+  upper globe: bbox=(1050,1600,2500,2200) paper L80=242.3 line pixels=371,891 (42.75% of region)
+    ink extent x=1050..2499 (1450px wide), y=1600..2199 (600px tall)
+    aspect (w/h) = 2.417
+  lower globe: bbox=(1050,2650,2500,3150) paper L80=242.7 line pixels=379,682 (52.37% of region)
+    ink extent x=1050..2499 (1450px wide), y=2650..3149 (500px tall)
+    aspect (w/h) = 2.900
+
+=== COLOUR ===
+  printed page 72
+    165 display    n=  1230  mean RGB=(235,236,230)  median=(236,237,231)
+    572 display    n=  2532  mean RGB=(49,49,49)  median=(49,49,49)
+    PALESTINE      n=  9813  mean RGB=(105,106,91)  median=(105,106,91)
+    $930.44 line   n= 23341  mean RGB=(105,106,91)  median=(105,106,91)
+    footer URLs    n= 14082  mean RGB=(134,131,120)  median=(136,133,122)
+  printed page 76 body ink  n=10545  mean RGB=(108,87,68)
+
+=== NUMERALS ===
+  every numeral token printed on page 72 (22):
+    165 572 2020 4.8 930.44 2026 3.9 35.8 2026 14.5 2019 34 2021 05 12 19 75 2021 04 12 2208403 72
+  total digit glyphs: 68
+  digit frequency: 0:12  1:8  2:17  3:5  4:7  5:6  6:3  7:3  8:3  9:4
+  distinct digit glyphs used: 10 of 10 (missing: none)
+  numerals in the statistics blocks only (11): 165 572 2020 4.8 930.44 2026 3.9 35.8 2026 14.5 2019
+  their sum (as floats): 9,817.44
