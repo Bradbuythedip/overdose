@@ -679,6 +679,31 @@ def selftest():
     sys.stderr.write(f"  same signature REJECTED after the output is changed: "
                      f"{'OK' if not tampered else 'FAIL'}\n")
 
+    # PSBT: magic, structure, and a round trip through our own parser. This is
+    # a floor, not a proof — only an independent decoder proves the encoding.
+    tp = Tx([TxIn(b"\xcc" * 32, 0, amount=100000, kind="p2wpkh"),
+             TxIn(b"\xbb" * 32, 1, amount=50000, kind="p2pkh_c")],
+            [TxOut(140000, b"\x00\x14" + b"\xdd" * 20)])
+    us = [{"kind": "p2wpkh", "spk": b"\x00\x14" + h160(pub), "value": 100000,
+           "pub": pub, "txid": "cc" * 32},
+          {"kind": "p2pkh_c", "spk": b"\x76\xa9\x14" + h160(pub) + b"\x88\xac",
+           "value": 50000, "pub": pub, "txid": "bb" * 32}]
+    p = build_psbt(tp, us, chain=None)
+    good = p[:5] == PSBT_MAGIC
+    try:
+        ptx, pins, pouts = parse_psbt(p)
+        good &= (ptx.ser(witness=False)
+                 == unsigned_clone(tp).ser(witness=False))
+        good &= len(pins) == 2 and len(pouts) == 1
+        good &= PSBT_IN_WITNESS_UTXO in pins[0]
+        good &= all(not i.script_sig and not i.witness for i in ptx.vin)
+    except Exception as e:
+        sys.stderr.write(f"  psbt round trip raised {e}\n")
+        good = False
+    ok &= good
+    sys.stderr.write(f"  PSBT magic, round trip, and empty scriptSigs in the "
+                     f"unsigned tx: {'OK' if good else 'FAIL'}\n")
+
     # fee guards
     good = (fee_ok(50_000, 2_000_000_000, DEFAULT_MAX_FEE)[0]
             and not fee_ok(200_000, 2_000_000_000, DEFAULT_MAX_FEE)[0]
@@ -700,6 +725,105 @@ def fee_ok(fee, total_in, max_fee):
         return False, (f"fee {fee:,} exceeds {MAX_FEE_FRACTION:.0%} of the "
                        f"{total_in:,} sat being swept")
     return True, ""
+
+
+# -------------------------------------------------------------------- PSBT ---
+# BIP-174. The point of emitting one is NOT to sign elsewhere — a PSBT is
+# signed by a wallet that holds the key, and a raw brainwallet key has no such
+# wallet until you import it. The point is INDEPENDENT VERIFICATION: Sparrow,
+# Electrum or `bitcoin-cli decodepsbt` will tell you exactly what is about to
+# be signed without you having to trust the 900 lines above.
+#
+# There is no chain-grounded oracle for this the way there is for sighashes.
+# The oracle is interop itself: if a real decoder accepts it and shows the
+# right destination and amounts, the encoding is right. So this emits, parses
+# its own output back, and then tells you to go check it with something that
+# is not me.
+PSBT_MAGIC = b"psbt\xff"
+PSBT_GLOBAL_UNSIGNED_TX = 0x00
+PSBT_IN_NON_WITNESS_UTXO = 0x00
+PSBT_IN_WITNESS_UTXO = 0x01
+PSBT_IN_REDEEM_SCRIPT = 0x04
+PSBT_SEPARATOR = b"\x00"
+
+
+def _kv(keytype, value, keydata=b""):
+    """One PSBT key-value pair: <len><keytype+keydata><len><value>."""
+    key = bytes([keytype]) + keydata
+    return varint(len(key)) + key + varint(len(value)) + value
+
+
+def unsigned_clone(tx):
+    """The transaction with every scriptSig and witness stripped.
+
+    PSBT's global unsigned tx must carry no input scripts at all; a decoder
+    that sees one rejects the whole thing.
+    """
+    return Tx([TxIn(i.txid, i.vout, b"", i.sequence) for i in tx.vin],
+              [TxOut(o.value, o.spk) for o in tx.vout],
+              tx.version, tx.locktime)
+
+
+def build_psbt(tx, utxos, chain=None):
+    """Serialize an unsigned transaction plus its input context as a PSBT."""
+    out = PSBT_MAGIC
+    out += _kv(PSBT_GLOBAL_UNSIGNED_TX, unsigned_clone(tx).ser(witness=False))
+    out += PSBT_SEPARATOR
+
+    for i, u in zip(tx.vin, utxos):
+        m = b""
+        kind = u["kind"]
+        if kind in ("p2wpkh", "p2sh_p2wpkh"):
+            # witness_utxo is just the one output being spent: value + script
+            m += _kv(PSBT_IN_WITNESS_UTXO,
+                     struct.pack("<Q", u["value"]) + varint(len(u["spk"]))
+                     + u["spk"])
+            if kind == "p2sh_p2wpkh":
+                from coincurve import PrivateKey
+                pub = u["pub"]
+                m += _kv(PSBT_IN_REDEEM_SCRIPT, b"\x00\x14" + h160(pub))
+        else:
+            # legacy inputs need the FULL previous transaction so a verifier can
+            # confirm the amount for itself rather than taking our word
+            if chain is not None:
+                try:
+                    m += _kv(PSBT_IN_NON_WITNESS_UTXO, chain.raw_tx(u["txid"]))
+                except Exception as e:
+                    sys.stderr.write(f"    psbt: could not fetch prev tx for "
+                                     f"{u['txid'][:16]}… ({e}); input left "
+                                     f"without its utxo record\n")
+        out += m + PSBT_SEPARATOR
+
+    for _o in tx.vout:
+        out += PSBT_SEPARATOR
+    return out
+
+
+def parse_psbt(raw):
+    """Parse our own PSBT back. Round-tripping is a floor, not a proof."""
+    if raw[:5] != PSBT_MAGIC:
+        raise ValueError("not a PSBT: bad magic")
+    r = Reader(raw)
+    r.take(5)
+
+    def read_map():
+        m = {}
+        while True:
+            klen = r.varint()
+            if klen == 0:
+                return m
+            key = r.take(klen)
+            m[key[0]] = r.take(r.varint())
+
+    g = read_map()
+    if PSBT_GLOBAL_UNSIGNED_TX not in g:
+        raise ValueError("PSBT has no unsigned transaction")
+    tx = parse_tx(g[PSBT_GLOBAL_UNSIGNED_TX])
+    ins = [read_map() for _ in tx.vin]
+    outs = [read_map() for _ in tx.vout]
+    if r.i != len(raw):
+        raise ValueError(f"PSBT has {len(raw) - r.i} trailing bytes")
+    return tx, ins, outs
 
 
 # ---------------------------------------------------------------- key input ---
@@ -947,6 +1071,10 @@ def main():
                     help="skip the 20 wrapped/multisig forms. They cannot be "
                          "signed here anyway, and checking them multiplies the "
                          "query count by ~5x")
+    ap.add_argument("--psbt", metavar="FILE",
+                    help="also write a BIP-174 PSBT and print it base64, so an "
+                         "independent decoder (bitcoin-cli decodepsbt, Sparrow, "
+                         "Electrum) can confirm what this is about to sign")
     ap.add_argument("--broadcast", action="store_true",
                     help="actually send. Also requires retyping --to")
     ap.add_argument("--selftest", action="store_true")
@@ -1047,6 +1175,25 @@ def main():
 
     tx, fee = build_and_sign(spendable, dest_spk, a.fee_rate, a.max_fee)
     raw = tx.ser().hex()
+
+    if a.psbt:
+        import base64
+        p = build_psbt(tx, spendable, chain)
+        ptx, pins, pouts = parse_psbt(p)          # our own round-trip, a floor
+        if ptx.ser(witness=False) != unsigned_clone(tx).ser(witness=False):
+            sys.exit("  psbt does not round-trip to the same unsigned tx; "
+                     "refusing to emit it")
+        with open(a.psbt, "wb") as fh:
+            fh.write(p)
+        b64 = base64.b64encode(p).decode()
+        sys.stderr.write(
+            f"\n  PSBT  {len(p)} bytes -> {a.psbt}\n"
+            f"    {len(pins)} input record(s), {len(pouts)} output record(s)\n"
+            f"    Verify it with something that is NOT this script:\n"
+            f"      bitcoin-cli decodepsbt {b64[:24]}...\n"
+            f"    or open {a.psbt} in Sparrow or Electrum. Confirm the\n"
+            f"    destination and amount there before you trust the hex below.\n")
+        sys.stderr.write(f"\n  PSBT BASE64\n{b64}\n")
     sys.stderr.write(f"\n  BUILT  txid {tx.txid()}\n")
     sys.stderr.write(f"    vsize {tx.vsize()} vB, fee {fee:,} sat "
                      f"({fee/tx.vsize():.1f} sat/vB), "
