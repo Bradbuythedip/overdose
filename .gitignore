@@ -53,3 +53,9 @@ solver/furniture.txt
 solver/hlcolor.txt
 # regenerable from note_signatures.py
 solver/notesig.txt
+
+# 52 MB of renders, all regenerable: python3 solver/extract_scan.py
+# The 1.38 MB source lives at solver/scan/Scan1.pdf and IS committed.
+solver/hires/
+# regenerable from page72.py
+solver/p72.txt
