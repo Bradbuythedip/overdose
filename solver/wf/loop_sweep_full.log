@@ -1,0 +1,25 @@
+  candidate files: 13  phrases 49,078
+     cand_artwork.txt: 2,450
+     cand_highlights.txt: 2,525
+     cand_keiser.txt: 4,764
+     cand_layer1.txt: 3,248
+     cand_marks.txt: 4,885
+     cand_mirror.txt: 4,380
+     cand_numbers.txt: 2,264
+     cand_selfref.txt: 4,026
+     cand_serial.txt: 4,443
+     cand_structure.txt: 3,446
+     cand_x_all.txt: 4,142
+     cand_x_marks_layer1.txt: 4,482
+     cand_x_mirror_serial.txt: 4,023
+  priority phrases: 2,247
+  candidates present: OK
+  derivation path: OK
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+[tier1 shallow, all candidates] phrases 49,071  addresses 1,721,205  182s  hits 0
+[tier2 deep, priority candidates] phrases 2,207  addresses 4,049,985  521s  hits 0
+
+TOTAL HITS: 0
