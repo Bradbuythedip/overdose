@@ -434,7 +434,10 @@ def main():
                     help="concurrent requests, with --auto")
     ap.add_argument("--start-qps", type=float, default=8.0)
     ap.add_argument("--cap-qps", type=float, default=400.0)
-    ap.add_argument("--out", default="everfunded_hits.tsv")
+    ap.add_argument("--out", default=None,
+                    help="hits file. Defaults to everfunded_hits_<input>.tsv "
+                         "so consecutive runs over different lists cannot "
+                         "clobber each other's findings.")
     ap.add_argument("--control-only", action="store_true")
     ap.add_argument("--debug-url", metavar="PATH",
                     help="fetch ONE path, print status and raw body, query "
@@ -495,6 +498,15 @@ def main():
         return
 
     ad = Adaptive(start=a.start_qps, cap=a.cap_qps) if a.auto else None
+    # Per-input default. A single shared default truncates on every run, and
+    # a sequence of lists then leaves only the LAST one's hits on disk — three
+    # real findings from one list were silently erased by the next list's zero
+    # before this was fixed. The cache still holds every answer, so a re-run
+    # over a cached list recovers them for free.
+    if not a.out:
+        src = a.addresses or a.phrases or "hits"
+        a.out = "everfunded_hits_" + os.path.basename(src).replace(
+            "everfunded_", "").replace(".txt", "") + ".tsv"
     api = Esplora(a.base, cache=a.cache, qps=a.qps, adaptive=ad)
     if not run_control(api):
         sys.exit("control failed — refusing to sweep, a null here would be "
