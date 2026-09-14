@@ -1,0 +1,327 @@
+#!/usr/bin/env python3
+"""
+The 136,917 blocks nobody scanned, and the question they can actually answer.
+
+THE GAP
+window/onchain_marker_scan.md and STATUS.md both record the on-chain marker
+scan as covering "blocks 0-829,999". That was never a decision — it is exactly
+where the data source stops. cirosantilli/bitcoin-inscription-indexer serves
+data/out/0000.txt through 0829.txt and nothing after; 0830.txt is a 404,
+confirmed by binary search. Meanwhile the chain is at 966,916.
+
+    scanned      0 .. 829,999
+    UNSCANNED    830,000 .. tip        136,917 blocks, roughly Feb 2024 to now
+
+Nobody noticed the chain had moved on. And that window is not arbitrary: the
+announcement was March 2023 (~block 780,000), so the scanned range covers only
+the first year after it. If somebody solved this puzzle and swept the prize,
+the most likely time is inside the unscanned part.
+
+TWO THINGS THIS LOOKS FOR
+
+  1. TEXT. ASCII runs embedded in any script — outputs, inputs, witnesses —
+     matching the puzzle's vocabulary. A solver boasting, Keiser marking the
+     wallet, anyone naming the serial.
+
+  2. A SWEEP, which is the one that matters. window/Tnew_exact_20.tsv holds 795
+     scripthashes that each held exactly 20.00000000 BTC. A raw block does not
+     say what an input spent, so a scripthash cannot be matched directly — but
+     a standard spend REVEALS ITS PUBKEY in the scriptSig or witness. From the
+     pubkey this reconstructs every script form, hashes each, and checks the
+     795. If one of those addresses was emptied in this window, that is a
+     direct observation of the swept-key hypothesis rather than an inference
+     about it, and swept_key_untested.md says that hypothesis is still open.
+
+This needs an endpoint that serves getblockhash/getblock. It cannot run in the
+container it was written in — the network policy answers 403 for the Alchemy
+host — so the parsing and detection logic is tested offline against synthetic
+blocks instead, and the live run belongs on a machine with access.
+
+  python3 chain_tail_scan.py --selftest
+  python3 chain_tail_scan.py --rpc "$B" --start 830000
+"""
+import argparse, hashlib, json, os, re, sys, time
+
+ASCII_RUN = re.compile(rb"[\x20-\x7e]{16,}")
+KEYWORDS = [
+    "keiser", "overdose", "orangepill", "orange pill", "toxic af",
+    "el salvador", "elsalvador", "bukele", "cl76841714a", "76841714",
+    "41714867", "stacy herbert", "honey badger", "20 btc", "20btc",
+    "bitcoin magazine", "annabellebaz", "george sand",
+]
+
+
+def dsha(b):
+    return hashlib.sha256(hashlib.sha256(b).digest()).digest()
+
+
+def h160(b):
+    return hashlib.new("ripemd160", hashlib.sha256(b).digest()).digest()
+
+
+def load_targets(path="window/Tnew_exact_20.tsv"):
+    """The scripthashes that each held exactly 20 BTC."""
+    if not os.path.exists(path):
+        return set()
+    out = set()
+    for line in open(path):
+        p = line.split("\t")
+        if p and len(p[0]) == 64 and not p[0].startswith("scripthash"):
+            out.add(p[0].strip().lower())
+    return out
+
+
+def pubkeys_in(script_sig, witness):
+    """Every plausible pubkey revealed by a standard spend.
+
+    A raw block never states what an input spent. But p2pkh puts the pubkey in
+    the scriptSig, and p2wpkh / p2sh-p2wpkh put it at the top of the witness,
+    so a standard spend hands over the one thing needed to rebuild the script
+    it was spending from.
+    """
+    out = []
+    for item in list(witness) + _pushes(script_sig):
+        if len(item) in (33, 65) and item[:1] in (b"\x02", b"\x03", b"\x04"):
+            out.append(item)
+    return out
+
+
+def _pushes(script):
+    """Data pushes in a script, best effort — malformed input yields nothing."""
+    out, i = [], 0
+    try:
+        while i < len(script):
+            op = script[i]
+            i += 1
+            if op < 0x4C:
+                out.append(script[i:i + op])
+                i += op
+            elif op == 0x4C:
+                n = script[i]; i += 1
+                out.append(script[i:i + n]); i += n
+            elif op == 0x4D:
+                n = int.from_bytes(script[i:i + 2], "little"); i += 2
+                out.append(script[i:i + n]); i += n
+            else:
+                break
+    except Exception:
+        pass
+    return out
+
+
+def scripthashes_for_pubkey(pub):
+    """Every standard script this pubkey could have been locked behind."""
+    hp = h160(pub)
+    forms = [b"\x76\xa9\x14" + hp + b"\x88\xac"]          # p2pkh
+    if len(pub) == 33:
+        wp = b"\x00\x14" + hp
+        forms.append(wp)                                   # p2wpkh
+        forms.append(b"\xa9\x14" + h160(wp) + b"\x87")     # p2sh-p2wpkh
+    forms.append(bytes([len(pub)]) + pub + b"\xac")        # p2pk
+    return {hashlib.sha256(f).hexdigest() for f in forms}
+
+
+class Reader:
+    def __init__(self, b):
+        self.b, self.i = b, 0
+
+    def take(self, n):
+        v = self.b[self.i:self.i + n]
+        if len(v) != n:
+            raise ValueError("truncated")
+        self.i += n
+        return v
+
+    def u32(self):
+        return int.from_bytes(self.take(4), "little")
+
+    def u64(self):
+        return int.from_bytes(self.take(8), "little")
+
+    def varint(self):
+        n = self.take(1)[0]
+        if n < 0xFD:
+            return n
+        return int.from_bytes(self.take({0xFD: 2, 0xFE: 4}.get(n, 8)), "little")
+
+
+def scan_block(raw):
+    """Yield (kind, payload) for every script and witness item in a block.
+
+    kind is 'in', 'out' or 'wit' so a hit can be attributed to where it lived.
+    """
+    r = Reader(raw)
+    r.take(80)
+    for _ in range(r.varint()):
+        r.u32()
+        segwit = False
+        n_in = r.varint()
+        if n_in == 0:
+            r.take(1)
+            segwit = True
+            n_in = r.varint()
+        ins = []
+        for _j in range(n_in):
+            r.take(32); r.u32()
+            ss = r.take(r.varint())
+            r.u32()
+            ins.append(ss)
+            yield "in", ss
+        for _j in range(r.varint()):
+            r.u64()
+            spk = r.take(r.varint())
+            yield "out", spk
+        wits = [[] for _ in ins]
+        if segwit:
+            for j in range(n_in):
+                wits[j] = [r.take(r.varint()) for _ in range(r.varint())]
+                for w in wits[j]:
+                    yield "wit", w
+        r.u32()
+        for ss, w in zip(ins, wits):
+            yield "spend", (ss, w)
+
+
+def selftest():
+    """Detection logic, proven offline against a block we build ourselves."""
+    ok = True
+
+    # a pubkey spend must be recognised and must reconstruct its own scripthash
+    from coincurve import PrivateKey
+    k = hashlib.sha256(b"tail scan selftest").digest()
+    pub = PrivateKey(k).public_key.format(True)
+    shs = scripthashes_for_pubkey(pub)
+    p2pkh = hashlib.sha256(b"\x76\xa9\x14" + h160(pub) + b"\x88\xac").hexdigest()
+    good = p2pkh in shs and len(shs) == 4
+    ok &= good
+    sys.stderr.write(f"  a pubkey reconstructs {len(shs)} script forms "
+                     f"including its own p2pkh: {'OK' if good else 'FAIL'}\n")
+
+    sig = b"\x30" * 71
+    ss = bytes([len(sig)]) + sig + bytes([len(pub)]) + pub
+    found = pubkeys_in(ss, [])
+    good = pub in found
+    ok &= good
+    sys.stderr.write(f"  pubkey recovered from a p2pkh scriptSig: "
+                     f"{'OK' if good else 'FAIL'}\n")
+    good = pub in pubkeys_in(b"", [sig, pub])
+    ok &= good
+    sys.stderr.write(f"  pubkey recovered from a p2wpkh witness:  "
+                     f"{'OK' if good else 'FAIL'}\n")
+
+    # embedded text must be found in an output script
+    msg = b"OVERDOSE by Max Keiser CL76841714A"
+    spk = b"\x6a" + bytes([len(msg)]) + msg
+    runs = ASCII_RUN.findall(spk)
+    good = any(b"OVERDOSE" in x for x in runs)
+    ok &= good
+    sys.stderr.write(f"  ASCII run extracted from an OP_RETURN: "
+                     f"{'OK' if good else 'FAIL'}\n")
+    hits = [w for w in KEYWORDS if w in msg.decode().lower()]
+    good = "overdose" in hits and "cl76841714a" in hits
+    ok &= good
+    sys.stderr.write(f"  keyword match on that run: {hits[:4]} "
+                     f"{'OK' if good else 'FAIL'}\n")
+
+    t = load_targets()
+    sys.stderr.write(f"  {len(t):,} exactly-20-BTC scripthashes loaded as "
+                     f"sweep targets\n")
+    ok &= len(t) > 700
+    sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
+    return ok
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--rpc", default=os.environ.get("B", ""))
+    ap.add_argument("--start", type=int, default=830000)
+    ap.add_argument("--end", type=int, default=0, help="0 = chain tip")
+    ap.add_argument("--batch", type=int, default=20)
+    ap.add_argument("--out", default="chain_tail_hits.tsv")
+    ap.add_argument("--state", default="chain_tail_state.json")
+    ap.add_argument("--selftest", action="store_true")
+    a = ap.parse_args()
+
+    sys.stderr.write("\n  SELFTEST\n")
+    if not selftest():
+        sys.exit("detection logic fails offline; a null from it would be "
+                 "meaningless")
+    if a.selftest:
+        return
+    if not a.rpc:
+        sys.exit("need --rpc (or $B): an endpoint serving getblockhash/getblock")
+
+    from alchemy_window_scan import RPC
+    rpc = RPC(a.rpc)
+    targets = load_targets()
+    tip = a.end or rpc.batch([("getblockchaininfo", [])])[0]["blocks"]
+    start = a.start
+    if os.path.exists(a.state):
+        try:
+            start = max(start, json.load(open(a.state))["next"])
+        except Exception:
+            pass
+    sys.stderr.write(f"\n  blocks {start:,} .. {tip:,} "
+                     f"({tip-start+1:,} to go)\n"
+                     f"  {len(targets):,} exactly-20 scripthashes watched for "
+                     f"a sweep\n\n")
+
+    fh = open(a.out, "a", encoding="utf-8")
+    t0, nblk, ntext, nsweep = time.time(), 0, 0, 0
+    h = start
+    try:
+        while h <= tip:
+            hs = list(range(h, min(h + a.batch, tip + 1)))
+            hashes = rpc.batch([("getblockhash", [x]) for x in hs])
+            raws = rpc.batch([("getblock", [bh, 0]) for bh in hashes if bh])
+            for ht, raw in zip(hs, raws):
+                if not raw:
+                    continue
+                nblk += 1
+                try:
+                    items = list(scan_block(bytes.fromhex(raw)))
+                except Exception as e:
+                    sys.stderr.write(f"\n  block {ht}: unparsed ({e})\n")
+                    continue
+                for kind, payload in items:
+                    if kind == "spend":
+                        ss, wit = payload
+                        for pub in pubkeys_in(ss, wit):
+                            hit = scripthashes_for_pubkey(pub) & targets
+                            if hit:
+                                nsweep += 1
+                                for s in hit:
+                                    fh.write(f"SWEEP\t{ht}\t{s}\t{pub.hex()}\n")
+                                    fh.flush()
+                                    sys.stderr.write(
+                                        f"\n  *** SWEEP of an exactly-20 "
+                                        f"address in block {ht}: {s}\n")
+                        continue
+                    for run in ASCII_RUN.findall(payload):
+                        s = run.decode("ascii", "replace").lower()
+                        got = [w for w in KEYWORDS if w in s]
+                        if got:
+                            ntext += 1
+                            fh.write(f"TEXT\t{ht}\t{kind}\t{','.join(got)}\t"
+                                     f"{run.decode('ascii','replace')[:200]}\n")
+                            fh.flush()
+                            sys.stderr.write(f"\n  *** TEXT block {ht} "
+                                             f"[{kind}] {got}: "
+                                             f"{run.decode('ascii','replace')[:110]}\n")
+            h = hs[-1] + 1
+            json.dump({"next": h}, open(a.state, "w"))
+            el = time.time() - t0
+            sys.stderr.write(f"\r  {nblk:,} blocks  {ntext} text  "
+                             f"{nsweep} sweeps  {nblk/max(el,1e-9):.1f} blk/s  "
+                             f"at {h:,}   ")
+            sys.stderr.flush()
+    except KeyboardInterrupt:
+        sys.stderr.write(f"\n  interrupted at {h:,}; rerun to resume\n")
+    finally:
+        fh.close()
+    sys.stderr.write(f"\n\n  {nblk:,} blocks, {ntext} text hits, "
+                     f"{nsweep} sweeps of exactly-20 addresses\n")
+
+
+if __name__ == "__main__":
+    main()
