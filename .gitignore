@@ -11,3 +11,7 @@ solver/serial_exhaust_*.tsv
 solver/verify_hit_addrs.txt
 solver/verify_hit_manifest.tsv
 solver/everfunded_cache.jsonl
+solver/*_sweep.log
+solver/chain_tail_hits.*
+solver/sweep_hits.*
+solver/*_state.json
