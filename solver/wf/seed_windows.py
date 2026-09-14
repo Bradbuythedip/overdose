@@ -38,15 +38,46 @@ PASSPHRASES = ["", "El Salvador", "ElSalvador", "el salvador", "elsalvador", "EL
                "Overdose", "OVERDOSE", "overdose", "Bitcoin Is Toxic AF", "Max Keiser", "maxkeiser",
                "Stacy", "20", "Bitcoin", "bitcoin", "mirror", "George Sand"]
 
-O = H.Oracle()
+# Rich list in memory; the full 56.8M index is consulted in ONE vectorized
+# pass per batch instead of a disk seek per address. The per-address form made
+# stage A take 34,011s against 12s for the same stage on the rich list alone.
+O = H.Oracle(use_full=False)
 hits = []
 stats = {}
+_pending = []          # (tag, path, script_type, addr, priv)
+_checked = [0]
+BATCH = 50000
+
+
+def _flush(force=False):
+    if not _pending or (len(_pending) < BATCH and not force):
+        return
+    full = H.full_index()
+    if full is None:
+        _pending.clear()
+        return
+    from index_oracle import spk_from_address
+    spks, meta = [], []
+    for row in _pending:
+        spk = spk_from_address(row[3])
+        if spk is not None:
+            spks.append(spk)
+            meta.append(row)
+    for j, bal in full.contains_spks(spks):
+        tag, p, t, a, priv = meta[j]
+        hits.append((tag, p, t, a, priv.hex(), bal))
+        print(f"HIT(fullindex) {tag} {p} {t} {a} {priv.hex()} {bal/1e8:.8f} BTC", flush=True)
+    _checked[0] += len(spks)
+    _pending.clear()
+
 
 def check_addrs(tag, addr_rows):
     for p, t, a, priv in addr_rows:
-        if O.funded(a):
+        if O.funded(a):        # in-memory April-2023 rich list
             hits.append((tag, p, t, a, priv.hex()))
-            print("HIT", tag, p, t, a, priv.hex(), flush=True)
+            print("HIT(richlist)", tag, p, t, a, priv.hex(), flush=True)
+        _pending.append((tag, p, t, a, priv))
+    _flush()
 
 # ---------- A. Electrum v2 over all contiguous windows ----------
 t0 = time.time()
@@ -150,6 +181,8 @@ ctrl.append(("bip39 vector bip44 addr", dict(((p, t), a) for p, t, a, _ in H.bip
 ctrl.append(("electrum v2 vector type", H.electrum_v2_type("cycle rocket west magnet parrot shuffle foot correct salt library feed song") == "standard"))
 ctrl.append(("old electrum vector addr", H.electrum_old_addrs("powerful random nobody notice nothing important anyway look away hidden message over".split(), 1)[0][2] == "1FJEEB8ihPMbzs2SkLmr37dHyRFzakqUmo"))
 ctrl.append(("oracle sees genesis", O.funded("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")))
+_flush(force=True)
+print(f"full-index scriptPubKeys checked: {_checked[0]:,}")
 print("CONTROLS:", ctrl)
 print("STATS:", stats)
 print("HITS:", len(hits))
