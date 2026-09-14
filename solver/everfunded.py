@@ -96,6 +96,19 @@ def b58check(payload):
     return "1" * (len(payload + chk) - len((payload + chk).lstrip(b"\0"))) + s
 
 
+def scripthash(spk):
+    """Esplora scripthash: sha256(scriptPubKey), hex, BYTE-REVERSED.
+
+    The reversal is not cosmetic — Esplora and Electrum display the digest in
+    little-endian, and querying the forward hex silently returns an empty,
+    never-funded result for every script. That would look exactly like a clean
+    null, which is the failure mode this project keeps having to guard against,
+    so the control below checks a scripthash lookup against the address lookup
+    for the same script and requires them to agree.
+    """
+    return "sh:" + hashlib.sha256(spk).digest()[::-1].hex()
+
+
 def b58decode_h160(addr):
     """hash160 from a P2PKH address, verifying the checksum. Stdlib only."""
     n = 0
@@ -223,10 +236,19 @@ class Esplora:
         raise RuntimeError(f"giving up on {url}")
 
     def stats(self, addr):
-        """(funded_txo_count, funded_sum_sats, current_balance_sats) or None."""
+        """(funded_txo_count, funded_sum_sats, current_balance_sats).
+
+        Accepts an address, or `sh:<64 hex>` for a raw scriptPubKey queried by
+        Esplora's scripthash endpoint. The scripthash form is what makes bare
+        P2PK reachable at all: a raw pubkey output is not an address, has no
+        base58 or bech32 encoding, and is therefore invisible to every
+        address-keyed index this project has — including both offline ones.
+        """
         if addr in self.cache:
             return tuple(self.cache[addr])
-        d = self._get(f"/address/{addr}")
+        path = (f"/scripthash/{addr[3:]}" if addr.startswith("sh:")
+                else f"/address/{addr}")
+        d = self._get(path)
         cs = d.get("chain_stats") or {}
         ms = d.get("mempool_stats") or {}
         fc = int(cs.get("funded_txo_count", 0)) + int(ms.get("funded_txo_count", 0))
@@ -274,6 +296,25 @@ def run_control(api):
                          + f" funded_txo_count={best[0]:<6} "
                            f"received={best[1]/1e8:.4f} BTC  balance="
                            f"{best[2]/1e8:.4f}  {'OK' if good else 'FAIL'}\n")
+    # Scripthash agreement: the same output queried two ways must agree, or
+    # every scripthash result in the run is meaningless.
+    try:
+        h = b58decode_h160(GENESIS)
+        spk = b"\x76\xa9\x14" + h + b"\x88\xac"
+        by_addr = api.stats(GENESIS)
+        by_sh = api.stats(scripthash(spk))
+        agree = by_addr == by_sh
+        ok &= agree
+        sys.stderr.write(f"\n    scripthash path: genesis by address "
+                         f"{by_addr[0]} fundings, by scripthash {by_sh[0]} "
+                         f"-> {'AGREE, scripthash queries are valid' if agree else 'DISAGREE (FAIL)'}\n")
+        if not agree:
+            sys.stderr.write("    (a mismatch usually means the digest needs "
+                             "the opposite byte order)\n")
+    except Exception as e:
+        sys.stderr.write(f"\n    scripthash control FAILED: {e}\n")
+        ok = False
+
     sys.stderr.write(f"\n  CONTROL {'PASSED' if ok else 'FAILED'} "
                      f"({api.calls} API calls)\n")
     if not ok:
