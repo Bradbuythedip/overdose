@@ -35,6 +35,13 @@ def run(phrases, oracle, label="", batch=60000, hd=True, progress=True):
         if not spks:
             return
         for j, bal in oracle.check(spks):
+            import decoys
+            is_d, why = decoys.classify(phrase=meta[j][0], balance=bal)
+            if is_d:
+                sys.stderr.write(f"\n  (decoy, not a solve: {why})\n"
+                                 f"      {meta[j][0][:70]!r}\n")
+                sys.stderr.flush()
+                continue
             hits.append(meta[j] + (bal,))
             sys.stderr.write(f"\n  *** HIT  {bal} sats\n"
                              f"      phrase     {meta[j][0]!r}\n"
