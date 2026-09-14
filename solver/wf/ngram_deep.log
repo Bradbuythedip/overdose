@@ -1,0 +1,11 @@
+  column words: OK (1258)
+  distinct n-grams (1..12): 14,389
+  contains a known 4-gram: OK
+  keys per phrase = 107: OK (107)
+  derivation path: OK
+  planted n-gram recovered: OK (16LeM9PonmcCy5ZfSeNSXMk5625xtcLoFX)
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+n-grams 14,389 x 3 forms x 107 keys x 5 addrs => ~23,094,345 addresses

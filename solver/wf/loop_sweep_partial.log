@@ -11,3 +11,6 @@ Oracle: full 56.8M index ACTIVE (checks both sets)
 SELFTEST PASS
 
 [tier1 shallow, all candidates] phrases 17,469  addresses 611,600  63s  hits 0
+[tier2 deep, priority candidates] phrases 780  addresses 1,431,310  184s  hits 0
+
+TOTAL HITS: 0
