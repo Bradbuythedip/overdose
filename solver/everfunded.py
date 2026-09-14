@@ -247,8 +247,26 @@ class Esplora:
                 raise
         raise RuntimeError(f"giving up on {url}")
 
+    def chain_only(self, key):
+        """chain_stats tuple, CACHE BYPASSED. Used by the control, which needs
+        two lookups of the same output to be comparable."""
+        path = (f"/scripthash/{key[3:]}" if key.startswith("sh:")
+                else f"/address/{key}")
+        cs = (self._get(path) or {}).get("chain_stats") or {}
+        fc = int(cs.get("funded_txo_count", 0))
+        fs = int(cs.get("funded_txo_sum", 0))
+        return fc, fs, fs - int(cs.get("spent_txo_sum", 0))
+
     def stats(self, addr):
         """(funded_txo_count, funded_sum_sats, current_balance_sats).
+
+        CONFIRMED CHAIN HISTORY ONLY — mempool is deliberately excluded. An
+        unconfirmed transaction is not history, it is volatile, and including it
+        made two lookups of the SAME output disagree: the genesis address
+        reported 2 mempool fundings while its scripthash reported 1 seconds
+        later, so a strict-equality control failed and this script wrongly
+        declared /scripthash unsupported on an endpoint that serves it
+        perfectly well.
 
         Accepts an address, or `sh:<64 hex>` for a raw scriptPubKey queried by
         Esplora's scripthash endpoint. The scripthash form is what makes bare
@@ -262,10 +280,9 @@ class Esplora:
                 else f"/address/{addr}")
         d = self._get(path)
         cs = d.get("chain_stats") or {}
-        ms = d.get("mempool_stats") or {}
-        fc = int(cs.get("funded_txo_count", 0)) + int(ms.get("funded_txo_count", 0))
-        fs = int(cs.get("funded_txo_sum", 0)) + int(ms.get("funded_txo_sum", 0))
-        bal = fs - int(cs.get("spent_txo_sum", 0)) - int(ms.get("spent_txo_sum", 0))
+        fc = int(cs.get("funded_txo_count", 0))
+        fs = int(cs.get("funded_txo_sum", 0))
+        bal = fs - int(cs.get("spent_txo_sum", 0))
         v = (fc, fs, bal)
         with self._iolock:
             self.cache[addr] = list(v)
@@ -317,10 +334,10 @@ def run_control(api):
     try:
         h = b58decode_h160(GENESIS)
         spk = b"\x76\xa9\x14" + h + b"\x88\xac"
-        by_addr = api.stats(GENESIS)
+        by_addr = api.chain_only(GENESIS)
         for rev in (True, False):
             try:
-                by_sh = api.stats(scripthash(spk, reverse=rev))
+                by_sh = api.chain_only(scripthash(spk, reverse=rev))
             except Exception:
                 continue
             if by_sh == by_addr:

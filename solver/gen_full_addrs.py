@@ -36,6 +36,7 @@ STAGES, each written to its own file so they can be run and judged separately:
 import argparse, glob, hashlib, os, sys
 
 from hd_sweep import all_addrs, build_paths, derive, direct_keys, seeds_from
+import everfunded as EF
 from everfunded import scripthash
 from spk_extra import spks_extra, sc_p2pk
 from gen_deep_addrs import tier1_phrases, CORE_PATHS
@@ -160,6 +161,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", choices=list(STAGES), required=False)
     ap.add_argument("--max", type=int, default=200000)
+    ap.add_argument("--sh-order", choices=("forward", "reversed"),
+                    default="forward",
+                    help="byte order for scripthash keys. FORWARD is the "
+                         "default because it is what a live probe of the "
+                         "endpoint actually accepted: querying the genesis "
+                         "output by forward-order scripthash returned the same "
+                         "78,762 fundings as the address lookup, while the "
+                         "reversed order returned 0.")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
@@ -171,6 +180,8 @@ def main():
                 f"{k}={v[0]}" for k, v in STAGES.items()) + "\n")
         return
 
+    EF.SH_REVERSED = (a.sh_order == "reversed")
+    sys.stderr.write(f"\n  scripthash byte order: {a.sh_order}\n")
     name, fn = STAGES[a.stage]
     already = already_queried()
     sys.stderr.write(f"\n  stage {a.stage} ({name}); skipping "
