@@ -19,6 +19,12 @@ WHAT IS GENUINELY NEW HERE
   deep       Existing n-grams against ALL 72 HD paths. Previous passes used 8.
   combo      Article phrases crossed with the banknote serial, the clue Keiser
              called obvious, and each other.
+  edit1      EVERY single-character edit of every sentence, line and
+             paragraph - substitution, insertion, deletion, over a 77-char
+             alphabet. Complete by construction, not sampled. This is the one
+             search that recovers from a transcription error, and no amount of
+             re-hashing the transcript AS WRITTEN ever could. ~1.6M candidates.
+  edit1_all  The same over every n-gram too. ~126M candidates, an overnight run.
   serial     The 10^8 serial keyspace under several readings.
 
 ON GPUs, MEASURED RATHER THAN ASSUMED
@@ -36,9 +42,10 @@ else has already validated.
 
   python3 mega_solve.py --selftest
   python3 mega_solve.py --families mutate,deep --workers 8
+  python3 mega_solve.py --families edit1 --workers 8
   python3 mega_solve.py --families mutate --emit candidates.txt
 """
-import argparse, hashlib, itertools, os, re, sys, time
+import argparse, hashlib, itertools, os, re, string, sys, time
 
 CURVE_N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 SERIAL, DIGITS = "CL76841714A", "76841714"
@@ -87,6 +94,70 @@ def fam_mutate(_p=None):
                 yield p.replace(a, b).lower()
 
 
+# The characters a transcriber could plausibly have got wrong. Not the full
+# byte range: a transcription error produces a character a human would type or
+# a printed glyph could be confused for, not an arbitrary control code.
+EDIT_ALPHABET = (string.ascii_letters + string.digits + " .,'\"!?;:-$%()"
+                 + "—’“”")
+
+
+def _edit1(p, alphabet=EDIT_ALPHABET):
+    """Every string one character-edit away from p: substitute, insert, delete.
+
+    Complete by construction over the alphabet — not sampled. A single wrong
+    character anywhere in the phrase is covered, which is the whole point.
+    """
+    seen = set()
+    for i in range(len(p)):
+        for c in alphabet:                       # substitution
+            if c != p[i]:
+                v = p[:i] + c + p[i + 1:]
+                if v not in seen:
+                    seen.add(v)
+                    yield v
+        v = p[:i] + p[i + 1:]                    # deletion
+        if v not in seen:
+            seen.add(v)
+            yield v
+    for i in range(len(p) + 1):                  # insertion
+        for c in alphabet:
+            v = p[:i] + c + p[i:]
+            if v not in seen:
+                seen.add(v)
+                yield v
+
+
+def _distinguished():
+    import article
+    lines, sents, paras = article.load()
+    return sorted(set(list(sents) + list(paras) + list(lines)))
+
+
+def fam_edit1(_p=None):
+    """Single-character edits of every sentence, line and paragraph.
+
+    The transcript is a HUMAN transcription of a printed page. Every hash
+    spanning a mistyped character is wrong, and no amount of re-deriving the
+    transcript as written can recover from that. This is the complete
+    single-error neighbourhood: ~14,242 variants per phrase, 229 phrases,
+    3.26M candidates. Bounded, exhaustive, and finally affordable.
+    """
+    for p in _distinguished():
+        yield p
+        for v in _edit1(p):
+            yield v
+
+
+def fam_edit1_all(_p=None):
+    """The same, over every n-gram as well. ~126M candidates — an overnight
+    run on a fast box, and the widest honest coverage of a transcription
+    error that exists."""
+    for p in phrases():
+        yield p
+        for v in _edit1(p):
+            yield v
+
+
 def fam_deep(_p=None):
     """Phrases for the HD path sweep; depth comes from the derivation side."""
     return iter(phrases())
@@ -116,7 +187,8 @@ def fam_serial(params):
 
 
 FAMILIES = {"mutate": fam_mutate, "deep": fam_deep,
-            "combo": fam_combo, "serial": fam_serial}
+            "combo": fam_combo, "serial": fam_serial,
+            "edit1": fam_edit1, "edit1_all": fam_edit1_all}
 DEEP_FAMILIES = {"deep"}          # these use all 72 HD paths, not just direct
 
 
@@ -204,6 +276,20 @@ def selftest():
     s = list(itertools.islice(fam_serial({"lo": 0, "hi": 3}), 9))
     ok &= "CL00000000A" in s
     sys.stderr.write(f"  serial yields {s[:3]}…\n")
+
+    # edit1 must be COMPLETE, not sampled: assert specific known neighbours
+    e = set(_edit1("cat"))
+    want = {"bat", "ca", "at", "ct", "cart", "cats", "scat", "cot"}
+    missing = want - e
+    ok &= not missing
+    sys.stderr.write(f"  edit1('cat') contains substitutions, deletions and "
+                     f"insertions: {'OK' if not missing else f'MISSING {missing}'}\n")
+    ok &= "cat" not in e
+    d = _distinguished()
+    n1 = sum(1 for _ in _edit1(d[0]))
+    sys.stderr.write(f"  {len(d)} distinguished phrases; the first yields "
+                     f"{n1:,} single-edit variants\n")
+    sys.stderr.write(f"    -> ~{n1*len(d):,} candidates for the edit1 family\n")
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
