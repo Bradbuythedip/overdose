@@ -449,7 +449,17 @@ def control_sighash(chain, txid):
                 sc = b"\x76\xa9\x14" + h160(pub) + b"\x88\xac"
                 sh = sighash_bip143(tx, n, sc, amount)
             elif kind == "p2sh" and len(i.witness) == 2 and i.script_sig:
+                # A 2-item witness does NOT make this P2SH-P2WPKH. A
+                # P2SH-P2WSH(<pk> CHECKSIG) spend also has witness [sig,
+                # witnessScript], and treating its script as a pubkey builds
+                # the wrong scriptCode, fails to verify, and makes the control
+                # announce "this signer does not match consensus" — a false
+                # alarm that stops a working sweep. Confirm the scriptSig
+                # really pushes the 22-byte redeemScript 0x0014<h160(pub)>.
                 sig, pub = i.witness
+                redeem = b"\x00\x14" + h160(pub)
+                if i.script_sig != bytes([len(redeem)]) + redeem:
+                    continue          # P2SH around something we do not model
                 sc = b"\x76\xa9\x14" + h160(pub) + b"\x88\xac"
                 sh = sighash_bip143(tx, n, sc, amount)
             elif kind == "p2pk" and i.script_sig:
@@ -548,6 +558,16 @@ def find_control_txs(chain, back=6, per_block=25,
                         break
                 n = meta["vin"].index(v)
                 i = raw.vin[n]
+                # Selecting a control the sighash checker will then decline to
+                # model produces "inconclusive" and reads as a failure. So the
+                # same P2SH-P2WPKH test that guards control_sighash guards the
+                # choice, one step earlier.
+                if kind == "p2sh":
+                    if len(i.witness) != 2:
+                        continue
+                    rd = b"\x00\x14" + h160(i.witness[1])
+                    if i.script_sig != bytes([len(rd)]) + rd:
+                        continue
                 sig = (i.witness[0] if len(i.witness) == 2
                        else (i.script_sig[1:i.script_sig[0] + 1]
                              if i.script_sig else b""))
