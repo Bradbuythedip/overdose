@@ -421,9 +421,9 @@ def control_sighash(chain, txid):
     prevs = [v.get("prevout") or {} for v in meta.get("vin", [])]
     if len(prevs) != len(tx.vin):
         sys.stderr.write(f"  sighash      {txid[:16]}…  prevout count mismatch\n")
-        return False
+        return False, set()
 
-    checked = 0
+    checked, kinds = 0, set()
     for n, (i, pv) in enumerate(zip(tx.vin, prevs)):
         spk = bytes.fromhex(pv.get("scriptpubkey") or "")
         amount = pv.get("value")
@@ -442,6 +442,13 @@ def control_sighash(chain, txid):
                 sig, pub = i.witness
                 sc = b"\x76\xa9\x14" + h160(pub) + b"\x88\xac"
                 sh = sighash_bip143(tx, n, sc, amount)
+            elif kind == "p2pk" and i.script_sig:
+                # the pubkey lives in the OUTPUT, not the input; the scriptCode
+                # is the whole scriptPubKey
+                r = Reader(i.script_sig)
+                sig = r.take(r.take(1)[0])
+                pub = spk[1:-1]
+                sh = sighash_legacy(tx, n, spk)
             else:
                 continue
             if sig[-1] != SIGHASH_ALL:
@@ -449,20 +456,29 @@ def control_sighash(chain, txid):
             good = PublicKey(pub).verify(sig[:-1], sh, hasher=None)
         except Exception as e:
             sys.stderr.write(f"    input {n} ({kind}): error {e}\n")
-            return False
+            return False, kinds
         checked += 1
+        kinds.add(kind)
         sys.stderr.write(f"  sighash      {txid[:16]}… input {n} {kind:12} "
                          f"{'VERIFIES' if good else 'FAILS'}\n")
         if not good:
-            return False
+            return False, kinds
     if not checked:
         sys.stderr.write(f"  sighash      {txid[:16]}…  no SIGHASH_ALL input "
                          f"of a modelled type — inconclusive\n")
-        return False
-    return True
+        return False, kinds
+    return True, kinds
 
 
-def find_control_txs(chain, back=6, per_block=25, need=("p2pkh", "p2wpkh")):
+# Every input type this signer can produce, and whether a control is required.
+# p2pk is optional only because bare-pubkey outputs are nearly extinct on the
+# modern chain — not because it matters less.
+REQUIRED_CONTROLS = ("p2pkh", "p2wpkh", "p2sh")
+OPTIONAL_CONTROLS = ("p2pk",)
+
+
+def find_control_txs(chain, back=12, per_block=40,
+                     need=REQUIRED_CONTROLS, optional=OPTIONAL_CONTROLS):
     """Discover confirmed transactions to validate the signer against.
 
     The alternative is for a human (or me) to supply txids from memory, and
@@ -470,13 +486,17 @@ def find_control_txs(chain, back=6, per_block=25, need=("p2pkh", "p2wpkh")):
     remembered value as ground truth. Nothing here is remembered: the chain is
     walked, transactions are fetched, and their own bytes decide. A wrong guess
     cannot pass — it can only fail to be found.
+
+    One control is sought per input type this signer can emit, so that no
+    signing path is trusted merely because a DIFFERENT path was validated.
     """
+    need = tuple(need) + tuple(optional)
     tip = int(chain._req("/blocks/tip/height"))
     found, seen = {}, 0
     sys.stderr.write(f"  searching for control transactions from block {tip} "
                      f"backwards\n")
     for h in range(tip - 1, tip - 1 - back, -1):
-        if all(k in found for k in need):
+        if all(k in found for k in REQUIRED_CONTROLS):
             break
         try:
             bh = chain._req(f"/block-height/{h}")
@@ -485,7 +505,7 @@ def find_control_txs(chain, back=6, per_block=25, need=("p2pkh", "p2wpkh")):
             sys.stderr.write(f"    block {h}: {e}\n")
             continue
         for txid in txids[1:per_block + 1]:          # [0] is the coinbase
-            if all(k in found for k in need):
+            if all(k in found for k in REQUIRED_CONTROLS):
                 break
             try:
                 meta = chain.tx(txid)
@@ -513,7 +533,14 @@ def find_control_txs(chain, back=6, per_block=25, need=("p2pkh", "p2wpkh")):
                     found[kind] = txid
                     sys.stderr.write(f"    {kind:8} <- {txid[:16]}… "
                                      f"(block {h}, input {n})\n")
-    missing = [k for k in need if k not in found]
+    missing = [k for k in REQUIRED_CONTROLS if k not in found]
+    absent = [k for k in optional if k not in found]
+    if absent:
+        sys.stderr.write(
+            f"    no {', '.join(absent)} spend in {seen} transactions across "
+            f"{back} blocks — bare-pubkey outputs are nearly extinct, so that\n"
+            f"    path stays UNPROVEN. It shares the legacy sighash with "
+            f"p2pkh, but its scriptCode differs.\n")
     if missing:
         sys.stderr.write(f"    no confirmed {', '.join(missing)} spend found in "
                          f"{seen} transactions across {back} blocks\n")
@@ -523,14 +550,31 @@ def find_control_txs(chain, back=6, per_block=25, need=("p2pkh", "p2wpkh")):
 def run_controls(chain, txids):
     sys.stderr.write("\n  CHAIN-GROUNDED CONTROLS — confirmed transactions as "
                      "the oracle\n")
-    ok = True
+    ok, covered = True, set()
     for t in dict.fromkeys(txids):          # dedupe, keep order
         try:
             ok &= control_serializer(chain, t)
-            ok &= control_sighash(chain, t)
+            good, kinds = control_sighash(chain, t)
+            ok &= good
+            covered |= kinds
         except RuntimeError as e:
             sys.stderr.write(f"  {t[:16]}…  {e}\n")
             ok = False
+
+    # "PASS" on its own invites the assumption that every path was checked.
+    # Name the ones that were, and the ones that were not.
+    sys.stderr.write("\n  SIGNING PATHS PROVEN AGAINST CONFIRMED SPENDS\n")
+    for kind, sig_kind in (("p2pkh", "legacy"), ("p2pk", "legacy"),
+                           ("p2wpkh", "BIP-143"), ("p2sh", "BIP-143")):
+        mark = "ok" if kind in covered else "--"
+        note = "" if kind in covered else "   NOT PROVEN"
+        sys.stderr.write(f"    [{mark}] {kind:8} {sig_kind:8}{note}\n")
+    gaps = [k for k in REQUIRED_CONTROLS + OPTIONAL_CONTROLS if k not in covered]
+    if gaps and ok:
+        sys.stderr.write(
+            f"    The signer still emits {', '.join(gaps)} inputs. Their "
+            f"sighash algorithm is shared\n    with a path that WAS proven, but "
+            f"their scriptCode or scriptSig is not.\n")
     sys.stderr.write(f"  CONTROLS {'PASS' if ok else 'FAIL'}\n")
     return ok
 
