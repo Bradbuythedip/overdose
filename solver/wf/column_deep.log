@@ -1,0 +1,15 @@
+  corpus built: OK (1,561 phrases)
+  page 75 represented: OK ('bitter truth')
+  page 76 represented: OK ('Volcano Bonds')
+  page 77 represented: OK ('Faketoshi')
+  page 78 represented: OK ("numbers don't lie")
+  page 79 represented: OK ('rabbit hole')
+  contains body prose: OK
+  contains mirrored prose: OK
+  path set: 72 paths x 5 seed schemes
+  planted corpus phrase recovered: OK (1A1Suzk2wk4DugMMLEonNmGRuSUZwM2GE6 via direct:sha256)
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
+
+phrases 1,561  paths 72  => ~2,864,435 addresses
