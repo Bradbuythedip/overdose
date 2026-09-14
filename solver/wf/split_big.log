@@ -59,3 +59,9 @@ precomputed 2,727 + 13,992 points in 0.8s
   2450/2727 left  34,294,392/38,156,184 pairs  26,281 pair/s  eta 2 min
   2500/2727 left  34,993,992/38,156,184 pairs  26,358 pair/s  eta 2 min
   2550/2727 left  35,693,592/38,156,184 pairs  26,208 pair/s  eta 2 min
+  2600/2727 left  36,393,192/38,156,184 pairs  26,297 pair/s  eta 1 min
+  2650/2727 left  37,092,792/38,156,184 pairs  26,199 pair/s  eta 1 min
+  2700/2727 left  37,792,392/38,156,184 pairs  26,289 pair/s  eta 0 min
+
+pairs 38,156,184  scriptPubKeys 152,624,736  in 1457s
+split-big hits: 0
