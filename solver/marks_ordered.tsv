@@ -1,0 +1,17 @@
+# Underline and strikethrough marks in the Overdose column, in page and
+# reading order. Measured on the scanner's 400 dpi lossless CCITT G4 ink
+# separation by wf/strikethrough.py (row-run clustering; planted-rule and
+# highlight-bar controls both pass).
+#
+# These are NOT in highlights_ordered.tsv. An earlier session concluded no
+# underlines or strikethroughs exist, measuring on 3x-LANCZOS-upscaled crops --
+# a method that manufactures continuous edges and so could not decide it.
+#
+# page 78 has none. p73/74/79 candidates are the OVERDOSE slab headline, the
+# photograph and the barbed-wire graphic. Page 77 is printed white on dark
+# brown and has no black separation, so it is NOT measurable by this method.
+#
+# page	kind	x	y	width_px	width_in	text
+75	underline	1074	538	1050	2.62	They discount stuff in advance.
+75	underline	1504	1766	294	0.73	protocol.
+76	strikethrough	497	640	1556	3.89	(and 10years of watching Peter Schiff miss buying bitcoin

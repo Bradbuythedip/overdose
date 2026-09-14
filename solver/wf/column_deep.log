@@ -13,3 +13,12 @@ Oracle: full 56.8M index ACTIVE (checks both sets)
 SELFTEST PASS
 
 phrases 1,561  paths 72  => ~2,864,435 addresses
+  250/1,561 phrases  400,000 addrs  52s
+  500/1,561 phrases  880,000 addrs  110s
+  750/1,561 phrases  1,360,000 addrs  170s
+  1,000/1,561 phrases  1,760,000 addrs  225s
+  1,250/1,561 phrases  2,240,000 addrs  284s
+  1,500/1,561 phrases  2,720,000 addrs  343s
+
+phrases 1,561  keys 572,887  addresses 2,864,435  in 359s
+column-deep hits: 0
