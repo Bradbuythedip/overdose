@@ -27,7 +27,20 @@ solver/*.out
 # reproducible method and are committed; the candidate lists they emit are
 # megabytes of regenerable derived data. .hits files are kept -- a non-empty
 # one is evidence.
-solver/bedin/*.txt
-solver/bedin/*.log
-solver/numlens/*.txt
-solver/numlens/*.log
+# General: bulk .txt/.log inside solver subdirectories is lens output.
+# The three dirs holding TRACKED files are explicitly re-included -- without
+# these negations this rule would swallow 36 committed files including the page
+# transcripts and the corpora_phrases sets.
+solver/*/*.txt
+solver/*/*.log
+solver/*/*.out
+solver/*/*.err
+!solver/corpora_phrases/**
+!solver/transcript/**
+!solver/wf/**
+
+# index-cipher candidate lists: regenerable from index_cipher.py and
+# bip39_index.py. valid_mnemonics.txt is KEPT -- it is the result.
+solver/index_cipher_candidates.txt
+solver/bip39_index_candidates.txt
+solver/index_all_candidates.txt
