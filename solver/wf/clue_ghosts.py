@@ -265,3 +265,82 @@ def cmd_edges(band=200):
         g60 = ge[:, :60] if FORE[p] == "R" else ge[:, -60:]
         print(f"{p:4d}  {FORE[p]}    {f60.mean():8.3f}                    "
               f"{g60.mean():8.3f}          {np.percentile(f60,99):6.1f}")
+
+
+# ------------------------------------------------ paper edge / serration ---
+def paper_edge(p, side, thresh=250.0):
+    """Column index of the paper boundary for every row, one page side.
+
+    The scan surrounds the sheet with pure white; the sheet itself is never
+    pure white.  Walking in from the scan border until the pixel stops being
+    white therefore finds the physical edge of the paper.
+    """
+    from PIL import Image as I
+    a = np.asarray(I.open(f"{SC}/p{p}_400dpi.png").convert("L")).astype(np.float32)
+    H, W = a.shape
+    notwhite = a < thresh
+    if side == "L":
+        idx = np.argmax(notwhite, axis=1).astype(float)
+        idx[~notwhite.any(axis=1)] = np.nan
+    else:
+        idx = (W - 1 - np.argmax(notwhite[:, ::-1], axis=1)).astype(float)
+        idx[~notwhite.any(axis=1)] = np.nan
+    return idx
+
+
+def serration(p, side, y0=400, y1=4000):
+    """Roughness of one page edge: robust spread and the dominant tooth pitch."""
+    idx = paper_edge(p, side)[y0:y1]
+    idx = idx[np.isfinite(idx)]
+    if idx.size < 100:
+        return None
+    med = np.median(idx)
+    dev = idx - med
+    mad = float(np.median(np.abs(dev)))
+    # dominant spatial frequency of the edge, ignoring slow drift
+    from scipy import ndimage as ndi
+    hp = dev - ndi.uniform_filter1d(dev, 201)
+    hp = hp[np.abs(hp) < 200]
+    f = np.abs(np.fft.rfft(hp - hp.mean()))
+    k = int(np.argmax(f[3:len(f)//2])) + 3
+    pitch = len(hp) / k
+    return dict(median_x=float(med), mad=mad, p2p=float(np.percentile(dev, 98)
+                - np.percentile(dev, 2)), pitch_px=float(pitch),
+                pitch_mm=float(pitch / 400 * 25.4), rows=int(idx.size))
+
+
+# ------------------------------------------------- leaf test from the tear ---
+def edge_signal(p, side, band=90, y0=200, y1=4200):
+    """Ink profile of the outermost `band` px of one page side, per row.
+
+    If two pages are the two faces of ONE leaf, one page's left-edge signal is
+    the other page's right-edge signal at the same row: the same torn paper
+    edge seen from both sides.  Facing pages of a spread are two DIFFERENT
+    leaves and their outer edges are guillotine-trimmed, so they cannot match.
+    """
+    from PIL import Image as I
+    a = np.asarray(I.open(f"{SC}/p{p}_400dpi.png").convert("RGB")).astype(np.float32)
+    strip = a[y0:y1, 12:12 + band] if side == "L" else a[y0:y1, -band:]
+    g = strip[..., 0] * .299 + strip[..., 1] * .587 + strip[..., 2] * .114
+    ink = np.clip(np.percentile(g, 98) - g, 0, None)
+    return ink.mean(axis=1)
+
+
+def leaf_test(pairs=((72, 73), (74, 75), (76, 77), (78, 79),
+                     (73, 74), (75, 76), (77, 78))):
+    """Correlate every even page's LEFT edge with its neighbours' RIGHT edge."""
+    from scipy import ndimage as ndi
+    out = []
+    for a, b in pairs:
+        sa = edge_signal(a, "L"); sb = edge_signal(b, "R")
+        hp = lambda v: v - ndi.uniform_filter1d(v, 301)
+        x, y = hp(sa), hp(sb)
+        r = float(np.corrcoef(x, y)[0, 1])
+        # allow a small vertical registration shift
+        best = max(((float(np.corrcoef(x[max(0,d):len(x)+min(0,d)],
+                                       y[max(0,-d):len(y)+min(0,-d)])[0, 1]), d)
+                    for d in range(-60, 61)))
+        out.append((a, b, r, best))
+        print(f"p{a} LEFT edge  vs  p{b} RIGHT edge:  r0={r:+.3f}   "
+              f"best r={best[0]:+.3f} at dy={best[1]:+d} px")
+    return out

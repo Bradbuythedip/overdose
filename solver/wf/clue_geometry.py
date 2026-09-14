@@ -213,6 +213,8 @@ def main():
 
 def _run_report():
     main()
+    print()
+    full_report()
     return 0
 
 
@@ -509,6 +511,140 @@ def alignment(lines, theta=0.0, base0=0.0):
                 left_sd=float(L.std()), right_min=float(R.min()),
                 right_max=float(R.max()), right_sd=float(R.std()),
                 lefts=[round(v, 1) for v in L], rights=[round(v, 1) for v in R])
+
+
+
+
+# ------------------------------------------------- one-command full report
+LINEFIX = {                     # measured by hand-check against the renders
+    76: dict(prepend=[(596.0, "colour", 1041, 2908)]),
+    79: dict(drop=[2756.3, 2853.6, 2950.9],
+             insert=(19, [(2789.0, "colour", 836, 2705),
+                          (2886.0, "colour", 836, 2301)])),
+}
+PAGE_SLOPE = {75: 0.0036, 76: -0.0017, 78: -0.0008, 79: 0.047}
+
+
+def page_lines(p):
+    """Every printed typeset line on p, from the mask plus the colour plate."""
+    b = prep(p)
+    L = merge_fragments(chain_lines(b), 96.0)
+    fits = [f for f in (baseline_fit(Z) for Z in L) if f]
+    rows = [(i + 1, f["slope"] * 1700 + f["b"], f["slope"], None, None)
+            for i, f in enumerate(fits)]
+    bs = sorted(r[1] for r in rows)
+    d = np.diff(bs)
+    pit = float(np.median(d[d < 1.5 * np.median(d)]))
+    ci = np.load(f"/tmp/geo/colourink_{p}.npy")
+    x0, x1 = COLW[p]
+    filled = fill_gaps(rows, ci, pit, x0, x1, thresh=10000)
+    out = []
+    for z in [q for q in filled if q["kind"] != "blank"]:
+        e = line_extent(ci, z["base"], z["slope"], 1700, pit, x0, x1,
+                        up=0.60, dn=0.10, min_col=4)
+        out.append((round(z["base"], 1), z["kind"],
+                    e[0] if e else None, e[1] if e else None))
+    fx = LINEFIX.get(p, {})
+    out = fx.get("prepend", []) + out
+    out = [z for z in out if z[0] not in fx.get("drop", [])]
+    if "insert" in fx:
+        i, items = fx["insert"]
+        out = out[:i] + items + out[i:]
+    return out, pit
+
+
+def full_report():
+    import math
+    print("### leading, per typographic block (least squares on baselines)")
+    for p in (75, 76, 78, 79):
+        rows, pit = page_lines(p)
+        bases = [z[0] for z in rows]
+        for B in blocks_of(bases, pit):
+            bb = np.array([bases[i] for i in B])
+            if len(bb) < 3:
+                continue
+            A = np.vstack([np.arange(len(bb)), np.ones(len(bb))]).T
+            sol, *_ = np.linalg.lstsq(A, bb, rcond=None)
+            print("  p%d block n=%2d first_base=%7.1f leading=%.3f px = %.3f pt"
+                  % (p, len(bb), bb[0], sol[0], sol[0] * 72 / 400))
+    print()
+    print("### printed typeset line counts, and lines missing from the masks")
+    for p in (75, 76, 78, 79):
+        rows, pit = page_lines(p)
+        mk, _ = ink_raster(p)
+        mk = rot180(mk)
+        ci = np.load(f"/tmp/geo/colourink_{p}.npy")
+        x0, x1 = COLW[p]
+        drop = part = 0
+        for (bb, kind, l, r) in rows:
+            sl = PAGE_SLOPE[p] if (p != 79 or bb < 2100) else -0.003
+            em = line_extent(mk, bb, sl, 1700, pit, x0, x1, 0.62, 0.12, 1)
+            ec = line_extent(ci, bb, sl, 1700, pit, x0, x1, 0.62, 0.12, 1)
+            ratio = (em[2] if em else 0) / max(ec[2] if ec else 1, 1)
+            if ratio < 0.05:
+                drop += 1
+                print("  p%d base=%7.1f  mask=%6d colour=%6d  WHOLE LINE MISSING"
+                      % (p, bb, em[2] if em else 0, ec[2] if ec else 0))
+            elif ratio < 0.45:
+                part += 1
+        print("  p%d: %d printed typeset lines, %d wholly absent from the mask,"
+              " %d more under 45%% present" % (p, len(rows), drop, part))
+    print()
+    print("### alignment per block (edges in 400 dpi px)")
+    for p in (75, 76, 78, 79):
+        rows, pit = page_lines(p)
+        for (a, b) in BLOCKS[p]:
+            seg = rows[a:b]
+            th = 0.0468 if (p == 79 and a == 0) else 0.0
+            A = alignment(seg, th, seg[0][0])
+            print("  p%d lines %2d-%2d  LEFT %4.0f-%4.0f sd=%5.1f   "
+                  "RIGHT %4.0f-%4.0f sd=%5.1f"
+                  % (p, a + 1, b, A["left_min"], A["left_max"], A["left_sd"],
+                     A["right_min"], A["right_max"], A["right_sd"]))
+    print()
+    print("### two more whole-line dropouts the per-line pass cannot reach")
+    mk = rot180(ink_raster(75)[0])
+    ci = np.load("/tmp/geo/colourink_75.npy")
+    print("  p75 headline 'BITCOIN IS TOXIC AF' y460-650 x440-1800: "
+          "mask=%d colour=%d" % (mk[460:650, 440:1800].sum(),
+                                 ci[460:650, 440:1800].sum()))
+    mk = rot180(ink_raster(72)[0])
+    ci = np.load("/tmp/geo/colourink_72.npy")
+    print("  p72 left source column y3800-4120 x400-1400: mask=%d colour=%d"
+          % (mk[3800:4120, 400:1400].sum(), ci[3800:4120, 400:1400].sum()))
+    for nm, (a, b) in (("left", (420, 1450)), ("right", (1900, 2990))):
+        prof = ci[3800:4110, a:b].sum(axis=1)
+        on = prof > 25
+        tops, st = [], None
+        for i, v in enumerate(on):
+            if v and st is None:
+                st = i
+            elif not v and st is not None:
+                if i - st >= 10:
+                    tops.append(3800 + st)
+                st = None
+        d = np.diff(tops)
+        print("  p72 %-5s source column: %d lines, leading %.2f px = %.3f pt"
+              % (nm, len(tops), d.mean(), d.mean() * 72 / 400))
+    print()
+    print("### p77 centred display block vs the justified column below it")
+    ci = np.load("/tmp/geo/colourink_77.npy")
+    cs = []
+    for base in (2369.2, 2465.3, 2562.5, 2657.9, 2755.9):
+        e = line_extent(ci, base, 0.0015, 1700, 96.5, 1000, 2990, 0.62, 0.12, 3)
+        cs.append((e[0] + e[1]) / 2)
+        print("  display  base=%7.1f L=%4d R=%4d centre=%7.1f"
+              % (base, e[0], e[1], cs[-1]))
+    ls, rs = [], []
+    for base in (3012.3, 3116.2, 3208.3, 3302.7, 3401.0, 3498.3, 3594.3,
+                 3691.2, 3788.2, 3883.0):
+        e = line_extent(ci, base, 0.0, 1700, 96.5, 1000, 2990, 0.62, 0.12, 3)
+        ls.append(e[0]); rs.append(e[1])
+    print("  display centre mean %.1f range %.1f px | justified column "
+          "L %d-%d R %d-%d centre %.1f"
+          % (np.mean(cs), max(cs) - min(cs), min(ls), max(ls), min(rs),
+             max(rs), (np.mean(ls) + np.mean(rs)) / 2))
+
 
 
 if __name__ == "__main__":
