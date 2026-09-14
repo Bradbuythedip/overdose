@@ -46,17 +46,41 @@ impossible, since a `4` and a `7` do not become digits upside down. Swept
 anyway: that argument is about what a **reader** sees, and this is about what an
 **author** might have typed.
 
-## The boundary that remains
+## The stretched family, now also run
 
-This closes the mirrored serial under **fast hashes**. It says nothing about
-stretched KDFs, and `kdf_and_keyformats.md` makes the point that stretching is
-invisible to a bulk sweep by construction -- that is what stretching is for.
-`serial_secret.py` tested the serial as a BIP-39 passphrase and KDF salt, but
-not confirmed for the mirrored readings.
+`mirror_serial.py` closed the mirrored serial under **fast hashes**. That said
+nothing about stretched KDFs, and `kdf_and_keyformats.md` makes the point that
+stretching is invisible to a bulk sweep by construction -- that is what
+stretching is for. `serial_secret.py` had tested the FORWARD serial as a
+passphrase and salt, not the mirrored readings.
 
-For 36 strings that is cheap: WarpWallet is ~2 s per derivation, so the whole
-set across salts is roughly a quarter of an hour. Until it is run, the honest
-claim is "the mirrored serial is closed under fast hashes", not "exhausted".
+36 strings is small enough that the argument does not apply, so the expensive
+family was affordable. `mirror_kdf.py`:
+
+```
+pbkdf2-hmac-sha256  c = 1000 / 2048 / 4096 / 10000 / 65536, 8 salts
+pbkdf2-hmac-sha512  c = 2048 / 4096 / 65536,                8 salts
+scrypt              N = 2^12, 2^14
+WarpWallet          scrypt N=2^18 XOR pbkdf2 c=2^16,        8 salts
+
+2,664 stretched keys, 66,600 scriptPubKeys, 0 hits
+```
+
+Every primitive pinned to a published vector before the sweep, because a
+silently-wrong scrypt would make the null worthless:
+
+| vector | result |
+|---|---|
+| RFC 6070 pbkdf2-sha1, c=1 | OK |
+| RFC 7914 scrypt, N=16 | OK |
+| WarpWallet `ER8FT+HFjk0` / `7DpniYifN6c` -> `1J32CmwScqhwnNQ77cKv9q41JGwoZe2JYQ` | OK, uncompressed |
+
+Plus the planted-key control through the index, as above.
+
+## Status
+
+**The mirrored serial is exhausted**, across fast hashes and stretched KDFs,
+direct and HD derivation, all 25 script forms. Not "tested" -- exhausted.
 
 ## Two engineering notes, because the first attempt died of them
 
