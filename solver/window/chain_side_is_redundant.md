@@ -1,5 +1,13 @@
 # Narrowing the chain side cannot help (2026-09-14)
 
+> **CORRECTED the same day — see `index_horizon.md`.** The argument below is
+> sound only for addresses funded **before 2025-10-11**. `address_map.bin`
+> carries that snapshot date in its header (offset 60 = 1760205236, verified),
+> which puts its horizon at roughly **block 918,388**. Blocks 918,388–966,916,
+> the most recent ~48,500, are absent from it and from every null this project
+> has produced. For that region the chain side is NOT redundant — it is the
+> only thing that can see at all.
+
 The tail scan produced a clean funnel on the first 1,037 blocks:
 
 ```
