@@ -15,3 +15,5 @@ n-grams 14,389 x 3 forms x 107 keys x 5 addrs => ~23,094,345 addresses
   4,000/14,389 n-grams  6,400,000 addrs  827s
   5,000/14,389 n-grams  8,000,000 addrs  1035s
   6,000/14,389 n-grams  9,600,000 addrs  1242s
+  7,000/14,389 n-grams  11,200,000 addrs  1452s
+  8,000/14,389 n-grams  12,800,000 addrs  1661s
