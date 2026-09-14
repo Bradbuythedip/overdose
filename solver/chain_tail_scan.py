@@ -43,12 +43,56 @@ blocks instead, and the live run belongs on a machine with access.
 import argparse, hashlib, json, os, re, sys, time
 
 ASCII_RUN = re.compile(rb"[\x20-\x7e]{16,}")
-KEYWORDS = [
-    "keiser", "overdose", "orangepill", "orange pill", "toxic af",
-    "el salvador", "elsalvador", "bukele", "cl76841714a", "76841714",
-    "41714867", "stacy herbert", "honey badger", "20 btc", "20btc",
-    "bitcoin magazine", "annabellebaz", "george sand",
+
+# Keywords tiered by how often they occur for reasons unrelated to this puzzle.
+# The first live run matched "overdose" in block 830,200 — an Atomicals realm
+# registration, CBOR {"bitworkc":"3165","request_realm":"overdose"}, somebody
+# claiming the NAME. One hit per 200 blocks extrapolates to ~685 across the
+# window, which would bury anything real. "overdose" is an ordinary English
+# word and a desirable short name; so are most of the others.
+SPECIFIC = [                      # effectively zero false-positive rate
+    "cl76841714a", "76841714", "41714867", "annabellebaz",
+    "orangepill", "honey badger", "honeybadger", "toxic af",
+    "bitcoin is toxic", "george sand", "max keiser", "stacy herbert",
 ]
+GENERIC = [                       # real words; need corroboration
+    "keiser", "overdose", "orange pill", "el salvador", "elsalvador",
+    "bukele", "20 btc", "20btc", "bitcoin magazine", "satoshi experience",
+]
+KEYWORDS = SPECIFIC + GENERIC     # kept for the selftest and --all
+
+# Protocol envelopes that mint names and text for their own reasons. A generic
+# keyword appearing inside one of these is a name, not a message.
+# Deliberately NOT "ord" — it is a substring of word, record, according, order,
+# and would suppress ordinary English containing a real message. Suppression has
+# to be narrower than detection or the filter becomes the bug.
+PROTOCOL_NOISE = ["request_realm", "bitworkc", "request_subrealm", "atomicals",
+                  "request_container", "request_dmitem", "text/plain;charset",
+                  "application/json", "brc-20", '"op":"', '"tick":',
+                  "ord\x01", "mint_ticker"]
+
+
+def classify(text):
+    """(report?, matched, reason) for one embedded ASCII run.
+
+    A specific term stands alone. A generic one has to be corroborated — by a
+    specific term, or by another generic term — and is discarded outright if it
+    sits inside a naming-protocol envelope, because there it is a claimed name
+    rather than a sentence.
+    """
+    s = text.lower()
+    spec = [w for w in SPECIFIC if w in s]
+    gen = [w for w in GENERIC if w in s]
+    if spec:
+        return True, spec + gen, "specific"
+    if not gen:
+        return False, [], ""
+    noise = [p for p in PROTOCOL_NOISE if p in s]
+    if noise:
+        return False, gen, f"protocol envelope ({noise[0]})"
+    if len(gen) >= 2:
+        return True, gen, "two generic terms"
+    return False, gen, "single generic term, uncorroborated"
 
 
 def dsha(b):
@@ -223,6 +267,30 @@ def selftest():
     sys.stderr.write(f"  keyword match on that run: {hits[:4]} "
                      f"{'OK' if good else 'FAIL'}\n")
 
+    # REGRESSION: the first live run's false positive, block 830,200. An
+    # Atomicals realm registration — somebody claiming the NAME "overdose".
+    # It must never be reported again.
+    atom = "hbitworkcd3165mrequest_realmhoverdoseh"
+    rep, got, why = classify(atom)
+    ok &= not rep
+    sys.stderr.write(f"  block 830,200 Atomicals realm suppressed "
+                     f"({why}): {'OK' if not rep else 'FAIL — still reports'}\n")
+
+    # but suppression must not be so wide it eats a real message
+    real = "I solved the OVERDOSE puzzle. El Salvador was the clue. Thanks Max."
+    rep2, got2, why2 = classify(real)
+    ok &= rep2
+    sys.stderr.write(f"  a genuine boast still reports ({why2}): "
+                     f"{'OK' if rep2 else 'FAIL — over-suppressed'}\n")
+    rep3, _g, _w = classify("according to the record, in a word, order restored")
+    ok &= not rep3
+    sys.stderr.write(f"  ordinary English containing 'ord' is not treated as "
+                     f"an ordinals envelope: {'OK' if not rep3 else 'FAIL'}\n")
+    rep4, _g, _w = classify("serial CL76841714A appears here")
+    ok &= rep4
+    sys.stderr.write(f"  a SPECIFIC term reports on its own: "
+                     f"{'OK' if rep4 else 'FAIL'}\n")
+
     t = load_targets()
     sys.stderr.write(f"  {len(t):,} exactly-20-BTC scripthashes loaded as "
                      f"sweep targets\n")
@@ -239,6 +307,8 @@ def main():
     ap.add_argument("--batch", type=int, default=20)
     ap.add_argument("--out", default="chain_tail_hits.tsv")
     ap.add_argument("--state", default="chain_tail_state.json")
+    ap.add_argument("--verbose", action="store_true",
+                    help="also print suppressed matches and why")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
@@ -267,7 +337,7 @@ def main():
                      f"a sweep\n\n")
 
     fh = open(a.out, "a", encoding="utf-8")
-    t0, nblk, ntext, nsweep = time.time(), 0, 0, 0
+    t0, nblk, ntext, nsweep, nsupp = time.time(), 0, 0, 0, 0
     h = start
     try:
         while h <= tip:
@@ -298,28 +368,36 @@ def main():
                                         f"address in block {ht}: {s}\n")
                         continue
                     for run in ASCII_RUN.findall(payload):
-                        s = run.decode("ascii", "replace").lower()
-                        got = [w for w in KEYWORDS if w in s]
-                        if got:
+                        txt = run.decode("ascii", "replace")
+                        report, got, why = classify(txt)
+                        if got and not report:
+                            nsupp += 1
+                            if a.verbose:
+                                sys.stderr.write(f"\n  (suppressed block {ht} "
+                                                 f"{got}: {why})\n")
+                            continue
+                        if report:
                             ntext += 1
-                            fh.write(f"TEXT\t{ht}\t{kind}\t{','.join(got)}\t"
-                                     f"{run.decode('ascii','replace')[:200]}\n")
+                            fh.write(f"TEXT\t{ht}\t{kind}\t{why}\t"
+                                     f"{','.join(got)}\t{txt[:200]}\n")
                             fh.flush()
                             sys.stderr.write(f"\n  *** TEXT block {ht} "
-                                             f"[{kind}] {got}: "
-                                             f"{run.decode('ascii','replace')[:110]}\n")
+                                             f"[{kind}] {got} ({why}): "
+                                             f"{txt[:110]}\n")
             h = hs[-1] + 1
             json.dump({"next": h}, open(a.state, "w"))
             el = time.time() - t0
             sys.stderr.write(f"\r  {nblk:,} blocks  {ntext} text  "
-                             f"{nsweep} sweeps  {nblk/max(el,1e-9):.1f} blk/s  "
+                             f"{nsweep} sweeps  {nsupp} suppressed  "
+                             f"{nblk/max(el,1e-9):.1f} blk/s  "
                              f"at {h:,}   ")
             sys.stderr.flush()
     except KeyboardInterrupt:
         sys.stderr.write(f"\n  interrupted at {h:,}; rerun to resume\n")
     finally:
         fh.close()
-    sys.stderr.write(f"\n\n  {nblk:,} blocks, {ntext} text hits, "
+    sys.stderr.write(f"\n\n  {nblk:,} blocks, {ntext} reportable text "
+                     f"hits, {nsupp} suppressed as noise, "
                      f"{nsweep} sweeps of exactly-20 addresses\n")
 
 
