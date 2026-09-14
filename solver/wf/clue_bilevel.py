@@ -327,6 +327,41 @@ def jpeg_only_all():
             print(p, "ERR", e)
 
 
+def summary():
+    """One line per printed page: how many stencils, their dpi, ink, and colours."""
+    d = doc()
+    st = _stencils()
+    print(f"{'page':>4} {'stencils':>8} {'dpi(min..max)':>16} {'total ink px':>13} "
+          f"{'main mask fill':>15} {'chan order':>11}")
+    for p in sorted(PAGE_MAP.values()):
+        ss = [s for s in st if s["page"] == p]
+        if not ss:
+            print(f"{p:>4} {0:>8} {'-':>16} {0:>13} {'NONE':>15} {'-':>11}")
+            continue
+        dp = [s["px"] / (s["w"] / 72.0) for s in ss]
+        tot = 0
+        for s in ss:
+            a = np.array(Image.open(io.BytesIO(d.extract_image(s["xref"])["image"])).convert("1"))
+            tot += int(a.sum())
+        big = max(ss, key=lambda s: s["px"] * s["py"])
+        c = big["col"]
+        hx = "#%02X%02X%02X" % tuple(int(round(v * 255)) for v in c)
+        order = "".join(ch for _, ch in sorted(zip(c, "rgb"), reverse=True))
+        print(f"{p:>4} {len(ss):>8} {min(dp):7.2f}..{max(dp):<7.2f} {tot:13d} {hx:>15} {order:>11}")
+
+
+def blanks():
+    """Stencils that paint nothing at all."""
+    d = doc()
+    for s in _stencils():
+        a = np.array(Image.open(io.BytesIO(d.extract_image(s["xref"])["image"])).convert("1"))
+        if a.sum() == 0:
+            print(f"p{s['page']} {s['name']} xref={s['xref']} {s['px']}x{s['py']} "
+                  f"= {s['px']*s['py']} px, ink=0, raw CCITT stream "
+                  f"{len(d.xref_stream_raw(s['xref']))} bytes, fill "
+                  + "#%02X%02X%02X" % tuple(int(round(v*255)) for v in s["col"]))
+
+
 if __name__ == "__main__":
     fn = sys.argv[1] if len(sys.argv) > 1 else "inventory"
     globals()[fn](*sys.argv[2:])
