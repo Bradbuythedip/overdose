@@ -344,3 +344,31 @@ def leaf_test(pairs=((72, 73), (74, 75), (76, 77), (78, 79),
         print(f"p{a} LEFT edge  vs  p{b} RIGHT edge:  r0={r:+.3f}   "
               f"best r={best[0]:+.3f} at dy={best[1]:+d} px")
     return out
+
+
+# --------------------------------------------- spread-wide ghost solution ---
+def fit_transfer(pg, src, Crange=(1500, 1900), dyrange=(-40, 40), step=2):
+    """Find the mirror constant C and vertical shift dy of src -> pg transfer.
+
+    The model is  pg_ghost(x, y)  ~  alpha * src_ink(C - x, y + dy).
+    Returns (best_r, C, dy, alpha).  Works on the MRC background layer of the
+    receiving page, which is the scanner's own ghost/no-ghost separation.
+    """
+    from scipy import ndimage as ndi
+    G = inkmap(bg(pg)); S = inkmap(full(src))
+    G4 = ndi.zoom(G, .25, order=1); S4 = ndi.zoom(S, .25, order=1)
+    hp = lambda a: a - ndi.uniform_filter(a, 25)
+    Gh = hp(G4); H, W = Gh.shape
+    best = (-2, None, None, None)
+    ys, xs = np.mgrid[0:H, 0:W]
+    for C in range(Crange[0] // 4, Crange[1] // 4, step):
+        for dy in range(dyrange[0] // 4, dyrange[1] // 4 + 1):
+            sy = np.clip(ys + dy, 0, H - 1); sx = np.clip(C - xs, 0, W - 1)
+            P = hp(S4[sy, sx])
+            m = (P != 0)
+            r = float(np.corrcoef(Gh[m], P[m])[0, 1])
+            if r > best[0]:
+                a = float((G4[m] * S4[sy, sx][m]).sum() /
+                          (S4[sy, sx][m] ** 2).sum())
+                best = (r, C * 4, dy * 4, a)
+    return best
