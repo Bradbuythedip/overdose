@@ -22,3 +22,7 @@ n-grams 14,389 x 3 forms x 107 keys x 5 addrs => ~23,094,345 addresses
   11,000/14,389 n-grams  17,600,000 addrs  2279s
   12,000/14,389 n-grams  19,200,000 addrs  2481s
   13,000/14,389 n-grams  20,800,000 addrs  2671s
+  14,000/14,389 n-grams  22,400,000 addrs  2868s
+
+n-grams 14,389  addresses 23,094,345 in 2948s
+ngram-deep hits: 0
