@@ -1,7 +1,6 @@
   vigenere round trip: OK
   atbash vector: OK
   derivation vector: OK
-Oracle: full 56.8M index ACTIVE (checks both sets)
   oracle genesis: OK
 SELFTEST PASS
 

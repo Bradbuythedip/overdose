@@ -361,55 +361,109 @@ def reuse(rows73, a73, rows79, a79, size=180):
 
 
 # ---------------------------------------------------------------- p76 X marks
-def xmarks(pn=76):
+def edge_orientations(mask, sigma=4.0, sep=20, k=2):
+    """Structure-tensor orientation spectrum of a blob's boundary.
+
+    A straight brush stroke contributes its two long edges at the SAME
+    orientation, so an X gives exactly two peaks: the bearings of its two
+    strokes.  Bearings are CCW-on-paper degrees in (-90, 90].
+    """
+    from scipy import ndimage as _nd
+    f = _nd.gaussian_filter(mask.astype(float), sigma)
+    gy, gx = np.gradient(f)
+    mag = np.hypot(gx, gy)
+    sel = mag > mag.max() * 0.15
+    # gradient is normal to the edge; stroke bearing = gradient angle + 90
+    ang = (np.degrees(np.arctan2(-gy[sel], gx[sel])) + 90.0) % 180.0
+    w = mag[sel]
+    hist, edges = np.histogram(ang, bins=180, range=(0, 180), weights=w)
+    hist = np.convolve(np.r_[hist, hist, hist], np.ones(7) / 7, "same")[180:360]
+    order = np.argsort(hist)[::-1]
+    picks = []
+    for i in order:
+        d = i + 0.5
+        if all(min(abs(d - p), 180 - abs(d - p)) > sep for p, _ in picks):
+            picks.append((d, float(hist[i])))
+        if len(picks) == k:
+            break
+    out = []
+    for d, v in picks:
+        out.append((d - 180 if d > 90 else d, v))
+    return out, hist
+
+
+def stroke_bearings(mask, halfwidth=26, sep=25, k=2):
+    """Hough-lite: the k best-separated line bearings through the centroid."""
+    ys, xs = np.nonzero(mask)
+    cy, cx = ys.mean(), xs.mean()
+    sc = []
+    for deg in range(-89, 91):
+        t = math.radians(deg)
+        # bearing deg is CCW-on-paper; direction (cos t, -sin t) in y-down
+        # image coords, so the perpendicular offset is:
+        d = np.abs((xs - cx) * math.sin(t) + (ys - cy) * math.cos(t))
+        sc.append((int((d < halfwidth).sum()), deg))
+    sc.sort(reverse=True)
+    picks = []
+    for cnt, deg in sc:
+        if all(min(abs(deg - d), 180 - abs(deg - d)) > sep for _, d in picks):
+            picks.append((cnt, deg))
+        if len(picks) == k:
+            break
+    return picks
+
+
+def xmarks(pn=76, roi=(2300, 3350, 3400, 4400)):
+    """The two painted X marks in the lower-right corner of p76."""
     a = page(pn)
     lum = a.mean(2)
     sat = a.max(2) - a.min(2)
-    m = (lum < 205) & (sat < 40)
-    # the X marks live in the top-right quadrant of the printed page
-    m[:, :1700] = False
-    m[1400:, :] = False
+    m = (lum < 200) & (sat < 45)
+    keep = np.zeros_like(m)
+    keep[roi[1]:roi[3], roi[0]:roi[2]] = True
+    m &= keep
     lab, n = label_fast(m)
-    print(f"\n=== p{pn} painted X marks (grey: lum<205, sat<40, top-right quadrant) ===")
+    cnt = np.bincount(lab.ravel())
+    print(f"\n=== p{pn} painted X marks  (grey ink: lum<200, sat<45, ROI x{roi[0]}-{roi[2]} y{roi[1]}-{roi[3]}) ===")
     res = []
     for i in range(1, n + 1):
-        ys, xs = np.nonzero(lab == i)
-        if ys.size < 3000:
+        if cnt[i] < 5000:
             continue
+        ys, xs = np.nonzero(lab == i)
         ang, L, W = pca_axis(ys, xs)
         col = np.median(a[ys, xs], axis=0)
-        res.append(dict(idx=len(res) + 1, cx=float(xs.mean()), cy=float(ys.mean()),
+        res.append(dict(cx=float(xs.mean()), cy=float(ys.mean()),
                         bbox=[int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())],
                         area=int(ys.size), angle=round(ang, 2),
                         length=round(float(L), 1), width=round(float(W), 1),
-                        rgb=[int(v) for v in col]))
-    for r in sorted(res, key=lambda r: r['cx']):
-        print(f"  X#{r['idx']} centroid ({r['cx']:.0f},{r['cy']:.0f}) bbox {r['bbox']} "
-              f"area {r['area']} axis {r['angle']:+.2f} deg  L={r['length']:.0f} W={r['width']:.0f} "
-              f"median RGB {r['rgb']}")
-    # decompose each blob into its two strokes by splitting on the minor axis
-    for r in sorted(res, key=lambda r: r['cx']):
+                        rgb=[int(v) for v in col], mask=(lab == i)))
+    res.sort(key=lambda r: r['cy'])
+    for k, r in enumerate(res):
         x0, y0, x1, y1 = r['bbox']
-        sub = m[y0:y1 + 1, x0:x1 + 1]
-        ys, xs = np.nonzero(sub)
-        # Hough-lite: for each candidate stroke angle, how much ink lies on a
-        # thin line through the centroid?
-        best = []
-        cy, cx = ys.mean(), xs.mean()
-        for deg in range(-89, 91):
-            t = math.radians(deg)
-            d = np.abs((xs - cx) * math.sin(t) + (ys - cy) * math.cos(t))
-            best.append((int((d < 22).sum()), deg))
-        best.sort(reverse=True)
-        picks = []
-        for cnt, deg in best:
-            if all(min(abs(deg - d), 180 - abs(deg - d)) > 25 for _, d in picks):
-                picks.append((cnt, deg))
-            if len(picks) == 2:
-                break
-        print(f"  X#{r['idx']} two strongest stroke bearings: "
-              + ", ".join(f"{-d:+d} deg ({c} px)" for c, d in picks)
-              + f"   included angle {abs(picks[0][1]-picks[1][1])} deg")
+        picks, _ = edge_orientations(r['mask'][y0:y1 + 1, x0:x1 + 1])
+        inc = abs(picks[0][0] - picks[1][0]) if len(picks) > 1 else float('nan')
+        inc = min(inc, 180 - inc)
+        # stroke thickness = area / total stroke length
+        from scipy import ndimage as _nd
+        dt = _nd.distance_transform_edt(r['mask'][y0:y1 + 1, x0:x1 + 1])
+        r['thick'] = float(np.percentile(dt[dt > 0], 95) * 2)
+        print(f"  X#{k+1}  bbox x[{x0},{x1}] y[{y0},{y1}] = {x1-x0+1}x{y1-y0+1} px "
+              f"({(x1-x0+1)/DPI:.2f}x{(y1-y0+1)/DPI:.2f} in)")
+        print(f"        centroid ({r['cx']:.0f},{r['cy']:.0f})  ink area {r['area']} px  "
+              f"bbox fill {100*r['area']/((x1-x0+1)*(y1-y0+1)):.1f}%  median RGB {r['rgb']}")
+        r['bearings'] = [round(p[0], 1) for p in picks]
+        print(f"        stroke bearings {picks[0][0]:+.1f} deg and {picks[1][0]:+.1f} deg;  "
+              f"included angle {inc:.1f} deg;  "
+              f"95th-pct stroke thickness {r['thick']:.0f} px")
+    if len(res) == 2:
+        A, B = res
+        sa = math.sqrt(A['area'] / B['area'])
+        print(f"  size ratio X#1/X#2: area {A['area']/B['area']:.3f} -> linear {sa:.3f}; "
+              f"diagonal {math.hypot(A['bbox'][2]-A['bbox'][0], A['bbox'][3]-A['bbox'][1]) / math.hypot(B['bbox'][2]-B['bbox'][0], B['bbox'][3]-B['bbox'][1]):.3f}; "
+              f"thickness {A['thick']/B['thick']:.3f}")
+        print(f"  centre-to-centre {math.hypot(A['cx']-B['cx'], A['cy']-B['cy']):.0f} px "
+              f"= {math.hypot(A['cx']-B['cx'], A['cy']-B['cy'])/DPI:.2f} in, bearing "
+              f"{math.degrees(math.atan2(-(B['cy']-A['cy']), B['cx']-A['cx'])):+.1f} deg")
     return res
 
 
@@ -472,36 +526,97 @@ def scribble(pn=78):
         print(f"    bbox in page coords x[{kx.min()+x0},{kx.max()+x0}] y[{ky.min()+y0},{ky.max()+y0}]"
               f"  = {kx.max()-kx.min()+1} x {ky.max()-ky.min()+1} px")
         print(f"    type block long axis {ang2:+.2f} deg")
-        # baseline angle: fit rows of glyph centroids
+        # ---- skew detection: the quote is set on a rotated baseline, so find
+        # the rotation that makes the glyph-centroid rows crispest.
         cents = []
+        boxes = []
         for s, i in sz:
             if s >= 40:
                 yy, xx = np.nonzero(ll == i)
-                cents.append((xx.mean(), yy.mean(), s))
-        cents.sort(key=lambda t: t[1])
-        yy = np.array([c[1] for c in cents])
-        # cluster into text lines by gaps in y
-        cents.sort(key=lambda t: t[1])
-        lines, cur = [], [cents[0]]
-        for c in cents[1:]:
-            if c[1] - cur[-1][1] > 28:
+                cents.append((xx.mean(), yy.mean()))
+                boxes.append((xx.min(), xx.max(), yy.min(), yy.max()))
+        P = np.array(cents)
+        # skew score = fraction of EMPTY 8-px rows in the projection profile.
+        # (scale-free: collapsing everything into one bin scores badly because
+        # a 4-line block must show 3 clean inter-line gaps)
+        best = (None, -1)
+        for th in np.arange(-30, 30.01, 0.25):
+            t = math.radians(th)
+            yr = -P[:, 0] * math.sin(t) + P[:, 1] * math.cos(t)
+            bins = np.arange(yr.min(), yr.max() + 8, 8)
+            h, _ = np.histogram(yr, bins=bins)
+            sc = float((h == 0).sum()) / max(1, h.size)
+            if sc > best[1]:
+                best = (th, sc)
+        th = best[0]
+        print(f"    SET ANGLE of the reversed-out quote: {th:+.2f} deg "
+              f"(rotation that maximises row crispness; scan skew for reference below)")
+        t = math.radians(th)
+        yr = -P[:, 0] * math.sin(t) + P[:, 1] * math.cos(t)
+        xr = P[:, 0] * math.cos(t) + P[:, 1] * math.sin(t)
+        o = np.argsort(yr)
+        lines, cur = [], [o[0]]
+        for i in o[1:]:
+            if yr[i] - yr[cur[-1]] > 40:
                 lines.append(cur)
-                cur = [c]
+                cur = [i]
             else:
-                cur.append(c)
+                cur.append(i)
         lines.append(cur)
-        print(f"    {len(lines)} reversed-out text lines; per-line slope:")
+        print(f"    {len(lines)} text lines after de-rotation:")
+        bl = []
         for k, ln in enumerate(lines):
-            ln = sorted(ln)
-            X = np.array([c[0] for c in ln])
-            Y = np.array([c[1] for c in ln])
-            if X.size >= 3 and X.std() > 1:
-                m_, b_ = np.polyfit(X, Y, 1)
-                print(f"      line {k+1}: {len(ln)} blobs, x-span {X.max()-X.min():.0f} px, "
-                      f"slope {math.degrees(math.atan(-m_)):+.2f} deg")
-            else:
-                print(f"      line {k+1}: {len(ln)} blobs")
+            ln = sorted(ln, key=lambda i: xr[i])
+            X, Y = P[ln, 0], P[ln, 1]
+            hh = [boxes[i][3] - boxes[i][2] for i in ln]
+            m_ = np.polyfit(X, Y, 1)[0] if len(ln) >= 3 else float('nan')
+            bl.append(np.mean(yr[ln]))
+            print(f"      line {k+1}: {len(ln):2d} glyph blobs  x-span "
+                  f"{xr[ln].max()-xr[ln].min():5.0f} px  residual slope "
+                  f"{math.degrees(math.atan(-m_)):+6.2f} deg  median glyph height "
+                  f"{np.median(hh):.0f} px")
+        if len(bl) > 1:
+            lead = np.diff(bl)
+            print(f"    leading between lines: {np.round(lead,1).tolist()} px "
+                  f"(mean {lead.mean():.1f} px = {lead.mean()/DPI*72:.1f} pt at 400 dpi)")
+        # body text on the same page, for comparison
+        bodyang, bodyh = _body_metrics(a)
+        print(f"    same page, BODY TEXT: set angle {bodyang:+.2f} deg, "
+              f"median glyph height {bodyh:.0f} px")
+        print(f"    -> the quote is rotated {th-bodyang:+.2f} deg against the page's own type")
     return dict(bbox=[int(x0), int(y0), int(x1), int(y1)], area=int(big[0]))
+
+
+def _body_metrics(a, roi=(400, 800, 3000, 3100)):
+    """Skew and glyph height of the page's ordinary body type, same method."""
+    from scipy import ndimage as _nd
+    lum = a.mean(2)
+    m = np.zeros(lum.shape, bool)
+    m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] < 150
+    lab, n = label_fast(m)
+    cnt = np.bincount(lab.ravel())
+    objs = _nd.find_objects(lab)
+    P, H = [], []
+    for i in range(1, n + 1):
+        if not (60 <= cnt[i] <= 3000):
+            continue
+        sl = objs[i - 1]
+        h = sl[0].stop - sl[0].start
+        w = sl[1].stop - sl[1].start
+        if h > 90 or w > 90:
+            continue
+        P.append(((sl[1].start + sl[1].stop) / 2, (sl[0].start + sl[0].stop) / 2))
+        H.append(h)
+    P = np.array(P)
+    best = (0.0, -1)
+    for th in np.arange(-6, 6.01, 0.1):
+        t = math.radians(th)
+        yr = -P[:, 0] * math.sin(t) + P[:, 1] * math.cos(t)
+        hh, _ = np.histogram(yr, bins=np.arange(yr.min(), yr.max() + 8, 8))
+        sc = float((hh.astype(float) ** 2).sum())
+        if sc > best[1]:
+            best = (th, sc)
+    return best[0], float(np.median(H))
 
 
 # --------------------------------------------------------------- p77 'SHIT'

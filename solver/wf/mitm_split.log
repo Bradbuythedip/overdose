@@ -1,6 +1,6 @@
   point addition == scalar sum: OK
   planted split target: 1PKF8tPirdfd8baYgtAy6ZNzkkKhS6rSCh
-*** HIT split '__control_half_A__' + '__control_half_B__' -> p2pkh_c 1PKF8tPirdfd8baYgtAy6ZNzkkKhS6rSCh
+*** HIT(richlist) split '__control_half_A__' + '__control_half_B__' -> p2pkh_c 1PKF8tPirdfd8baYgtAy6ZNzkkKhS6rSCh
   pipeline recovers the planted split: OK
 Oracle: full 56.8M index ACTIVE (checks both sets)
   oracle sees genesis coinbase: OK
@@ -8,5 +8,7 @@ SELFTEST PASS
 
 half A: 363 components   half B: 122 components
 product space: 44,286 splits, 177,144 addresses
-Oracle: full 56.8M index ACTIVE (checks both sets)
-  precomputed 363 + 122 points in 0.1s
+  precomputed 363 + 122 points in 0.6s
+  44,286 point additions, 177,144 addresses, 33.5s
+
+additive-split hits: 0
