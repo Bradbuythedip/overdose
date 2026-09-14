@@ -53,14 +53,29 @@ class IndexOracle:
     name = INDEX
 
     def __init__(self):
-        from index_oracle import Oracle
-        self.o = Oracle(verbose=False)
-        self.ready = self.o.calibrate()
+        # The index is a 2.3 GB file that is NOT in the repository. Its absence
+        # must degrade to "this family cannot run here", never to a crash and
+        # never to a run of empty nulls — and it must not stop the chain-free
+        # families, which need no data file at all.
+        self.o = None
+        self.ready = False
+        self.why = ""
+        try:
+            from index_oracle import Oracle, MAP
+            if not os.path.exists(MAP):
+                self.why = f"index not present at {MAP}"
+                return
+            self.o = Oracle(verbose=False)
+            self.ready = self.o.calibrate()
+            if not self.ready:
+                self.why = "index present but failed calibration"
+        except Exception as e:
+            self.why = f"index unavailable: {e!r}"
 
     def control(self):
-        from index_oracle import spk_from_address
         if not self.ready:
             return False
+        from index_oracle import spk_from_address
         spk = spk_from_address("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
         return bool(self.o.contains_spks([spk]))
 
@@ -254,12 +269,14 @@ def selftest():
 
     io = IndexOracle()
     c1 = io.control()
-    ok &= c1
-    sys.stderr.write(f"  index oracle control (genesis found): "
-                     f"{'OK' if c1 else 'FAIL'}\n")
+    sys.stderr.write(f"  index oracle: "
+                     + ("control fired (genesis found)\n" if c1 else
+                        f"UNAVAILABLE — {io.why}\n"
+                        "    index-backed families will be skipped; "
+                        "chain-free families still run\n"))
     co = ChecksumOracle()
     c2 = co.control()
-    ok &= c2
+    ok &= c2                       # the chain-free oracle is the hard require
     sys.stderr.write(f"  checksum oracle control: {'OK' if c2 else 'FAIL'}\n")
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
@@ -271,6 +288,10 @@ def main():
     ap.add_argument("--seed", action="store_true")
     ap.add_argument("--run", action="store_true")
     ap.add_argument("--max-units", type=int, default=0)
+    ap.add_argument("--families", default="",
+                    help="comma-separated subset to run, e.g. checksum_mine. "
+                         "Default: whatever this machine can actually do.")
+    ap.add_argument("--status", action="store_true")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
 
@@ -280,6 +301,15 @@ def main():
         return
 
     led = Ledger(a.db)
+    if a.status:
+        t = led.totals()
+        sys.stderr.write(f"\n  {t['done']:,} units done, {t['addresses']:,} "
+                         f"addresses, {t['hits']} hits, {t['invalid']} "
+                         f"invalid\n\n")
+        for fam, st, n, ad, h in led.stats():
+            sys.stderr.write(f"    {fam:16} {st:8} {n:5} units "
+                             f"{(ad or 0):>13,} addrs  {h or 0} hits\n")
+        return
     if a.seed:
         n = seed_work(led)
         sys.stderr.write(f"\n  queued {n} work units\n")
@@ -293,6 +323,17 @@ def main():
         sys.stderr.write(f"  requeued {req} stale units from a previous run\n")
 
     oracles = {INDEX: IndexOracle(), CHECKSUM: ChecksumOracle()}
+    want = {f.strip() for f in a.families.split(",") if f.strip()}
+    usable = {f for f, (_g, o) in FAMILIES.items() if oracles[o].control()}
+    if want:
+        usable &= want
+    skipped = set(FAMILIES) - usable
+    sys.stderr.write(f"\n  running families: {sorted(usable)}\n")
+    if skipped:
+        sys.stderr.write(f"  skipping (no usable oracle or not selected): "
+                         f"{sorted(skipped)}\n")
+    if not usable:
+        sys.exit("no family can run on this machine")
     done = 0
     while True:
         got = led.claim(order_by="family, id")
@@ -300,6 +341,20 @@ def main():
             sys.stderr.write("\n  queue empty — all known work is done\n")
             break
         wid, family, params = got
+        if family not in usable:
+            # put it back untouched; another machine, or a later run with the
+            # index present, can take it
+            led.db.execute("UPDATE work SET status='pending' WHERE id=?",
+                           (wid,))
+            led.db.commit()
+            if family not in getattr(main, "_warned", set()):
+                main._warned = getattr(main, "_warned", set()) | {family}
+                sys.stderr.write(f"  leaving {family} units queued for a "
+                                 f"machine that has its oracle\n")
+            if all(f not in usable for f, _ in
+                   [(r[0], r[1]) for r in led.stats() if r[1] == "pending"]):
+                break
+            continue
         genfn, oname = FAMILIES[family]
         oracle = oracles[oname]
 
