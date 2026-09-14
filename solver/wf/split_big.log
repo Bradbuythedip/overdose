@@ -1,0 +1,10 @@
+  left_serial.txt: OK
+  right_column.txt: OK
+  spk shortcut == address parser: OK
+  aG + bG == (a+b)G: OK
+  full index sees genesis: OK
+  index rejects a fresh key: OK
+SELFTEST PASS
+
+left 2,727  right 13,992  pairs 38,156,184
+precomputed 2,727 + 13,992 points in 0.8s
