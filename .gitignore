@@ -62,3 +62,6 @@ solver/p72.txt
 # 240 KB of per-glyph metadata, regenerable from oddity/glyph_mirror.py
 solver/oddity/glyph_meta.json
 solver/*/__pycache__/
+# regenerable: bar_geometry.py / playfair.py
+solver/bargeom.txt
+solver/playfair_out.txt
