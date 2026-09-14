@@ -172,6 +172,28 @@ def profile_via_prevout(api, prev_txid):
     return h, 2, "dated from the spent outpoint, not a full history"
 
 
+def render_row(tag, sh, first, swp, dorm, n, why):
+    """One PRE-* line. MUST tolerate a missing sweep height.
+
+    The base-rate control is built from addresses that were never observed
+    being swept, so `swp` and `dorm` are None for every row in it by
+    construction. An earlier version formatted them with `:,` unconditionally
+    and died six rows into the control run -- the control could not be
+    computed because the code assumed the thing the control exists to vary.
+    """
+    out = [f"\n  *** {tag}  {sh[:40]}…\n"]
+    out.append(f"      funded block {first:,}" if first is not None
+               else "      funded block unknown")
+    if swp is not None:
+        out.append(f", swept {swp:,}")
+    if dorm is not None:
+        out.append(f", dormant {dorm:,} blocks (~{dorm/144/365:.1f} yr)")
+    else:
+        out.append(", no sweep observed")
+    out.append(f", {n} tx\n      {why}\n")
+    return "".join(out)
+
+
 def classify(first, sweep):
     """How interesting is this history?"""
     if first is None:
@@ -185,8 +207,15 @@ def classify(first, sweep):
     return "RECENT", "funded after the claim"
 
 
-def verdict(rows, n_input):
-    """The summary. MUST NOT conclude anything from an empty result set."""
+def verdict(rows, n_input, have_sweeps=True):
+    """The summary. MUST NOT conclude anything from an empty result set.
+
+    `have_sweeps` False means no sweep heights were supplied at all, which is
+    how the base-rate control is run (`--sweeps /dev/null`). PRE-* rows are the
+    EXPECTED outcome there -- they are the null being measured -- so calling
+    them "the profile of a prize being claimed" would invert the whole point of
+    running a control.
+    """
     import collections
     tally = collections.Counter(r[0] for r in rows)
     out = []
@@ -197,6 +226,16 @@ def verdict(rows, n_input):
         out.append("  An earlier version printed a confident negative here.")
         return "\n".join(out), tally
     hot = tally["PRE-PRINT"] + tally["PRE-ANNOUNCE"]
+    if not have_sweeps:
+        out.append("BASE-RATE PROFILE, not a finding. No sweep heights were "
+                   "supplied, so these")
+        out.append(f"  are dated only. {hot} of {len(rows)} "
+                   f"({hot/len(rows):.1%}) predate the 2023-03-04 claim.")
+        out.append("  That number is the NULL. Compare it against the swept "
+                   "set with:")
+        out.append("    base_rate.py --compare age_profile.tsv "
+                   "control_profile.tsv")
+        return "\n".join(out), tally
     if hot:
         out.append(f"{hot} address(es) were funded before Keiser's claim, sat, "
                    f"and were emptied")
@@ -283,6 +322,43 @@ def selftest():
     ok &= classify(h2, 940000)[0] == "UNKNOWN"
     sys.stderr.write(f"  which classifies UNKNOWN rather than being dropped "
                      f"silently: {'OK' if classify(h2,940000)[0]=='UNKNOWN' else 'FAIL'}\n")
+
+    # REGRESSION: the base-rate control has no sweep height for ANY row, and
+    # an earlier version crashed six rows in trying to format None with ":,".
+    try:
+        r = render_row("PRE-PRINT", "ab" * 32, 697615, None, None, 4, "why")
+        good = "no sweep observed" in r and "697,615" in r
+    except Exception as e:
+        good = False
+        r = repr(e)
+    ok &= good
+    sys.stderr.write(f"  a PRE-* row with no sweep height renders instead of "
+                     f"crashing: {'OK' if good else 'FAIL ' + r}\n")
+    r2 = render_row("PRE-ANNOUNCE", "cd" * 32, 763545, 922180, 158635, 3, "w")
+    good = "922,180" in r2 and "158,635" in r2 and "3.0 yr" in r2
+    ok &= good
+    sys.stderr.write(f"  and a normal row still shows sweep and dormancy: "
+                     f"{'OK' if good else 'FAIL'}\n")
+    good = "funded block unknown" in render_row("PRE-PRINT", "e" * 64, None,
+                                                None, None, 0, "w")
+    ok &= good
+    sys.stderr.write(f"  an unknown funding height renders too: "
+                     f"{'OK' if good else 'FAIL'}\n")
+
+    # a control run must NOT describe its PRE-* rows as a prize being claimed
+    crows = [("PRE-PRINT", "x", 690000, None, None, 2, "", "")] * 20 + \
+            [("RECENT", "y", 900000, None, None, 2, "", "")] * 80
+    cmsg, _t = verdict(crows, 100, have_sweeps=False)
+    good = ("BASE-RATE" in cmsg and "prize being claimed" not in cmsg
+            and "20.0%" in cmsg)
+    ok &= good
+    sys.stderr.write(f"  a control run reports a BASE-RATE profile, not a "
+                     f"prize claim: {'OK' if good else 'FAIL'}\n")
+    smsg, _t = verdict(crows, 100, have_sweeps=True)
+    good = "profile of a prize being" in smsg
+    ok &= good
+    sys.stderr.write(f"  but the swept set still gets the strong wording: "
+                     f"{'OK' if good else 'FAIL'}\n")
 
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
@@ -379,11 +455,7 @@ def main():
         dorm = (swp - first) if (first and swp) else None
         rows.append((tag, sh, first, swp, dorm, n, why, note))
         if tag in ("PRE-PRINT", "PRE-ANNOUNCE"):
-            sys.stderr.write(
-                f"\n  *** {tag}  {sh[:40]}…\n"
-                f"      funded block {first:,}, swept {swp:,}, "
-                f"dormant {dorm:,} blocks (~{dorm/144/365:.1f} yr), "
-                f"{n} tx\n      {why}\n")
+            sys.stderr.write(render_row(tag, sh, first, swp, dorm, n, why))
         if sys.stderr.isatty():
             sys.stderr.write(f"\r  {i}/{len(shs)}  ")
             sys.stderr.flush()
@@ -397,7 +469,7 @@ def main():
         for r in rows:
             fh.write("\t".join("" if x is None else str(x) for x in r) + "\n")
 
-    msg, tally = verdict(rows, len(shs))
+    msg, tally = verdict(rows, len(shs), have_sweeps=bool(sweep_block))
     sys.stderr.write(f"\n\n  {len(rows)} of {len(shs)} profiled -> {a.out}\n")
     if unresolved:
         sys.stderr.write(f"    ({unresolved} had no prevout txid on record and "
