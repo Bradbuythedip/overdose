@@ -70,3 +70,99 @@ if __name__ == "__main__":
         survey()
     else:
         print("unknown cmd", a.cmd)
+
+
+# ---------------------------------------------------------------- page edges
+def page_edges(dpi=200):
+    """Locate the paper boundary on each side; report straight (trimmed) vs
+    ragged (torn from the binding) by the std-dev of the edge position."""
+    print("page | side  | mean_px  std_px  -> verdict")
+    out = {}
+    for pr in sorted(INV):
+        im = render(pr, dpi).convert("L")
+        a = np.asarray(im).astype(int)
+        H, W = a.shape
+        # scanner background beyond the sheet is the brightest, flattest region.
+        bg = np.percentile(a[:, :6], 95)
+        res = {}
+        for side in ("left", "right"):
+            rows = range(int(H * 0.08), int(H * 0.92), 4)
+            pos = []
+            for y in rows:
+                line = a[y]
+                if side == "left":
+                    xs = np.where(line < bg - 6)[0]
+                    pos.append(xs[0] if len(xs) else 0)
+                else:
+                    xs = np.where(line < bg - 6)[0]
+                    pos.append(xs[-1] if len(xs) else W - 1)
+            pos = np.array(pos, float)
+            res[side] = (pos.mean(), pos.std())
+            v = "RAGGED(torn)" if pos.std() > 4 else "straight(trim)"
+            print(f"  {pr} | {side:5s} | {pos.mean():7.1f} {pos.std():7.2f}  -> {v}")
+        out[pr] = res
+    return out
+
+
+# ---------------------------------------------------------- furniture blocks
+def _ink_bbox(a, thresh, box):
+    x0, y0, x1, y1 = box
+    sub = a[y0:y1, x0:x1]
+    m = sub < thresh
+    ys, xs = np.where(m)
+    if len(xs) == 0:
+        return None
+    return (x0 + xs.min(), y0 + ys.min(), x0 + xs.max() + 1, y0 + ys.max() + 1)
+
+
+def runhead(dpi=400):
+    """Running head: bbox in printed points, mean RGB of its ink."""
+    S = dpi / 72.0
+    print("page | bbox pt x[..] y[..]  | w x h pt | ink RGB | n_px")
+    for pr in sorted(INV):
+        im = render(pr, dpi)
+        g = np.asarray(im.convert("L")).astype(int)
+        rgb = np.asarray(im).astype(int)
+        H, W = g.shape
+        band = (0, int(30 * S), W, int(70 * S))
+        if pr == 77:      # knockout: light ink on dark ground
+            sub = g[band[1]:band[3], :]
+            m = sub > 110
+        else:
+            sub = g[band[1]:band[3], :]
+            m = sub < 170
+        ys, xs = np.where(m)
+        if len(xs) == 0:
+            print(f"  {pr} | none"); continue
+        bb = (xs.min(), band[1] + ys.min(), xs.max() + 1, band[1] + ys.max() + 1)
+        sel = np.zeros(g.shape, bool)
+        sel[band[1]:band[3], :] = m
+        px = rgb[sel]
+        print(f"  {pr} | x[{bb[0]/S:6.1f},{bb[2]/S:6.1f}] y[{bb[1]/S:5.1f},{bb[3]/S:5.1f}]"
+              f" | {(bb[2]-bb[0])/S:5.1f} x {(bb[3]-bb[1])/S:4.1f}"
+              f" | ({px[:,0].mean():5.1f},{px[:,1].mean():5.1f},{px[:,2].mean():5.1f})"
+              f" | {len(px)}")
+
+
+def folio(dpi=400):
+    """Page number: bbox in printed points and ink RGB, both bottom corners."""
+    S = dpi / 72.0
+    print("page | corner | bbox pt x[..] y[..] | h pt | ink RGB | n_px")
+    for pr in sorted(INV):
+        im = render(pr, dpi)
+        g = np.asarray(im.convert("L")).astype(int)
+        rgb = np.asarray(im).astype(int)
+        H, W = g.shape
+        y0, y1 = int(725 * S), int(765 * S)
+        for corner, (x0, x1) in (("left", (int(30 * S), int(140 * S))),
+                                 ("right", (int(470 * S), int(590 * S)))):
+            sub = g[y0:y1, x0:x1]
+            m = (sub > 110) if pr == 77 else (sub < 170)
+            ys, xs = np.where(m)
+            if len(xs) < 40:
+                continue
+            bb = (x0 + xs.min(), y0 + ys.min(), x0 + xs.max() + 1, y0 + ys.max() + 1)
+            px = rgb[y0:y1, x0:x1][m]
+            print(f"  {pr} | {corner:5s} | x[{bb[0]/S:6.1f},{bb[2]/S:6.1f}] "
+                  f"y[{bb[1]/S:5.1f},{bb[3]/S:5.1f}] | {(bb[3]-bb[1])/S:4.1f}"
+                  f" | ({px[:,0].mean():5.1f},{px[:,1].mean():5.1f},{px[:,2].mean():5.1f}) | {len(px)}")
