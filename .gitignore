@@ -6,3 +6,5 @@ __pycache__/
 solver/strips/
 solver/wf/__pycache__/
 solver/solver_ledger.sqlite
+solver/serial_matches.tsv
+solver/serial_exhaust_*.tsv
