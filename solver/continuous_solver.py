@@ -45,12 +45,12 @@ from solver_ledger import Ledger
 
 INDEX = "index56m"
 CHECKSUM = "serial_checksum"
+RICHLIST = "richlist1m"
 
 
 # ---------------------------------------------------------------- oracles
 class IndexOracle:
-    """The 56.8M funded-address index, with its control."""
-    name = INDEX
+    """The funded-address index, with its control and an explicit fallback."""
 
     def __init__(self):
         # The index is a 2.3 GB file that is NOT in the repository. Its absence
@@ -60,17 +60,37 @@ class IndexOracle:
         self.o = None
         self.ready = False
         self.why = ""
+        self.name = INDEX
         try:
             from index_oracle import Oracle, MAP
-            if not os.path.exists(MAP):
-                self.why = f"index not present at {MAP}"
+            if os.path.exists(MAP):
+                self.o = Oracle(verbose=False)
+                self.ready = self.o.calibrate()
+                if not self.ready:
+                    self.why = "index present but failed calibration"
                 return
-            self.o = Oracle(verbose=False)
-            self.ready = self.o.calibrate()
-            if not self.ready:
-                self.why = "index present but failed calibration"
+            self.why = f"no index at {MAP}"
         except Exception as e:
             self.why = f"index unavailable: {e!r}"
+
+        # FALLBACK: the April-2023 rich list. It answers a DIFFERENT question —
+        # "held a large balance in April 2023" rather than "holds coins today" —
+        # so it carries its own oracle name and its results are never merged
+        # with index56m's. A weaker oracle is worth having; a weaker oracle
+        # mislabelled as the strong one is how this project once described
+        # balance-snapshot nulls as though they covered chain history.
+        try:
+            from hist_index import HistIndex
+            h = HistIndex()
+            if getattr(h, "n", 0) > 1000:
+                self.o = h
+                self.ready = True
+                self.name = RICHLIST
+                self.why = (f"{self.why}; using the {h.n:,}-address April-2023 "
+                            f"rich list, which answers 'held a large balance "
+                            f"then', NOT 'holds coins now'")
+        except Exception as e:
+            self.why += f"; rich list also unavailable: {e!r}"
 
     def control(self):
         if not self.ready:
@@ -386,8 +406,10 @@ def selftest():
 
     io = IndexOracle()
     c1 = io.control()
-    sys.stderr.write(f"  index oracle: "
-                     + ("control fired (genesis found)\n" if c1 else
+    sys.stderr.write(f"  index oracle [{io.name}]: "
+                     + ((f"control fired (genesis found)"
+                         + (f"\n    NOTE: {io.why}" if io.why else "")
+                         + "\n") if c1 else
                         f"UNAVAILABLE — {io.why}\n"
                         "    index-backed families will be skipped; "
                         "chain-free families still run\n"))
@@ -460,6 +482,8 @@ def main():
         wid, family, params = got
         genfn, oname = FAMILIES[family]
         oracle = oracles[oname]
+        # record the oracle that ACTUALLY judged it, which may be the fallback
+        oname = getattr(oracle, "name", oname)
 
         ctrl = oracle.control()
         if not ctrl:
