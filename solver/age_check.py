@@ -325,7 +325,8 @@ def main():
                      f"index-blind window\n")
     if not shs:
         sys.exit("  no scripthashes in the input")
-    sys.stderr.write(f"  {len(prev_txid)} of them carry a prevout txid from "
+    have = sum(1 for s in shs if prev_txid.get(s))
+    sys.stderr.write(f"  {have} of them carry a prevout txid from "
                      f"{a.sweeps}\n")
     sys.stderr.write("\n  PROBING the endpoint\n")
 
