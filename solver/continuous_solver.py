@@ -106,9 +106,9 @@ class ChecksumOracle:
 
 # ---------------------------------------------------------------- families
 def article_words():
-    from gen_priority_addrs import load
-    _l, _s, paras = load()
-    return re.findall(r"[A-Za-z0-9$%'-]+", " ".join(paras))
+    """Stdlib-only. The chain-free families must not need a crypto library."""
+    from article import words
+    return words()
 
 
 def fam_ngram(params):
@@ -207,8 +207,35 @@ def run_index_unit(gen, oracle, led, wid, family, batch=4000):
     return cand, addrs, hits
 
 
+def _checksum_products(phrase):
+    """Four-byte products of a phrase. hashlib plus serial_oracle, both stdlib.
+
+    Inlined rather than imported from serial_text_mine, which pulls in the
+    address-derivation stack. A chain-free family that cannot run without an
+    elliptic-curve library is not chain-free.
+    """
+    from serial_oracle import wif_checksums
+    b = phrase.encode("utf-8")
+    out = []
+    for name, fn in (("sha256", lambda x: hashlib.sha256(x).digest()),
+                     ("dsha256", lambda x: hashlib.sha256(
+                         hashlib.sha256(x).digest()).digest()),
+                     ("sha512h", lambda x: hashlib.sha512(x).digest()[:32]),
+                     ("sha512l", lambda x: hashlib.sha512(x).digest()[32:]),
+                     ("sha3_256", lambda x: hashlib.sha3_256(x).digest()),
+                     ("blake2b", lambda x: hashlib.blake2b(
+                         x, digest_size=32).digest())):
+        d = fn(b)
+        out.append((name + "_head", d[:4]))
+        out.append((name + "_tail", d[-4:]))
+    u, c = wif_checksums(hashlib.sha256(b).digest())
+    out.append(("brainwallet_wif_u", u))
+    out.append(("brainwallet_wif_c", c))
+    return out
+
+
 def run_checksum_unit(gen, oracle, led, wid, family):
-    from serial_text_mine import products
+    products = _checksum_products
     cand = hits = 0
     for phrase in gen:
         cand += 1

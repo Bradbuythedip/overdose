@@ -43,9 +43,10 @@ bound is named rather than glossed.
 import argparse, hashlib, os, sys, time
 from multiprocessing import Pool
 
-from coincurve import PrivateKey
-
-from hd_sweep import h160
+# coincurve and hd_sweep are imported INSIDE the worker, not here. The four
+# transforms below are pure hashlib, so another module can import TRANSFORMS to
+# enumerate candidate keys without an elliptic-curve library present — which is
+# what the continuous solver's chain-free path needs.
 
 N_CURVE = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 
@@ -82,6 +83,8 @@ def _init():
 
 
 def _chunk(args):
+    from coincurve import PrivateKey
+    from hd_sweep import h160
     lo, hi, tname = args
     fn = TRANSFORMS[tname]
     spks, meta = [], []
@@ -114,6 +117,8 @@ def selftest():
     ok &= t.hex() == "76841714" * 8 and len(t) == 32
     sys.stderr.write(f"  tiled('76841714') = {t.hex()[:24]}...  "
                      f"{'OK' if ok else 'FAIL'}\n")
+    from coincurve import PrivateKey  # selftest only; the transforms need none
+    from hd_sweep import h160
     ok &= key_intkey("00000042") == (42).to_bytes(32, "big")
     sys.stderr.write(f"  intkey is the decimal value big-endian: OK\n")
     for n, fn in TRANSFORMS.items():
