@@ -372,3 +372,117 @@ def fit_transfer(pg, src, Crange=(1500, 1900), dyrange=(-40, 40), step=2):
                           (S4[sy, sx][m] ** 2).sum())
                 best = (r, C * 4, dy * 4, a)
     return best
+
+
+# ============================================================ CLUE DRIVERS ==
+def clue_binding_edge():
+    """Which page edge is the perfect-bound spine, measured, for all 8 pages."""
+    from scipy import ndimage as ndi
+    from scipy.signal import find_peaks
+    from PIL import Image as I
+
+    def boundary(p, side, band=400):
+        a = np.asarray(I.open(f"{SC}/p{p}_400dpi.png").convert("L")).astype(np.float32)
+        W = a.shape[1]
+        b = a[:, 14:14 + band] if side == "L" else a[:, W - band:]
+        sm = ndi.uniform_filter1d(b, 9, axis=1); nw = sm < 251
+        if side == "L":
+            idx = np.argmax(nw, axis=1).astype(float) + 14
+        else:
+            idx = (band - 1 - np.argmax(nw[:, ::-1], axis=1)).astype(float) + W - band
+        idx[~nw.any(axis=1)] = np.nan
+        return idx
+
+    print("page  right-edge boundary sd (px)   notch pitch (mm)   notch depth (mm)")
+    prof = {}
+    for p in PAGES:
+        v = boundary(p, "R")[300:4100]
+        med = np.nanmedian(v); v = np.where(np.isfinite(v), v, med)
+        d = np.clip(v - med, -120, 120)
+        hp = d - ndi.uniform_filter1d(d, 601)
+        prof[p] = hp
+        pk, _ = find_peaks(-hp, prominence=8, distance=20)
+        pitch = np.median(np.diff(pk)) / 400 * 25.4 if len(pk) > 4 else float("nan")
+        depth = np.median(np.abs(hp[pk])) / 400 * 25.4 if len(pk) > 4 else float("nan")
+        print(f"{p:4d}      {d.std():8.2f}                {pitch:8.2f}          {depth:8.2f}")
+    print("\nnotch pattern shared between odd pages (same milling, same heights):")
+    for a, b in ((73, 75), (75, 79), (73, 77), (73, 74), (72, 76)):
+        r = max((float(np.corrcoef(prof[a][max(0,d):len(prof[a])+min(0,d)],
+                                   prof[b][max(0,-d):len(prof[b])+min(0,-d)])[0, 1]), d)
+                for d in range(-80, 81))
+        print(f"  p{a}R vs p{b}R:  r={r[0]:+.3f} at dy={r[1]:+d} px")
+
+
+def clue_ghost_transform():
+    """The one mirror transform that places every ghost on its source page."""
+    jobs = [("p72 <- p73  OVERDOSE masthead", 72, 73, (300, 255, 1600, 410)),
+            ("p73 <- p72  In2020/WESTERN UN", 73, 72, (600, 360, 920, 560)),
+            ("p74 <- p75  TOXIC AF headline", 74, 75, (840, 225, 1450, 320)),
+            ("p79 <- p78  MAX KEISER sig   ", 79, 78, (600, 1830, 830, 2010))]
+    print("receiving page            NCC    mirror C   dy   src ink  ghost ink  transfer")
+    for name, pg, src, (x0, y0, x1, y1) in jobs:
+        G = inkmap(bg(pg)); S = inkmap(full(src))
+        patch = G[y0:y1, x0:x1]
+        c, xm, ym = match(patch, S, True)
+        C = xm + 1699 - x0; dy = ym - y0
+        sx = np.clip(C - np.arange(x0, x1), 0, 1699)
+        sy = np.clip(np.arange(y0, y1) + dy, 0, 2199)
+        sp = S[np.ix_(sy, sx)]; m = sp > 40
+        print(f"{name}  {c:.3f}   {C:6d}  {dy:+4d}  {sp[m].mean():7.1f}  "
+              f"{patch[m].mean():8.2f}   {100*patch[m].mean()/sp[m].mean():5.2f}%")
+
+
+def clue_p72_note():
+    """The faint banknote on p72 does not lie on p73 under that transform."""
+    from scipy import ndimage as ndi
+    G = inkmap(bg(72)); S = inkmap(full(73))
+    band = lambda a: ndi.gaussian_filter(a, 3) - ndi.gaussian_filter(a, 25)
+    Gb, Sb = band(G), band(S)
+
+    def t(box, C=1683, dy0=2, rad=14):
+        x0, y0, x1, y1 = box; g = Gb[y0:y1, x0:x1].ravel(); best = -2
+        for ddx in range(-rad, rad + 1, 2):
+            for ddy in range(-rad, rad + 1, 2):
+                sx = np.clip(C + ddx - np.arange(x0, x1), 0, 1699)
+                sy = np.clip(np.arange(y0, y1) + dy0 + ddy, 0, 2199)
+                s = Sb[np.ix_(sy, sx)].ravel()
+                if s.std() < 1e-6:
+                    continue
+                best = max(best, float(np.corrcoef(g, s)[0, 1]))
+        return best
+    for n, b in [("VERIFIED p73 ghost: OVERDOSE  ", (300, 255, 1600, 410)),
+                 ("VERIFIED p73 ghost: Max Keiser", (1040, 405, 1420, 475)),
+                 ("faint note: serial line       ", (500, 470, 980, 560)),
+                 ("blank-paper control           ", (1250, 1750, 1600, 1950))]:
+        print(f"  {n}  best band-pass r vs p73 = {t(b):+.3f}")
+
+
+def clue_red_seal():
+    """The one chromatically red object on page 72 is the ghost note's seal."""
+    from scipy import ndimage as ndi
+    from PIL import Image as I
+    a = bg(72)
+    d = ndi.uniform_filter(a[..., 0] - a[..., 1], 25)
+    inner = np.zeros(d.shape, bool); inner[110:2090, 60:1640] = True
+    print(f"  p72 background (R-G): median={np.median(d[inner]):+.2f}  "
+          f"p99.9={np.percentile(d[inner], 99.9):+.2f}")
+    m = np.where(inner, d, -99) > 3.0
+    lab, n = ndi.label(ndi.binary_closing(m, np.ones((9, 9), bool)))
+    sz = sorted(((int((lab[o] == i + 1).sum()), o)
+                 for i, o in enumerate(ndi.find_objects(lab))), reverse=True)[:3]
+    for s, o in sz:
+        print(f"    R-G>3 blob {s:6d}px  400dpi bbox "
+              f"({2*o[1].start},{2*o[0].start})-({2*o[1].stop},{2*o[0].stop})")
+
+
+def clue_rose_spine():
+    """Rose ink on the 78/79 leaf's binding edge, absent from pp.72-79's print."""
+    from PIL import Image as I
+    FOREEDGE = {72: "L", 73: "R", 74: "L", 75: "R",
+                76: "L", 77: "R", 78: "L", 79: "R"}
+    for p in PAGES:
+        a = np.asarray(I.open(f"{SC}/p{p}_400dpi.png").convert("RGB")).astype(np.float32)
+        s = a[:, :80] if FOREEDGE[p] == "L" else a[:, -80:]
+        red = (s[..., 0] - (s[..., 1] + s[..., 2]) / 2).max(axis=1)
+        print(f"  p{p} outer edge {FOREEDGE[p]}: rows with redness>18 = {int((red>18).sum()):5d}"
+              f"   max={red.max():5.1f}")

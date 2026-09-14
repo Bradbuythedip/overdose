@@ -587,6 +587,143 @@ def scribble(pn=78):
     return dict(bbox=[int(x0), int(y0), int(x1), int(y1)], area=int(big[0]))
 
 
+def quote_block(pn=78):
+    """The reversed-out pull-quote inside the p78 scrawl: set angle, line
+    metrics and character pitch, against the page's own body type."""
+    from scipy import ndimage as _nd
+    a = page(pn)
+    lum = a.mean(2)
+    sat = a.max(2) - a.min(2)
+    ink = (lum < 140) & (sat < 60)
+    lab, n = label_fast(ink)
+    cnt = np.bincount(lab.ravel())
+    big = cnt[1:].argmax() + 1
+    ys, xs = np.nonzero(lab == big)
+    x0, y0, x1, y1 = xs.min(), ys.min(), xs.max(), ys.max()
+    sub = a[y0:y1 + 1, x0:x1 + 1]
+    fill = _nd.binary_fill_holes(lab[y0:y1 + 1, x0:x1 + 1] == big)
+    inner = (sub.mean(2) > 200) & fill
+    ll, nn = label_fast(inner)
+    c2 = np.bincount(ll.ravel())
+    keep = np.isin(ll, [i for i in range(1, nn + 1) if c2[i] >= 40])
+    im = Image.fromarray((keep * 255).astype(np.uint8))
+    best = None
+    for th in np.arange(-25, 25.01, 0.25):
+        r = np.asarray(im.rotate(th, resample=Image.NEAREST, expand=True, fillcolor=0)) > 0
+        prof = r.sum(1).astype(float)
+        nz = np.flatnonzero(prof)
+        prof = prof[nz.min():nz.max() + 1]
+        sc = prof.size * (prof ** 2).sum() / prof.sum() ** 2
+        if best is None or sc > best[0]:
+            best = (sc, float(th))
+    th = best[1]
+    print(f"\n=== p{pn} reversed-out pull-quote inside the scrawl ===")
+    print(f"  the block levels at PIL rotate({th:+.2f}) -> the quote is SET AT "
+          f"{-th:+.2f} deg CCW on the page")
+    r = np.asarray(im.rotate(th, resample=Image.NEAREST, expand=True, fillcolor=0)) > 0
+    rl, rn = label_fast(r)
+    rc = np.bincount(rl.ravel())
+    objs = _nd.find_objects(rl)
+    rows = []
+    for i in range(1, rn + 1):
+        if rc[i] < 40:
+            continue
+        sl = objs[i - 1]
+        h = sl[0].stop - sl[0].start
+        w = sl[1].stop - sl[1].start
+        if h > 120 or w > 160:
+            continue
+        rows.append(((sl[1].start + sl[1].stop) / 2, (sl[0].start + sl[0].stop) / 2,
+                     sl[0].start, sl[0].stop, sl[1].start, sl[1].stop, int(rc[i])))
+    rows.sort(key=lambda t: t[1])
+    lines, cur = [], [rows[0]]
+    for t in rows[1:]:
+        if t[1] - cur[-1][1] > 34:
+            lines.append(cur)
+            cur = [t]
+        else:
+            cur.append(t)
+    lines.append(cur)
+    # drop clusters that are stray brush slivers rather than a line of type
+    lines = [ln for ln in lines if len(ln) >= 4]
+    text = ["The economy of", "love is infinitely", "more efficient than", "hate and war."]
+    print(f"  {len(lines)} lines of type after de-rotation")
+    base, allh = [], []
+    for k, ln in enumerate(lines):
+        ln = sorted(ln, key=lambda t: t[0])
+        yb0 = int(min(t[2] for t in ln))
+        yb1 = int(max(t[3] for t in ln))
+        band = r[yb0:yb1 + 1]
+        cols = np.flatnonzero(band.sum(0) > 0)
+        hh = [t[3] - t[2] for t in ln]
+        allh += hh
+        base.append(np.median([t[3] for t in ln]))
+        lbl = text[k] if k < len(text) else "?"
+        nch = len(lbl)
+        span = cols.max() - cols.min()
+        print(f"   line {k+1} '{lbl}': {len(ln):2d} blobs, ink span {span:4d} px, "
+              f"{nch} chars -> {span/(nch-1):5.1f} px per character "
+              f"({span/(nch-1)/DPI*72:.2f} pt), glyph heights p50 {np.median(hh):.0f} "
+              f"p90 {np.percentile(hh,90):.0f} px")
+    lead = np.diff(base)
+    print(f"  baseline leading {np.round(lead,1).tolist()} px "
+          f"(mean {lead.mean():.1f} px = {lead.mean()/DPI*72:.1f} pt)")
+    print(f"  quote glyph heights overall: p50 {np.median(allh):.0f} px, "
+          f"p90 {np.percentile(allh,90):.0f} px")
+    # body type on the same page, measured the same way
+    bang, bh, bpitch, bh90 = _body_pitch(a)
+    print(f"  p{pn} BODY TYPE for comparison: set angle {bang:+.2f} deg, "
+          f"glyph heights p50 {bh:.0f} p90 {bh90:.0f} px, character pitch "
+          f"{bpitch:.1f} px ({bpitch/DPI*72:.2f} pt)")
+    print(f"  -> the quote is set {-th-bang:+.2f} deg off the body baseline and "
+          f"{np.percentile(allh,90)/bh90:.2f}x its glyph height")
+    return th
+
+
+def _body_pitch(a, roi=(400, 800, 3000, 3100)):
+    """Skew, glyph height and fixed pitch of the ordinary body type."""
+    from scipy import ndimage as _nd
+    lum = a.mean(2)
+    m = np.zeros(lum.shape, bool)
+    m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] < 150
+    lab, n = label_fast(m)
+    cnt = np.bincount(lab.ravel())
+    objs = _nd.find_objects(lab)
+    P, H, C = [], [], []
+    for i in range(1, n + 1):
+        if not (60 <= cnt[i] <= 3000):
+            continue
+        sl = objs[i - 1]
+        h = sl[0].stop - sl[0].start
+        w = sl[1].stop - sl[1].start
+        if h > 90 or w > 90:
+            continue
+        P.append(((sl[1].start + sl[1].stop) / 2, (sl[0].start + sl[0].stop) / 2))
+        H.append(h)
+        C.append((sl[1].start, sl[1].stop, sl[0].start))
+    P = np.array(P)
+    best = (0.0, -1)
+    for th in np.arange(-4, 4.01, 0.1):
+        t = math.radians(th)
+        yr = -P[:, 0] * math.sin(t) + P[:, 1] * math.cos(t)
+        hh, _ = np.histogram(yr, bins=np.arange(yr.min(), yr.max() + 8, 8))
+        sc = hh.size * (hh.astype(float) ** 2).sum() / hh.sum() ** 2
+        if sc > best[1]:
+            best = (float(th), sc)
+    # pitch: modal spacing between consecutive glyph left edges on a line
+    byline = {}
+    for (l, r_, t_) in C:
+        byline.setdefault(t_ // 60, []).append(l)
+    d = []
+    for k, v in byline.items():
+        v = sorted(v)
+        d += [b - a_ for a_, b in zip(v, v[1:]) if 5 < b - a_ < 80]
+    d = np.array(d)
+    hist, edges = np.histogram(d, bins=np.arange(5, 81, 1))
+    pitch = edges[hist.argmax()] + 0.5
+    return best[0], float(np.median(H)), float(pitch), float(np.percentile(H, 90))
+
+
 def _body_metrics(a, roi=(400, 800, 3000, 3100)):
     """Skew and glyph height of the page's ordinary body type, same method."""
     from scipy import ndimage as _nd
@@ -620,95 +757,405 @@ def _body_metrics(a, roi=(400, 800, 3000, 3100)):
 
 
 # --------------------------------------------------------------- p77 'SHIT'
-def shit(pn=77):
+def shit(pn=77, roi=(40, 2550, 950, 3620)):
+    """The painted white 'SHIT' on p77's dark-brown ground, and the direction
+    its paint runs travel."""
+    from scipy import ndimage as _nd
     a = page(pn)
     lum = a.mean(2)
-    # page ground is dark brown; the graffiti is the bright paint on it
-    print(f"\n=== p{pn} white 'SHIT' graffiti ===")
-    print(f"  page ground median RGB {list(np.median(a[2000:2400,1500:1900].reshape(-1,3),axis=0).astype(int))}")
-    m = lum > 175
-    # restrict to the upper-right quadrant where the graffiti sits
-    m[2200:, :] = False
-    m[:, :1400] = False
+    ground = np.median(a[2000:2400, 1500:1900].reshape(-1, 3), axis=0).astype(int)
+    m = np.zeros(lum.shape, bool)
+    m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] > 165
     lab, n = label_fast(m)
-    res = []
-    for i in range(1, n + 1):
-        ys, xs = np.nonzero(lab == i)
-        if ys.size < 1500:
+    cnt = np.bincount(lab.ravel())
+    ids = [i for i in range(1, n + 1) if cnt[i] >= 1200]
+    print(f"\n=== p{pn} painted 'SHIT' ===")
+    print(f"  page ground median RGB {list(ground)}; paint threshold lum>165")
+    sel = np.isin(lab, ids)
+    ys, xs = np.nonzero(sel)
+    x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
+    print(f"  {len(ids)} paint components >=1200 px, {sel.sum()} px of paint")
+    print(f"  combined bbox x[{x0},{x1}] y[{y0},{y1}] = {x1-x0+1}x{y1-y0+1} px "
+          f"({(x1-x0+1)/DPI:.2f}x{(y1-y0+1)/DPI:.2f} in)")
+    print(f"  paint median RGB {list(np.median(a[ys,xs],axis=0).astype(int))}")
+    ang, L, W = pca_axis(ys, xs)
+    print(f"  long axis of the whole tag {ang:+.2f} deg")
+    objs = _nd.find_objects(lab)
+    for k, i in enumerate(sorted(ids, key=lambda i: objs[i-1][1].start)):
+        sl = objs[i - 1]
+        yy, xx = np.nonzero(lab == i)
+        a2, L2, W2 = pca_axis(yy, xx)
+        print(f"    letter blob {k+1}: area {cnt[i]:6d}  bbox x[{sl[1].start},{sl[1].stop-1}] "
+              f"y[{sl[0].start},{sl[0].stop-1}]  {sl[1].stop-sl[1].start}x{sl[0].stop-sl[0].start} px "
+              f"axis {a2:+.1f} deg")
+    # ---- which way do the paint RUNS go?
+    # Paint that has run is thin; letter strokes are fat.  Split on the local
+    # half-width (distance transform), then keep only long thin filaments.
+    dt = _nd.distance_transform_edt(sel)
+    core = _nd.binary_closing(dt >= 17, iterations=3)
+    dcore = _nd.distance_transform_edt(~core)
+    tails = sel & ~_nd.binary_dilation(core, iterations=6)
+    tl, tn = label_fast(tails)
+    tc = np.bincount(tl.ravel())
+    objs2 = _nd.find_objects(tl)
+    print(f"\n  paint RUNS (ink >6 px clear of any stroke core, kept when longer"
+          f" than 80 px and thinner than 30 px):")
+    rows = []
+    for i in range(1, tn + 1):
+        if tc[i] < 300:
             continue
-        res.append((ys, xs))
-    res.sort(key=lambda t: t[1].mean())
-    allx = np.concatenate([t[1] for t in res]) if res else np.array([])
-    ally = np.concatenate([t[0] for t in res]) if res else np.array([])
-    if allx.size:
-        print(f"  {len(res)} bright components >=1500 px; combined bbox "
-              f"x[{allx.min()},{allx.max()}] y[{ally.min()},{ally.max()}] "
-              f"= {allx.max()-allx.min()+1} x {ally.max()-ally.min()+1} px "
-              f"({(allx.max()-allx.min()+1)/DPI:.2f} x {(ally.max()-ally.min()+1)/DPI:.2f} in)")
-        ang, L, W = pca_axis(ally, allx)
-        print(f"  combined long axis {ang:+.2f} deg")
-        for k, (ys, xs) in enumerate(res):
-            a2, L2, W2 = pca_axis(ys, xs)
-            col = np.median(a[ys, xs], axis=0).astype(int)
-            print(f"    blob {k+1}: area {ys.size:6d} bbox x[{xs.min()},{xs.max()}] "
-                  f"y[{ys.min()},{ys.max()}] h={ys.max()-ys.min()+1} axis {a2:+.1f} "
-                  f"RGB {list(col)}")
-    return res
+        yy, xx = np.nonzero(tl == i)
+        ang2, L2, W2 = pca_axis(yy, xx)
+        if L2 < 80 or W2 > 30:
+            continue
+        j = np.argmax(dcore[yy, xx])
+        ty, tx = yy[j], xx[j]
+        k = np.argmin(dcore[yy, xx])
+        ry, rx = yy[k], xx[k]
+        br = math.degrees(math.atan2(-(ty - ry), tx - rx))
+        rows.append((int(tc[i]), int(rx), int(ry), int(tx), int(ty), round(br, 1),
+                     round(math.hypot(tx - rx, ty - ry), 1), round(L2, 1), round(W2, 1)))
+    up = sum(1 for r in rows if r[5] > 0)
+    for r in sorted(rows, key=lambda r: -r[7]):
+        print(f"    run {r[7]:6.1f} px long x {r[8]:4.1f} px wide: root ({r[1]},{r[2]})"
+              f" -> tip ({r[3]},{r[4]}), bearing {r[5]:+7.1f} deg")
+    print(f"  {up} of {len(rows)} runs point INTO THE UPPER half of the printed page"
+          f" (bearing > 0).")
+    if rows:
+        brs = [r[5] for r in rows]
+        print(f"  mean run bearing {np.mean(brs):+.1f} deg, median {np.median(brs):+.1f} deg"
+              f"   (0 deg = right, +90 = straight UP the page as printed)")
+        print(f"  gravity runs DOWN.  These run UP -> the graffiti photograph is"
+              f" placed on the page rotated 180 deg from the way the paint dried.")
+    return rows
 
 
 # ------------------------------------------------ p79 wire / bitcoin / signature
-def p79art():
-    pn = 79
+def _ink(a, mask, erode=2):
+    """Median RGB of a mark's INTERIOR (eroded to keep scanner edge fringing
+    out of the colour)."""
+    from scipy import ndimage as _nd
+    m = _nd.binary_erosion(mask, iterations=erode)
+    if m.sum() < 50:
+        m = mask
+    ys, xs = np.nonzero(m)
+    return np.median(a[ys, xs], axis=0).astype(int), int(m.sum())
+
+
+def region(pn, roi, thresh=150, minpx=600, name=""):
+    """All dark ink inside a rectangle, as one measured mark."""
+    from scipy import ndimage as _nd
     a = page(pn)
     lum = a.mean(2)
-    sat = a.max(2) - a.min(2)
-    ink = (lum < 150) & (sat < 60)
-    lab, n = label_fast(ink)
-    comps = []
-    for i in range(1, n + 1):
-        ys, xs = np.nonzero(lab == i)
-        if ys.size < 800:
+    m = np.zeros(lum.shape, bool)
+    m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] < thresh
+    lab, n = label_fast(m)
+    cnt = np.bincount(lab.ravel())
+    sel = np.isin(lab, [i for i in range(1, n + 1) if cnt[i] >= minpx])
+    ys, xs = np.nonzero(sel)
+    if ys.size == 0:
+        print(f"  {name}: nothing over threshold")
+        return None
+    ang, L, W = pca_axis(ys, xs)
+    dt = _nd.distance_transform_edt(sel)
+    col, npx = _ink(a, sel)
+    nblob = len([i for i in range(1, n + 1) if cnt[i] >= minpx])
+    print(f"  {name:22s} bbox x[{xs.min()},{xs.max()}] y[{ys.min()},{ys.max()}] "
+          f"= {xs.max()-xs.min()+1}x{ys.max()-ys.min()+1} px "
+          f"({(xs.max()-xs.min()+1)/DPI:.2f}x{(ys.max()-ys.min()+1)/DPI:.2f} in)")
+    print(f"  {'':22s} centroid ({xs.mean():.0f},{ys.mean():.0f})  ink {ys.size} px in "
+          f"{nblob} blobs  long axis {ang:+.2f} deg")
+    print(f"  {'':22s} stroke width: median {2*np.median(dt[sel]):.1f} px, "
+          f"p95 {2*np.percentile(dt[sel],95):.1f} px    interior RGB {list(col)} "
+          f"(from {npx} px)")
+    return dict(name=name, bbox=[int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())],
+                area=int(ys.size), angle=round(ang, 2), rgb=[int(v) for v in col],
+                sw=float(2 * np.median(dt[sel])), mask=sel, page=pn)
+
+
+def p79art():
+    """Barbed wire, drawn Bitcoin glyph, MAX-heart-KEISER signature."""
+    from scipy import ndimage as _nd
+    print("\n=== p79 hand-drawn marks ===")
+    wire = region(79, (30, 30, 1300, 720), 160, 800, "barbed wire")
+    btc = region(79, (130, 3360, 470, 3720), 150, 800, "Bitcoin glyph")
+    maxw = region(79, (1180, 3660, 1660, 4010), 150, 600, "signature 'MAX'")
+    heart = region(79, (1640, 3690, 1780, 3810), 170, 200, "heart between names")
+    keis = region(79, (1330, 3800, 2150, 4160), 150, 600, "signature 'KEISER'")
+    # barbs: the wire is thin except where it is wrapped into a coil
+    wire = wire_measure()
+    if heart and maxw and keis:
+        hx = (heart['bbox'][0] + heart['bbox'][2]) / 2
+        hy = (heart['bbox'][1] + heart['bbox'][3]) / 2
+        print(f"  heart: {heart['bbox'][2]-heart['bbox'][0]+1} x "
+              f"{heart['bbox'][3]-heart['bbox'][1]+1} px "
+              f"({(heart['bbox'][2]-heart['bbox'][0]+1)/DPI*25.4:.1f} x "
+              f"{(heart['bbox'][3]-heart['bbox'][1]+1)/DPI*25.4:.1f} mm), centre "
+              f"({hx:.0f},{hy:.0f})")
+        fill = _nd.binary_fill_holes(heart['mask'])
+        print(f"        outline, not solid: {heart['mask'].sum()} ink px inside a "
+              f"filled silhouette of {int(fill.sum())} px "
+              f"-> the counter is {int(fill.sum()-heart['mask'].sum())} px")
+    return dict(wire=wire, btc=btc, max=maxw, heart=heart, keiser=keis)
+
+
+def inkcolour():
+    """Every hand-drawn mark in the piece, measured the same way: is the artwork
+    one pen or several?"""
+    print("\n=== interior ink colour of every hand-drawn mark ===")
+    print(f"  {'mark':28s} {'page':>4} {'R':>4} {'G':>4} {'B':>4}  {'R-B':>5} "
+          f"{'stroke w':>9}")
+    specs = [
+        ("p76 X mark, upper", 76, (2830, 3500, 3400, 3910), 200),
+        ("p76 X mark, lower", 76, (2370, 4010, 2800, 4290), 200),
+        ("p78 'X FUCK ALL X' scrawl", 78, (430, 3210, 1500, 3990), 140),
+        ("p78 X, left of scrawl", 78, (330, 3330, 560, 3560), 140),
+        ("p78 X, right of scrawl", 78, (1380, 3340, 1620, 3580), 140),
+        ("p79 barbed wire", 79, (30, 30, 1300, 720), 160),
+        ("p79 Bitcoin glyph", 79, (130, 3360, 470, 3720), 150),
+        ("p79 'MAX'", 79, (1180, 3660, 1660, 4010), 150),
+        ("p79 heart", 79, (1640, 3690, 1780, 3810), 170),
+        ("p79 'KEISER'", 79, (1330, 3800, 2150, 4160), 150),
+    ]
+    from scipy import ndimage as _nd
+    out = []
+    for name, pn, roi, th in specs:
+        a = page(pn)
+        lum = a.mean(2)
+        m = np.zeros(lum.shape, bool)
+        m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] < th
+        lab, n = label_fast(m)
+        cnt = np.bincount(lab.ravel())
+        sel = np.isin(lab, [i for i in range(1, n + 1) if cnt[i] >= 400])
+        if sel.sum() < 200:
             continue
-        comps.append((ys.size, ys, xs))
-    comps.sort(reverse=True, key=lambda t: t[0])
-    print(f"\n=== p{pn} hand-drawn marks (dark, low-saturation, >=800 px) ===")
-    named = []
-    for sz, ys, xs in comps[:14]:
-        ang, L, W = pca_axis(ys, xs)
-        x0, y0, x1, y1 = xs.min(), ys.min(), xs.max(), ys.max()
-        col = np.median(a[ys, xs], axis=0).astype(int)
-        where = "wire(top-left)" if y1 < 900 and x0 < 1200 else \
-                ("signature/heart" if y0 > 3000 and 900 < xs.mean() < 2600 else
-                 ("bitcoin-glyph" if y0 > 3000 and xs.mean() <= 900 else "?"))
-        print(f"  area {sz:6d} bbox x[{x0},{x1}] y[{y0},{y1}] "
-              f"({x1-x0+1}x{y1-y0+1}px) axis {ang:+6.2f} L={L:6.0f} W={W:5.0f} "
-              f"RGB {list(col)}  {where}")
-        named.append((sz, x0, y0, x1, y1, ang, where))
-    # barbed wire: count the barbs (local thickness maxima along the wire)
-    wire = np.zeros_like(ink)
-    for sz, ys, xs in comps:
-        if ys.max() < 950 and xs.min() < 1400:
-            wire[ys, xs] = True
-    wy, wx = np.nonzero(wire)
-    if wy.size:
-        ang, L, W = pca_axis(wy, wx)
-        print(f"\n  barbed wire: {wy.size} ink px, bbox x[{wx.min()},{wx.max()}] "
-              f"y[{wy.min()},{wy.max()}], long axis {ang:+.2f} deg, L={L:.0f} W={W:.0f}")
-        # thickness profile perpendicular to the run: count ink per column
-        cols = wire.sum(0)
-        nz = np.flatnonzero(cols)
-        prof = cols[nz.min():nz.max() + 1].astype(float)
-        k = 25
-        sm = np.convolve(prof, np.ones(k) / k, mode="same")
-        peaks = [i for i in range(k, sm.size - k)
-                 if sm[i] == sm[max(0, i - k):i + k].max() and sm[i] > sm.mean() * 1.25]
-        merged = []
-        for p in peaks:
-            if not merged or p - merged[-1] > 60:
-                merged.append(p)
-        print(f"  column-thickness peaks (barb clusters): {len(merged)} at x = "
-              f"{[int(p+nz.min()+wx.min()*0) for p in merged]}")
-    return comps
+        col, npx = _ink(a, sel, 3)
+        dt = _nd.distance_transform_edt(sel)
+        sw = 2 * np.median(dt[sel])
+        print(f"  {name:28s} {pn:>4} {col[0]:>4} {col[1]:>4} {col[2]:>4}  "
+              f"{col[0]-col[2]:>5} {sw:>7.1f} px")
+        out.append((name, col, sw))
+    # body-text ink on the same pages, as the printing-black reference
+    for pn in (76, 78, 79):
+        a = page(pn)
+        lum = a.mean(2)
+        m = np.zeros(lum.shape, bool)
+        m[900:2600, 500:2900] = lum[900:2600, 500:2900] < 120
+        col, npx = _ink(a, m, 1)
+        print(f"  {'(body-text ink, reference)':28s} {pn:>4} {col[0]:>4} {col[1]:>4} "
+              f"{col[2]:>4}  {col[0]-col[2]:>5}")
+    return out
+
+
+def xcensus():
+    """Every X mark in the piece, measured identically: the two painted Xs on
+    p76 and the two that flank the p78 scrawl."""
+    from scipy import ndimage as _nd
+    specs = [
+        ("p76 upper X", 76, (2830, 3500, 3400, 3910), 200, 5000),
+        ("p76 lower X", 76, (2370, 4010, 2800, 4290), 200, 5000),
+        ("p78 left X",  78, (330, 3330, 560, 3560), 140, 3000),
+        ("p78 right X", 78, (1380, 3340, 1620, 3580), 140, 3000),
+    ]
+    print("\n=== X-mark census (identical method for all four) ===")
+    print(f"  {'mark':12s} {'bbox w x h':>12} {'ink px':>7} {'fill':>6} "
+          f"{'stroke A':>9} {'stroke B':>9} {'included':>9} {'median sw':>10}")
+    rows = []
+    for name, pn, roi, th, minpx in specs:
+        a = page(pn)
+        lum = a.mean(2)
+        m = np.zeros(lum.shape, bool)
+        m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] < th
+        lab, n = label_fast(m)
+        cnt = np.bincount(lab.ravel())
+        sel = np.isin(lab, [i for i in range(1, n + 1) if cnt[i] >= minpx])
+        ys, xs = np.nonzero(sel)
+        x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
+        sub = sel[y0:y1 + 1, x0:x1 + 1]
+        picks, _ = edge_orientations(sub, sigma=3.0)
+        inc = abs(picks[0][0] - picks[1][0])
+        inc = min(inc, 180 - inc)
+        dt = _nd.distance_transform_edt(sel)
+        sw = 2 * np.median(dt[sel])
+        print(f"  {name:12s} {x1-x0+1:5d} x{y1-y0+1:5d} {ys.size:7d} "
+              f"{100*ys.size/((x1-x0+1)*(y1-y0+1)):5.1f}% {picks[0][0]:+8.1f} "
+              f"{picks[1][0]:+8.1f} {inc:8.1f} {sw:8.1f} px")
+        rows.append((name, x1 - x0 + 1, y1 - y0 + 1, ys.size, picks[0][0], picks[1][0], inc, sw))
+    print("  pairwise size ratios (bbox diagonal):")
+    for i in range(len(rows)):
+        for j in range(i + 1, len(rows)):
+            di = math.hypot(rows[i][1], rows[i][2])
+            dj = math.hypot(rows[j][1], rows[j][2])
+            print(f"    {rows[i][0]} / {rows[j][0]} = {di/dj:.3f}   "
+                  f"stroke-width ratio {rows[i][7]/rows[j][7]:.3f}   "
+                  f"included-angle difference {abs(rows[i][6]-rows[j][6]):.1f} deg")
+    return rows
+
+
+def wire_measure():
+    """The p79 barbed wire as its own connected component (the ROI also clips
+    the first body line's dark highlight bar, so take the largest blob only)."""
+    from scipy import ndimage as _nd
+    a = page(79)
+    lum = a.mean(2)
+    m = np.zeros(lum.shape, bool)
+    m[30:740, 30:1300] = lum[30:740, 30:1300] < 160
+    lab, n = label_fast(m)
+    cnt = np.bincount(lab.ravel())
+    sel = lab == (cnt[1:].argmax() + 1)
+    ys, xs = np.nonzero(sel)
+    ang, L, W = pca_axis(ys, xs)
+    dt = _nd.distance_transform_edt(sel)
+    print(f"\n  barbed wire, single connected stroke: {int(sel.sum())} ink px, "
+          f"bbox x[{xs.min()},{xs.max()}] y[{ys.min()},{ys.max()}]")
+    print(f"    long axis {ang:+.2f} deg, run {L:.0f} px ({L/DPI:.2f} in), "
+          f"transverse spread {W:.0f} px")
+    print(f"    median stroke width {2*np.median(dt[sel]):.1f} px "
+          f"({2*np.median(dt[sel])/DPI*25.4:.2f} mm), p95 {2*np.percentile(dt[sel],95):.1f} px")
+    t = math.radians(ang)
+    u = (xs - xs.mean()) * math.cos(t) - (ys - ys.mean()) * math.sin(t)
+    v = (xs - xs.mean()) * math.sin(t) + (ys - ys.mean()) * math.cos(t)
+    h, edges = np.histogram(u, bins=np.arange(u.min(), u.max() + 25, 25))
+    med = np.median(h)
+    idx = [i for i in range(len(h)) if h[i] > 2.2 * med]
+    groups = []
+    for i in idx:
+        if groups and i - groups[-1][-1] <= 3:
+            groups[-1].append(i)
+        else:
+            groups.append([i])
+    print(f"    ink is {med:.0f} px per 25-px bin along the wire; "
+          f"{len(groups)} bins-clusters exceed 2.2x that = {len(groups)} barb coils")
+    cents = []
+    for g in groups:
+        lo, hi = edges[g[0]], edges[g[-1]] + 25
+        sl = (u >= lo) & (u < hi)
+        cents.append((xs[sl].mean(), ys[sl].mean()))
+        print(f"      coil at page ({xs[sl].mean():.0f},{ys[sl].mean():.0f}): "
+              f"{25*len(g)} px of wire, {int(sl.sum())} ink px, perpendicular "
+              f"spread {v[sl].max()-v[sl].min():.0f} px")
+    if len(cents) == 2:
+        d = math.hypot(cents[0][0] - cents[1][0], cents[0][1] - cents[1][1])
+        print(f"      coil spacing {d:.0f} px = {d/DPI:.2f} in")
+    return dict(area=int(sel.sum()), angle=round(ang, 2), coils=len(groups))
+
+
+def xiou(size=200):
+    """Silhouette overlap between the four X marks, after aspect-normalised
+    resize and a small search over rotation and shift.  Answers: which Xs are
+    the same drawing used twice?"""
+    specs = [("p76 upper X", 76, (2830, 3500, 3400, 3910), 200, 5000),
+             ("p76 lower X", 76, (2370, 4010, 2800, 4290), 200, 5000),
+             ("p78 left X", 78, (330, 3330, 560, 3560), 140, 3000),
+             ("p78 right X", 78, (1380, 3340, 1620, 3580), 140, 3000)]
+    chips = {}
+    for name, pn, roi, th, minpx in specs:
+        a = page(pn)
+        lum = a.mean(2)
+        m = np.zeros(lum.shape, bool)
+        m[roi[1]:roi[3], roi[0]:roi[2]] = lum[roi[1]:roi[3], roi[0]:roi[2]] < th
+        lab, n = label_fast(m)
+        cnt = np.bincount(lab.ravel())
+        sel = np.isin(lab, [i for i in range(1, n + 1) if cnt[i] >= minpx])
+        ys, xs = np.nonzero(sel)
+        chips[name] = sel[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+
+    def best_iou(A, B):
+        best, bp = 0.0, None
+        A2 = np.asarray(Image.fromarray((A * 255).astype(np.uint8))
+                        .resize((size, size), Image.NEAREST)) > 0
+        for th in np.arange(-12, 12.01, 1.0):
+            bb = np.asarray(Image.fromarray((B * 255).astype(np.uint8))
+                            .resize((size, size), Image.NEAREST)
+                            .rotate(th, resample=Image.NEAREST, fillcolor=0)) > 0
+            for dx in range(-14, 15, 2):
+                for dy in range(-14, 15, 2):
+                    b2 = np.roll(np.roll(bb, dy, 0), dx, 1)
+                    v = (A2 & b2).sum() / (A2 | b2).sum()
+                    if v > best:
+                        best, bp = v, (th, dx, dy)
+        return best, bp
+
+    print("\n=== X silhouette overlap (aspect-normalised, best small rot/shift) ===")
+    names = list(chips)
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            v, bp = best_iou(chips[names[i]], chips[names[j]])
+            print(f"  {names[i]:12s} vs {names[j]:12s}  IoU {v:.3f}  "
+                  f"(rot {bp[0]:+.0f} deg, shift {bp[1]},{bp[2]})")
+
+
+def shit_runs():
+    """A single scale-free statistic for the direction of p77's paint runs:
+    where does the THIN ink sit relative to the THICK letter cores?"""
+    from scipy import ndimage as _nd
+    a = page(77)
+    lum = a.mean(2)
+    m = np.zeros(lum.shape, bool)
+    m[2550:3620, 40:950] = lum[2550:3620, 40:950] > 165
+    lab, n = label_fast(m)
+    cnt = np.bincount(lab.ravel())
+    sel = np.isin(lab, [i for i in range(1, n + 1) if cnt[i] >= 1200])
+    dt = _nd.distance_transform_edt(sel)
+    ys, xs = np.nonzero(sel)
+    d = dt[ys, xs]
+    thin, thick = d <= 8, d >= 20
+    print("\n=== p77 'SHIT': which way did the paint run? ===")
+    print(f"  paint {int(sel.sum())} px; thin (local half-width <=8 px) "
+          f"{int(thin.sum())}; thick (>=20 px) {int(thick.sum())}")
+    print(f"  centroid y: thin {ys[thin].mean():.1f}, thick {ys[thick].mean():.1f} "
+          f"-> the thin ink sits {ys[thick].mean()-ys[thin].mean():.1f} px ABOVE the cores")
+    print(f"  thick-core y range {ys[thick].min()}..{ys[thick].max()}; "
+          f"thin ink y range {ys[thin].min()}..{ys[thin].max()}")
+    print(f"  thin ink reaches {ys[thick].min()-ys[thin].min()} px ABOVE the core top "
+          f"and only {ys[thin].max()-ys[thick].max()} px below the core bottom "
+          f"(ratio {(ys[thick].min()-ys[thin].min())/(ys[thin].max()-ys[thick].max()):.2f}:1)")
+    yy = ys.astype(float)
+    print(f"  vertical ink-profile skewness {((yy-yy.mean())**3).mean()/yy.std()**3:+.3f} "
+          f"(negative = long tail toward the TOP of the printed page)")
+    q = np.quantile(ys, [0, .1, .9, 1.0])
+    print(f"  mean local half-width: top 10% of the ink {d[(ys>=q[0])&(ys<=q[1])].mean():.2f} px, "
+          f"bottom 10% {d[(ys>=q[2])&(ys<=q[3])].mean():.2f} px")
+    print("  Gravity pulls paint DOWN.  These runs go UP -> the graffiti photograph")
+    print("  is placed on the page 180 deg from the way the paint dried.")
+
+
+def orangesplit():
+    """On p79 the page carries BOTH kinds of orange: photographed gelatin caps
+    and printed highlight bars.  Measure them apart, on the same sheet, in the
+    same scan pass."""
+    print("\n=== p79: photographed orange vs printed orange, same page ===")
+    for pn in (73, 79):
+        a = page(pn)
+        r, g, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
+        o = (r - b > 60) & (r > 140) & (g < r - 30)
+        lab, n = label_fast(o)
+        cnt = np.bincount(lab.ravel())
+        from scipy import ndimage as _nd
+        objs = _nd.find_objects(lab)
+        pill, bar = [], []
+        for i in range(1, n + 1):
+            if cnt[i] < 2000:
+                continue
+            sl = objs[i - 1]
+            h = sl[0].stop - sl[0].start
+            w = sl[1].stop - sl[1].start
+            (pill if 0.4 <= w / h <= 2.0 else bar).append(i)
+        for tag, ids in (("gelatin capsule caps", pill), ("printed highlight bars", bar)):
+            if not ids:
+                print(f"  p{pn} {tag:24s} none")
+                continue
+            m = np.isin(lab, ids)
+            ys, xs = np.nonzero(m)
+            px = a[ys, xs]
+            med = np.median(px, axis=0).astype(int)
+            per = [list(np.median(a[np.nonzero(lab == i)], axis=0).astype(int)) for i in ids]
+            print(f"  p{pn} {tag:24s} {len(ids)} regions, {ys.size:6d} px, "
+                  f"median RGB {list(med)}")
+            print(f"  {'':29s} per region: {per}")
+    print("  -> the two oranges differ on the SAME sheet, so this is not a scan or")
+    print("     paper effect; the capsule orange is a photographed object, the bar")
+    print("     orange is the article's spot ink.")
 
 
 def main():
@@ -727,10 +1174,22 @@ def main():
         xmarks(76)
     if o in ("all", "scribble"):
         scribble(78)
+    if o in ("all", "quote"):
+        quote_block(78)
     if o in ("all", "shit"):
         shit(77)
     if o in ("all", "p79art"):
         p79art()
+    if o in ("all", "ink"):
+        inkcolour()
+    if o in ("all", "xcensus"):
+        xcensus()
+    if o in ("all", "xiou"):
+        xiou()
+    if o in ("all", "runs"):
+        shit_runs()
+    if o in ("all", "orange"):
+        orangesplit()
 
 
 if __name__ == "__main__":

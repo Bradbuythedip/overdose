@@ -1,0 +1,211 @@
+
+=== p73: 5 gelatin capsules ===
+ #    centroid(x,y)    axis    len    wid   L/W  pill px   cap%  capdir         cap RGB        body RGB
+ 1    779.0, 1652.3  -54.04  335.5  177.1  1.89    23502  35.3%   -44.2  [248, 146, 86] [223, 225, 227]
+ 2   1188.5, 1841.2  -23.49  332.4  129.4  2.57    25112  38.5%   -27.1  [250, 141, 89] [229, 229, 231]
+ 3   1455.7, 2183.0   -3.34  310.4  201.9  1.54    21571  39.9%    -9.4  [241, 140, 85] [222, 222, 223]
+ 4   1121.9, 2428.4   -4.10  302.4  214.0  1.41    21671  41.2%   -10.8  [240, 141, 81] [222, 225, 224]
+ 5    663.0, 2612.1  -75.81  285.4  236.0  1.21    19876  34.4%   -60.5  [247, 150, 87] [225, 228, 227]
+   length px  mean 313.2 sd 21.0 (19.89 mm)   width mean 191.7
+   pill area  mean 22346 px
+   cap RGB    mean (245.2,143.6,85.6)
+   axes       [-54.04, -23.49, -3.34, -4.1, -75.81]
+
+=== p79: 5 gelatin capsules ===
+ #    centroid(x,y)    axis    len    wid   L/W  pill px   cap%  capdir         cap RGB        body RGB
+ 1    147.7, 3203.0  -43.53  280.7  149.5  1.88    16496  30.7%   -32.0  [248, 153, 91] [228, 228, 223]
+ 2    486.8, 3293.3  -12.61  252.7   98.4  2.57    14195  40.4%   -15.7  [251, 149, 90] [231, 231, 225]
+ 3    731.1, 3508.6   +3.34  232.6  155.0  1.50    13062  40.0%    -3.8  [243, 151, 90] [225, 225, 219]
+ 4    512.7, 3740.2   +3.51  231.5  167.6  1.38    12889  41.5%    -0.6  [242, 145, 86] [226, 227, 221]
+ 5    194.8, 3936.7  -51.10  219.5  207.7  1.06    15790  26.2%   -49.5  [247, 152, 89] [231, 231, 226]
+   length px  mean 243.4 sd 24.0 (15.46 mm)   width mean 155.6
+   pill area  mean 14486 px
+   cap RGB    mean (246.2,150.0,89.2)
+   axes       [-43.53, -12.61, 3.34, 3.51, -51.1]
+
+=== are the two capsule arrangements the same photograph? ===
+  Procrustes p73 centroids -> p79 centroids (same top-to-bottom order)
+  uniform scale      0.7617   (p79 is 1.313x smaller than p73)
+  rotation           +10.23 deg
+  per-point residual [3.7, 4.5, 1.6, 1.2, 2.3] px
+  RMS residual       2.9 px = 0.3% of the 913 px cloud diameter
+  best of all 120 orderings: 2.9 px for (0, 1, 2, 3, 4); median ordering 319.5 px
+
+  rotation- and scale-invariant shape match, pill by pill:
+  pill  p73 L/W  p79 L/W   diff   p73 cap%  p79 cap%   diff
+     1     1.89     1.88  +0.02      35.3%     30.7%   +4.6
+     2     2.57     2.57  +0.00      38.5%     40.4%   -1.8
+     3     1.54     1.50  +0.04      39.9%     40.0%   -0.1
+     4     1.41     1.38  +0.03      41.2%     41.5%   -0.3
+     5     1.21     1.06  +0.15      34.4%     26.2%   +8.2
+  long-axis rotation p73->p79, pill by pill: [10.5, 10.9, 6.7, 7.6, 24.7]  (mean +12.1)
+
+=== capsule chip cross-correlation (180x180, rotation-normalised, cap to the right) ===
+     73#1 73#2 73#3 73#4 73#5 79#1 79#2 79#3 79#4 79#5
+73#1   1.00  0.61  0.73  0.70  0.87  0.10  0.58  0.42  0.76  0.80
+73#2   0.61  1.00  0.63  0.61  0.46  0.24  0.96  0.50  0.46  0.39
+73#3   0.73  0.63  1.00  0.95  0.77  0.37  0.60  0.74  0.61  0.54
+73#4   0.70  0.61  0.95  1.00  0.74  0.44  0.57  0.78  0.57  0.51
+73#5   0.87  0.46  0.77  0.74  1.00  0.19  0.42  0.50  0.75  0.74
+79#1   0.10  0.24  0.37  0.44  0.19  1.00  0.26  0.70 -0.22 -0.12
+79#2   0.58  0.96  0.60  0.57  0.42  0.26  1.00  0.49  0.41  0.36
+79#3   0.42  0.50  0.74  0.78  0.50  0.70  0.49  1.00  0.20  0.18
+79#4   0.76  0.46  0.61  0.57  0.75 -0.22  0.41  0.20  1.00  0.78
+79#5   0.80  0.39  0.54  0.51  0.74 -0.12  0.36  0.18  0.78  1.00
+
+ top 6 pairs:
+   0.959  73#2 <-> 79#2
+   0.952  73#3 <-> 73#4
+   0.875  73#1 <-> 73#5
+   0.802  73#1 <-> 79#5
+   0.784  79#4 <-> 79#5
+   0.779  73#4 <-> 79#3
+ within-page  mean r = 0.506 (n=20)
+ cross-page   mean r = 0.541 (n=25)
+
+=== p76 painted X marks  (grey ink: lum<200, sat<45, ROI x2300-3400 y3350-4400) ===
+  X#1  bbox x[2851,3355] y[3526,3890] = 505x365 px (1.26x0.91 in)
+        centroid (3148,3741)  ink area 52860 px  bbox fill 28.7%  median RGB [94, 92, 91]
+        stroke bearings -46.5 deg and +10.5 deg;  included angle 57.0 deg;  95th-pct stroke thickness 68 px
+  X#2  bbox x[2392,2783] y[4035,4273] = 392x239 px (0.98x0.60 in)
+        centroid (2603,4157)  ink area 36737 px  bbox fill 39.2%  median RGB [110, 104, 101]
+        stroke bearings +12.5 deg and -39.5 deg;  included angle 52.0 deg;  95th-pct stroke thickness 61 px
+  size ratio X#1/X#2: area 1.439 -> linear 1.200; diagonal 1.358; thickness 1.122
+  centre-to-centre 686 px = 1.72 in, bearing -142.6 deg
+
+=== p78 'X FUCK ALL X' scrawl ===
+  largest dark component: 357444 px
+  bbox x[451,1483] y[3236,3967]  = 1033 x 732 px = 2.58 x 1.83 in
+  centroid (974,3622)  fill 47.3% of its bbox
+  long axis +9.24 deg, L=1030 W=703
+  median RGB of the scrawl ink [np.int64(100), np.int64(92), np.int64(89)]
+  enclosed white (reversed-out) pixels inside the scrawl: 27994
+  181 enclosed white components; 8 largest [3055, 1697, 713, 703, 699, 683, 674, 659]
+  reversed-out TYPE: 26997 px in 86 glyph blobs
+    bbox in page coords x[589,1363] y[3335,3864]  = 775 x 530 px
+    type block long axis +21.30 deg
+    SET ANGLE of the reversed-out quote: -7.50 deg (rotation that maximises row crispness; scan skew for reference below)
+    4 text lines after de-rotation:
+      line 1:  2 glyph blobs  x-span   201 px  residual slope   +nan deg  median glyph height 49 px
+      line 2: 82 glyph blobs  x-span   788 px  residual slope  +7.18 deg  median glyph height 22 px
+      line 3:  1 glyph blobs  x-span     0 px  residual slope   +nan deg  median glyph height 47 px
+      line 4:  1 glyph blobs  x-span     0 px  residual slope   +nan deg  median glyph height 69 px
+    leading between lines: [214.5, 187.5, 54.8] px (mean 152.3 px = 27.4 pt at 400 dpi)
+    same page, BODY TEXT: set angle -0.00 deg, median glyph height 31 px
+    -> the quote is rotated -7.50 deg against the page's own type
+
+=== p78 reversed-out pull-quote inside the scrawl ===
+  the block levels at PIL rotate(-7.00) -> the quote is SET AT +7.00 deg CCW on the page
+  3 lines of type after de-rotation
+   line 1 'The economy of': 14 blobs, ink span  512 px, 14 chars ->  39.4 px per character (7.09 pt), glyph heights p50 28 p90 46 px
+   line 2 'love is infinitely': 23 blobs, ink span  604 px, 18 chars ->  35.5 px per character (6.40 pt), glyph heights p50 23 p90 48 px
+   line 3 'more efficient than': 43 blobs, ink span  698 px, 19 chars ->  38.8 px per character (6.98 pt), glyph heights p50 18 p90 46 px
+  baseline leading [70.0, 71.0] px (mean 70.5 px = 12.7 pt)
+  quote glyph heights overall: p50 20 px, p90 47 px
+  p78 BODY TYPE for comparison: set angle +0.00 deg, glyph heights p50 31 p90 42 px, character pitch 32.5 px (5.85 pt)
+  -> the quote is set +7.00 deg off the body baseline and 1.12x its glyph height
+
+=== p77 painted 'SHIT' ===
+  page ground median RGB [np.int64(97), np.int64(89), np.int64(87)]; paint threshold lum>165
+  5 paint components >=1200 px, 160780 px of paint
+  combined bbox x[40,903] y[2627,3517] = 864x891 px (2.16x2.23 in)
+  paint median RGB [np.int64(233), np.int64(231), np.int64(231)]
+  long axis of the whole tag +28.46 deg
+    letter blob 1: area  42547  bbox x[40,269] y[3068,3517]  230x450 px axis -85.6 deg
+    letter blob 2: area  60496  bbox x[254,634] y[3088,3411]  381x324 px axis +10.6 deg
+    letter blob 3: area  50444  bbox x[379,903] y[2737,3320]  525x584 px axis -60.4 deg
+    letter blob 4: area   1816  bbox x[618,676] y[2771,2965]  59x195 px axis -76.7 deg
+    letter blob 5: area   5477  bbox x[646,729] y[2627,2956]  84x330 px axis -77.6 deg
+
+  paint RUNS (ink >6 px clear of any stroke core, kept when longer than 80 px and thinner than 30 px):
+    run  198.9 px long x 21.3 px wide: root (665,2965) -> tip (621,2771), bearing  +102.8 deg
+  1 of 1 runs point INTO THE UPPER half of the printed page (bearing > 0).
+  mean run bearing +102.8 deg, median +102.8 deg   (0 deg = right, +90 = straight UP the page as printed)
+  gravity runs DOWN.  These run UP -> the graffiti photograph is placed on the page rotated 180 deg from the way the paint dried.
+
+=== p79 hand-drawn marks ===
+  barbed wire            bbox x[46,1112] y[62,719] = 1067x658 px (2.67x1.65 in)
+                         centroid (655,444)  ink 48404 px in 3 blobs  long axis +6.50 deg
+                         stroke width: median 6.0 px, p95 17.9 px    interior RGB [np.int64(105), np.int64(95), np.int64(93)] (from 33175 px)
+  Bitcoin glyph          bbox x[193,393] y[3432,3662] = 201x231 px (0.50x0.58 in)
+                         centroid (310,3554)  ink 15449 px in 1 blobs  long axis +78.97 deg
+                         stroke width: median 11.3 px, p95 24.0 px    interior RGB [np.int64(91), np.int64(90), np.int64(88)] (from 12768 px)
+  signature 'MAX'        bbox x[1234,1644] y[3700,4009] = 411x310 px (1.03x0.78 in)
+                         centroid (1447,3860)  ink 28138 px in 6 blobs  long axis -8.02 deg
+                         stroke width: median 8.5 px, p95 18.4 px    interior RGB [np.int64(86), np.int64(85), np.int64(83)] (from 21721 px)
+  heart between names    bbox x[1668,1744] y[3710,3783] = 77x74 px (0.19x0.18 in)
+                         centroid (1703,3744)  ink 3447 px in 1 blobs  long axis -12.56 deg
+                         stroke width: median 10.0 px, p95 20.0 px    interior RGB [np.int64(89), np.int64(88), np.int64(83)] (from 2811 px)
+  signature 'KEISER'     bbox x[1343,2032] y[3800,4121] = 690x322 px (1.73x0.81 in)
+                         centroid (1666,3933)  ink 41846 px in 8 blobs  long axis +1.71 deg
+                         stroke width: median 8.9 px, p95 19.7 px    interior RGB [np.int64(86), np.int64(84), np.int64(81)] (from 32451 px)
+
+  barbed wire, single connected stroke: 35169 ink px, bbox x[46,1065] y[62,666]
+    long axis +29.93 deg, run 1152 px (2.88 in), transverse spread 315 px
+    median stroke width 6.0 px (0.38 mm), p95 16.8 px
+    ink is 541 px per 25-px bin along the wire; 2 bins-clusters exceed 2.2x that = 2 barb coils
+      coil at page (170,583): 75 px of wire, 5024 ink px, perpendicular spread 139 px
+      coil at page (736,267): 175 px of wire, 11256 ink px, perpendicular spread 264 px
+      coil spacing 648 px = 1.62 in
+  heart: 77 x 74 px (4.9 x 4.7 mm), centre (1706,3746)
+        outline, not solid: 3447 ink px inside a filled silhouette of 4061 px -> the counter is 614 px
+
+=== interior ink colour of every hand-drawn mark ===
+  mark                         page    R    G    B    R-B  stroke w
+  p76 X mark, upper              76   94   91   91      3    32.0 px
+  p76 X mark, lower              76  108  102   99      9    28.6 px
+  p78 'X FUCK ALL X' scrawl      78   99   91   88     11    21.5 px
+  p78 X, left of scrawl          78  101   93   93      8    16.1 px
+  p78 X, right of scrawl         78  105   97   94     11    16.1 px
+  p79 barbed wire                79  104   93   93     11     6.0 px
+  p79 Bitcoin glyph              79   90   89   87      3    11.3 px
+  p79 'MAX'                      79   85   84   82      3     8.5 px
+  p79 heart                      79   88   87   82      6    10.0 px
+  p79 'KEISER'                   79   85   83   81      4     8.5 px
+  (body-text ink, reference)     76  100   91   95      5
+  (body-text ink, reference)     78  107   91   93     14
+  (body-text ink, reference)     79  106   90   93     13
+
+=== X-mark census (identical method for all four) ===
+  mark           bbox w x h  ink px   fill  stroke A  stroke B  included  median sw
+  p76 upper X    505 x  365   52860  28.7%    -47.5    +10.5     58.0     32.0 px
+  p76 lower X    392 x  239   36737  39.2%    +12.5    -39.5     52.0     28.6 px
+  p78 left X     153 x  142    9997  46.0%    +50.5    -35.5     86.0     17.9 px
+  p78 right X    159 x  132   10140  48.3%    +47.5    -32.5     80.0     18.0 px
+  pairwise size ratios (bbox diagonal):
+    p76 upper X / p76 lower X = 1.357   stroke-width ratio 1.117   included-angle difference 6.0 deg
+    p76 upper X / p78 left X = 2.985   stroke-width ratio 1.789   included-angle difference 28.0 deg
+    p76 upper X / p78 right X = 3.015   stroke-width ratio 1.778   included-angle difference 22.0 deg
+    p76 lower X / p78 left X = 2.199   stroke-width ratio 1.601   included-angle difference 34.0 deg
+    p76 lower X / p78 right X = 2.222   stroke-width ratio 1.591   included-angle difference 28.0 deg
+    p78 left X / p78 right X = 1.010   stroke-width ratio 0.994   included-angle difference 6.0 deg
+
+=== X silhouette overlap (aspect-normalised, best small rot/shift) ===
+  p76 upper X  vs p76 lower X   IoU 0.394  (rot +12 deg, shift 14,8)
+  p76 upper X  vs p78 left X    IoU 0.407  (rot -8 deg, shift 14,2)
+  p76 upper X  vs p78 right X   IoU 0.381  (rot +5 deg, shift 14,8)
+  p76 lower X  vs p78 left X    IoU 0.527  (rot -12 deg, shift 6,-2)
+  p76 lower X  vs p78 right X   IoU 0.589  (rot -12 deg, shift 12,4)
+  p78 left X   vs p78 right X   IoU 0.854  (rot +2 deg, shift 6,0)
+
+=== p77 'SHIT': which way did the paint run? ===
+  paint 160780 px; thin (local half-width <=8 px) 81190; thick (>=20 px) 29309
+  centroid y: thin 3168.1, thick 3207.2 -> the thin ink sits 39.1 px ABOVE the cores
+  thick-core y range 2996..3405; thin ink y range 2627..3517
+  thin ink reaches 369 px ABOVE the core top and only 112 px below the core bottom (ratio 3.29:1)
+  vertical ink-profile skewness -0.605 (negative = long tail toward the TOP of the printed page)
+  mean local half-width: top 10% of the ink 3.52 px, bottom 10% 6.41 px
+  Gravity pulls paint DOWN.  These runs go UP -> the graffiti photograph
+  is placed on the page 180 deg from the way the paint dried.
+
+=== p79: photographed orange vs printed orange, same page ===
+  p73 gelatin capsule caps     5 regions,  42348 px, median RGB [np.int64(246), np.int64(142), np.int64(86)]
+                                per region: [[np.int64(248), np.int64(146), np.int64(86)], [np.int64(250), np.int64(141), np.int64(89)], [np.int64(241), np.int64(140), np.int64(85)], [np.int64(240), np.int64(141), np.int64(81)], [np.int64(247), np.int64(150), np.int64(87)]]
+  p73 printed highlight bars   none
+  p79 gelatin capsule caps     5 regions,  25511 px, median RGB [np.int64(248), np.int64(150), np.int64(90)]
+                                per region: [[np.int64(248), np.int64(153), np.int64(91)], [np.int64(251), np.int64(149), np.int64(90)], [np.int64(243), np.int64(151), np.int64(90)], [np.int64(242), np.int64(145), np.int64(86)], [np.int64(247), np.int64(152), np.int64(89)]]
+  p79 printed highlight bars   7 regions, 410342 px, median RGB [np.int64(248), np.int64(136), np.int64(64)]
+                                per region: [[np.int64(248), np.int64(137), np.int64(68)], [np.int64(249), np.int64(137), np.int64(65)], [np.int64(247), np.int64(135), np.int64(64)], [np.int64(248), np.int64(137), np.int64(66)], [np.int64(248), np.int64(135), np.int64(63)], [np.int64(248), np.int64(136), np.int64(63)], [np.int64(248), np.int64(136), np.int64(62)]]
+  -> the two oranges differ on the SAME sheet, so this is not a scan or
+     paper effect; the capsule orange is a photographed object, the bar
+     orange is the article's spot ink.

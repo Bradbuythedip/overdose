@@ -5,3 +5,10 @@
 SELFTEST PASS
 
 units: 146 printed lines, 87 sentences, 1 page-72 sentences
+
+distinct composed phrases : 6,697
+keys derived              : 46,879
+addresses checked         : ~234,395
+elapsed                   : 61s
+
+hits: 0
