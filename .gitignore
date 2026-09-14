@@ -44,3 +44,8 @@ solver/*/*.err
 solver/index_cipher_candidates.txt
 solver/bip39_index_candidates.txt
 solver/index_all_candidates.txt
+
+# page crops: regenerate with solver/zoom_pages.py (~9 MB of derived PNG)
+solver/zoom/
+# regenerable from page_furniture.py
+solver/furniture.txt
