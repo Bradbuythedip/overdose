@@ -49,8 +49,23 @@ JUNK = re.compile(r"^\d+$")
 
 
 def keep(p):
-    """A phrase worth a network call."""
-    return len(p.strip()) >= 4 and not JUNK.match(p.strip())
+    """A phrase worth a network call.
+
+    SINGLE TOKENS ARE DROPPED, and that is not over-filtering. Every hit this
+    project has ever recorded from a corpus list was a single common word —
+    "the", "Bitcoin", "1", "42", "love", "michael", "virtually" — because every
+    single word is in every brainwallet dictionary already, so its funding
+    status says nothing about this article. They arrive here by accident: the
+    byte-variant expansion replaces an em dash with the empty string, so a
+    2-gram like "love —" collapses to "love".
+
+    A single word cannot be the thing Keiser hid either. He said "hidden in the
+    text", and a one-word brainwallet is not hidden, it is the first thing any
+    cracker tries.
+    """
+    p = p.strip()
+    return (len(p) >= 4 and not JUNK.match(p)
+            and len(p.split()) >= 2)
 
 
 def run_generators(tmpdir):
@@ -96,8 +111,11 @@ def selftest():
         sys.stderr.write(f"  {p!r:34} -> {got[0]}  "
                          f"{'OK' if good else 'MISMATCH'}\n")
     cases = [("a", False), ("42", False), ("1", False), ("xxx", False),
-             ("the", False), ("Bitcoin", True), ("El Salvador", True),
-             ("0000", False)]
+             ("the", False), ("Bitcoin", False), ("El Salvador", True),
+             ("0000", False),
+             # the three that actually produced hits, all single words
+             ("love", False), ("michael", False), ("virtually", False),
+             ("right there in the Genesis Block.", True)]
     bad = [c for c, want in cases if keep(c) != want]
     ok &= not bad
     sys.stderr.write(f"  junk filter: {len(cases)-len(bad)}/{len(cases)} "

@@ -24,11 +24,41 @@ see, and can now.
 
 | pass | addresses | ever-funded |
 |---|---|---|
-| article n-grams, sha256 -> P2PKH | 44,956 | 2, both dust, dated Feb 2025 |
-| tier-1 phrases x 135 derivations | 44,777 | 0 |
-| generic corpora (`candidates_*`) | 15,672 | **52** |
-| HD paths (`hdfull`) | 112,880 | in progress |
-| new corpora | 72,042 | queued |
+| article n-grams, sha256 -> P2PKH | 44,956 | 2, dust, Feb 2025 |
+| tier-1 phrases x 135 derivations | 44,777 | **0** |
+| generic corpora (`candidates_*`) | 15,672 | 52, all generic |
+| `10years` correction delta | 566 | **0** |
+| HD paths (`hdfull`, 68 paths) | 112,880 | **0** |
+| new corpora (`corpora2`) | 72,042 | 3, all single words |
+| bare P2PK | 17,928 | pending |
+| wrapped / 1-of-1 multisig | 46,480 | pending |
+| **total evaluated** | **290,893** | **57** |
+
+**Every one of the 57 is a generic dictionary entry.** Not one is an
+article-specific reading.
+
+The three from `corpora2` are the clearest demonstration, because that list is
+the project's most principled work — boustrophedon, the Sand device on the
+author's units, byte variants, the numbers trail, the Schott pointers — and the
+only things in it that had ever been funded were:
+
+```
+0.01200000  love          0.00010000  michael      0.00005460  virtually
+```
+
+Three single common words, and the third at the **identical 0.00005460** that ten
+earlier single-word hits share. They reached the list by accident: the
+byte-variant expansion replaces an em dash with the empty string, so a 2-gram
+like "love —" collapses to "love". `gen_corpora_addrs.keep()` now drops
+single-token phrases, with those three as regression cases.
+
+## The sprayer, identified
+
+Eleven addresses across two independent passes received **exactly 0.00005460
+BTC**: Afghanistan, Amsterdam, Heisenberg, Manhattan, discovered, efficient,
+experience, infinitely, terrorists, theorized, virtually. One actor walking an
+English word list and dusting every brainwallet it generates. It is the dominant
+source of every "hit" in this project and it has nothing to do with the puzzle.
 
 ## The 52 hits are all generic, and that is the finding
 
