@@ -1,0 +1,9 @@
+  142 printed lines: OK (142)
+  21 bit strings, all >=142 bits: OK
+  mod4 readings reach 256 bits: OK
+  bit strings distinct: OK (21/21)
+  BIP-39 all-zero vector: OK (abandon abandon ... about)
+  derivation path: OK
+Oracle: full 56.8M index ACTIVE (checks both sets)
+  oracle genesis: OK
+SELFTEST PASS
