@@ -8,3 +8,5 @@ SELFTEST PASS
 
 left 2,727  right 13,992  pairs 38,156,184
 precomputed 2,727 + 13,992 points in 0.8s
+  50/2727 left  713,592/38,156,184 pairs  30,052 pair/s  eta 21 min
+  100/2727 left  1,413,192/38,156,184 pairs  31,322 pair/s  eta 20 min
