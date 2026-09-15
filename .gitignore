@@ -69,3 +69,6 @@ solver/playfair_out.txt
 solver/composite.txt
 # regenerable from twitter_id.py
 solver/twitterid.txt
+# regenerable from shortlist_everfunded.py
+solver/everfunded_shortlist.txt
+solver/everfunded_shortlist.txt.labels

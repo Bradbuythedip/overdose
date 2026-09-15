@@ -66,6 +66,32 @@ LINES = [
 NUMS72 = ["165", "572", "2020", "4.8", "930.44", "2026", "3.9",
           "35.8", "2026", "14.5", "2019", "72"]
 
+# The footer citations, read off hires/p72_400dpi.png at 400 dpi. Printed text
+# in the magazine that had never been swept: page 72 itself was unknown until
+# the scan was opened, and this module previously covered only its display
+# type. The PDF's own text layer is OCR of the 180-rotated page and unusable.
+SOURCES = [
+    "www.knomad.org/publication/migration-and-development-brief-34",
+    "www.migrationdataportal.org/themes/remittances",
+    "www.worldbank.org/en/news/press-release/2021/05/12/defying-"
+    "predictions-remittance-flows-remain-strong-during-covid-19-crisis",
+    "www.wise.com/documents/Public_Research_and_Survey_-_US_Hidden_Fees",
+    "www.repository.upenn.edu/sire/75/",
+    "www.westernunion.com/sv/en/receive-money.html",
+    "ir.westernunion.com/investor-relations/financial-information/",
+    "www.alliedmarketresearch.com/remittance-market",
+    "www.globenewswire.com/news-release/2021/04/12/2208403/",
+]
+# Fragments a setter might actually use. Two are worth noting: `sv` is El
+# Salvador's country code, and `sire/75` carries one of the article's own page
+# numbers -- both are coincidences of ordinary citation, but both are exactly
+# the kind of thing this puzzle's clues have been made of.
+SOURCE_BITS = ["knomad", "migrationdataportal", "worldbank", "wise",
+               "repository.upenn.edu", "westernunion", "alliedmarketresearch",
+               "globenewswire", "sire", "sv", "brief-34", "34", "75",
+               "2208403", "20210412", "20210512", "receive-money",
+               "US_Hidden_Fees", "remittance-market", "Sources"]
+
 
 def variants(s):
     out = {s, s.upper(), s.lower(), s.replace(" ", ""),
@@ -78,6 +104,25 @@ def build():
     out = set()
     for L in LINES:
         out |= variants(L)
+
+    # the footer citations: whole, de-www'd, their domain, and each path segment
+    for u in SOURCES:
+        out |= variants(u)
+        out.add(u.replace("www.", ""))
+        out.add(u.split("/")[0])
+        for seg in u.split("/"):
+            if len(seg) > 2:
+                out.add(seg)
+    for b in SOURCE_BITS:
+        out |= variants(b)
+        for tag in (SERIAL2, SER2_DIGITS, "El Salvador", "OVERDOSE"):
+            out.add(f"{b} {tag}")
+            out.add(f"{tag} {b}")
+            out.add(f"{b}{tag}")
+    for j in ("", " ", "\n"):
+        out.add(j.join(SOURCES))
+        out.add(j.join(SOURCES[::-1]))
+    out.add("".join(u.split(".")[1] for u in SOURCES if u.count(".") > 1))
 
     # THE SECOND SERIAL, every form the first one was ever tested in
     for s in (SERIAL2, SER2_DIGITS, SER2_LETTERS,
@@ -142,6 +187,19 @@ def selftest():
     ok &= not seen
     sys.stderr.write(f"  absent from the existing corpora, i.e. untested: "
                      f"{'OK' if not seen else 'FAIL'}\n")
+    ok &= len(SOURCES) == 9
+    sys.stderr.write(f"  {len(SOURCES)} footer citations read at 400 dpi\n")
+    good = any("/sv/" in u for u in SOURCES) and any("sire/75" in u
+                                                     for u in SOURCES)
+    ok &= good
+    sys.stderr.write(f"  includes westernunion /sv/ (sv = El Salvador) and "
+                     f"upenn sire/75: {'OK' if good else 'FAIL'}\n")
+    fresh = [f for f in ("article_transcript.txt", "furniture.txt")
+             if os.path.exists(f)
+             and "knomad" in open(f, encoding="utf-8", errors="ignore").read()]
+    ok &= not fresh
+    sys.stderr.write(f"  citations absent from existing corpora, i.e. "
+                     f"untested: {'OK' if not fresh else 'FAIL ' + str(fresh)}\n")
     c = build()
     floor = 26 + len(LINES)
     ok &= len(c) > floor
