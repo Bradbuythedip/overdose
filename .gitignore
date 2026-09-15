@@ -67,3 +67,5 @@ solver/bargeom.txt
 solver/playfair_out.txt
 # regenerable from composite.py
 solver/composite.txt
+# regenerable from twitter_id.py
+solver/twitterid.txt
