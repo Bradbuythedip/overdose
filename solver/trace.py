@@ -226,60 +226,92 @@ def input_addrs(chain, txid):
     return [a for a in ins if a], outs
 
 
-def crawl(chain, seeds, max_depth, max_nodes, uf, flags, seen_tx):
-    """BFS the graph; union addresses that share an input set; return report."""
-    frontier = [(s, 0) for s in seeds]
-    seen_addr = set()
-    funding = {}
+def funding_of(chain, cand):
+    """The tx and input-address set that funded a candidate with ~20 BTC."""
+    for tx in chain.addr_txs(cand):
+        ins, outs = input_addrs(chain, tx["txid"])
+        for a, v in outs:
+            if a == cand and 1_990_000_000 <= v <= 2_010_000_000:
+                return {"txid": tx["txid"], "inputs": ins, "outputs": outs}
+    # fall back to the first tx that pays the candidate at all
+    for tx in chain.addr_txs(cand):
+        ins, outs = input_addrs(chain, tx["txid"])
+        if any(a == cand for a, _ in outs):
+            return {"txid": tx["txid"], "inputs": ins, "outputs": outs}
+    return None
+
+
+def crawl(chain, uf, flags, max_nodes, max_depth):
+    """Cluster the FUNDING WALLETS of the three candidates, not the candidates.
+
+    The candidates never spend, so they are singletons and clustering them is
+    meaningless. What matters is whether their FUNDERS -- the input addresses
+    of each funding tx -- are one wallet. So: get each candidate's funding
+    input set, then BFS from those inputs, unioning every co-input set, and
+    skipping high-activity addresses (>60 txs) that are exchanges, not a
+    personal setter wallet.
+    """
+    funding, seen_addr, seen_tx = {}, set(), set()
+    frontier = []
+    for c in CANDIDATES:
+        f = funding_of(chain, c)
+        if f:
+            funding[c] = f
+            for a in f["inputs"]:
+                if len(f["inputs"]) > 1:
+                    uf.union(f["inputs"][0], a)
+                frontier.append((a, 0))
     while frontier and len(seen_addr) < max_nodes:
         addr, depth = frontier.pop(0)
         if addr in seen_addr or depth > max_depth:
             continue
         seen_addr.add(addr)
-        for tx in chain.addr_txs(addr):
-            txid = tx["txid"]
-            ins, outs = input_addrs(chain, txid)
-            if len(ins) > 1:                       # common-input-ownership
+        txs = chain.addr_txs(addr)
+        if len(txs) > 60:                      # exchange / hot wallet; do not expand
+            continue
+        for tx in txs:
+            ins, outs = input_addrs(chain, tx["txid"])
+            seen_tx.add(tx["txid"])
+            if len(ins) > 1:
                 for a in ins[1:]:
                     uf.union(ins[0], a)
-            # record where each candidate's coins came from
-            if addr in CANDIDATES and any(o[0] == addr for o in outs):
-                funding[addr] = {"txid": txid, "inputs": ins,
-                                 "outputs": outs}
             for a in ins + [o[0] for o in outs]:
                 if a and a not in seen_addr:
                     frontier.append((a, depth + 1))
-            seen_tx.add(txid)
-    return seen_addr, funding
+    return funding, seen_addr, seen_tx
 
 
 def report(uf, funding, flags, seen_addr):
-    sys.stderr.write(f"\n  {len(seen_addr):,} addresses visited\n\n")
-    # THE TEST: same cluster across candidates?
-    roots = {c: uf.find(c) for c in CANDIDATES if c in uf.p}
-    sys.stderr.write("  SAME-WALLET TEST (the decisive one):\n")
+    sys.stderr.write(f"\n  {len(seen_addr):,} funder-side addresses visited\n\n")
+    # cluster each candidate by its FUNDING INPUT set (not the candidate)
+    def cand_cluster(c):
+        ins = funding.get(c, {}).get("inputs", [])
+        return uf.find(ins[0]) if ins else None
+    roots = {c: cand_cluster(c) for c in CANDIDATES}
+    sys.stderr.write("  SAME-WALLET TEST (clusters of each candidate's FUNDER):\n")
     for c in CANDIDATES:
-        r = roots.get(c, "(not reached)")
-        sys.stderr.write(f"    {c}  cluster {str(r)[:16]}\n")
-    uniq = set(roots.values())
-    if len(roots) >= 2 and len(uniq) == 1:
-        sys.stderr.write("    *** ALL REACHED CANDIDATES ARE ONE CLUSTER -- "
-                         "one wallet created these peels. Strong, near-decisive.\n")
-    elif len(uniq) > 1:
-        sys.stderr.write("    candidates are in DIFFERENT clusters -- not one "
-                         "wallet; the 20-BTC match is likely coincidence.\n")
-    # shared funding inputs / change
-    allfund = {}
-    for c, f in funding.items():
-        for a in f["inputs"]:
-            allfund.setdefault(a, []).append(c)
-    shared = {a: cs for a, cs in allfund.items() if len(set(cs)) > 1}
-    sys.stderr.write(f"\n  funding inputs shared across candidates: "
-                     f"{shared if shared else 'none'}\n")
-    # flags
+        f = funding.get(c)
+        if not f:
+            sys.stderr.write(f"    {c}  funding tx not found\n"); continue
+        sys.stderr.write(f"    {c}\n      funded by {f['txid'][:20]}... "
+                         f"inputs={[a[:12] for a in f['inputs'][:4]]} "
+                         f"cluster={str(roots[c])[:14]}\n")
+    live = {c: r for c, r in roots.items() if r}
+    # direct shared funding input -- the strongest signal
+    isets = {c: set(funding.get(c, {}).get("inputs", [])) for c in CANDIDATES}
+    shared = set.intersection(*[v for v in isets.values() if v]) if \
+        sum(1 for v in isets.values() if v) >= 2 else set()
+    # shared change: does one candidate's funding tx change feed another's?
+    if len(set(live.values())) == 1 and len(live) >= 2:
+        sys.stderr.write("\n    *** THE FUNDERS ARE ONE CLUSTER -- one wallet "
+                         "funded these candidates. Near-decisive.\n")
+    elif len(set(live.values())) > 1:
+        sys.stderr.write("\n    funders are in DIFFERENT clusters -- not one "
+                         "wallet; the 20-BTC coincidence does not hold up.\n")
+    if shared:
+        sys.stderr.write(f"    *** shared exact funding input(s): {shared}\n")
     hits = [a for a in seen_addr if a in flags]
-    sys.stderr.write(f"\n  traced addresses also in repo/Keiser data: "
-                     f"{len(hits)}\n")
+    sys.stderr.write(f"\n  funder addresses also in repo/Keiser data: {len(hits)}\n")
     for a in hits[:20]:
         sys.stderr.write(f"    {a}  [{flags[a]}]\n")
 
@@ -307,23 +339,18 @@ def main():
 
     chain = Chain(a.base, a.cache)
     flags = known_flags()
-    uf, seen_tx = UF(), set()
-    seeds = a.seed or CANDIDATES
-    depth = a.max_depth
-    prev = -1
+    uf = UF()
+    depth, prev = a.max_depth, -1
     while True:
-        seen_addr, funding = crawl(chain, seeds, depth, a.max_nodes, uf,
-                                   flags, seen_tx)
+        funding, seen_addr, seen_tx = crawl(chain, uf, flags, a.max_nodes, depth)
         report(uf, funding, flags, seen_addr)
         if not a.loop or len(seen_addr) == prev:
             break
         prev = len(seen_addr)
-        depth += 1
-        a.max_nodes = int(a.max_nodes * 1.5)
+        depth += 1; a.max_nodes = int(a.max_nodes * 1.5)
         sys.stderr.write(f"\n  --loop: widening to depth {depth}, "
                          f"{a.max_nodes} nodes...\n")
-    sys.stderr.write(f"\n  {len(seen_tx):,} txs cached in {a.cache}. "
-                     f"Re-run resumes for free.\n")
+    sys.stderr.write(f"\n  txs cached in {a.cache}. Re-run resumes for free.\n")
 
 
 if __name__ == "__main__":
