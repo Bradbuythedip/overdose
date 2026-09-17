@@ -76,3 +76,5 @@ solver/everfunded_shortlist.txt.labels
 solver/trace_cache.jsonl
 # regenerable
 solver/tx_targetsweep.out
+# regenerable
+solver/lowentropy.out
