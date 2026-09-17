@@ -96,3 +96,34 @@ project has — now including ones tying the article to the funder's own
 wallet — fails to reach the prize address or any of the four funding-tx
 addresses. The tx confirms the prize was set up deliberately; it yields no
 derivation foothold.
+
+## "Same key as the funding?" — tested with the curve points (2026-09-17)
+
+One private key yields two addresses (compressed vs uncompressed pubkey), so the
+prize could in principle be a funder input's key in the other format. We have
+the funder input POINTS, so this is decidable without any private key:
+
+```
+input0 1A3RB  compressed -> 1A3RB79H2aiacP9YoJu5h14grsC89DJpK4   (matches, sanity OK)
+              uncompressed-> 12sKLJnW68n479mjo1QwpfsNmzfUw1KM34
+input1 1BCYm  compressed -> 1BCYmbDS58mKdXqefH3xM8CK286sntX4UT   (matches, sanity OK)
+              uncompressed-> 1DxAkYSUxUWyx8e2PdjZqyGDRqDtaELThZ
+```
+
+Neither uncompressed twin (nor either compressed form) is 1BX2q (prize) or 1GRv
+(change). **The prize is a distinct key from both revealed funder keys.**
+
+Combined with the earlier self-referential tests (792 constructions incl.
+sha256 of the funder pubkeys/addresses -> 1BX2q, null), every "prize key = a
+function of the funder's known material" hypothesis that is testable offline is
+now closed.
+
+What remains, and is NOT offline-testable: the prize and the funder could be
+sibling keys of one HD wallet (different keys, one seed). That needs the seed
+or an xpub+chaincode+one child priv, none of which we have. It is exactly what
+the cluster trace probes indirectly: if 1BX2q was funded from the setter's own
+personal wallet, that confirms common ownership -- but common ownership still
+does not yield the prize key without the seed. The only paths from "same
+wallet" to "the key" are (a) the seed leaking, or (b) a funder address in that
+wallet leaking its key via nonce reuse AND the wallet being non-hardened with a
+known xpub. Both are long shots, both need the cluster the tracer builds.
