@@ -414,8 +414,48 @@ def selftest():
     sys.stderr.write("  ^ this is the whole point: balance 0, but it WAS "
                      "funded, and the offline indices cannot see it\n")
     ok &= good
+    # REGRESSION: a partial run must never be summarised as DONE. The first
+    # real run printed "DONE. 4,550 addresses, 0 EVER-FUNDED" after Ctrl-C at
+    # 888 evaluated -- a false completed null.
+    part = summary_line(True, 888, 4550, 691, 197, 0, 10, "x.tsv")
+    good = "DONE." not in part and "NO VERDICT" in part and "3,662" in part
+    ok &= good
+    sys.stderr.write(f"  an interrupted run (888 of 4,550) is NOT summarised as "
+                     f"DONE and names the 3,662 unresolved: "
+                     f"{'OK' if good else 'FAIL'}\n")
+    # an un-interrupted run that still did not evaluate everything (errors
+    # exhausted retries) is ALSO partial -- errors are unresolved, not done
+    part2 = summary_line(False, 4540, 4550, 4343, 197, 0, 10, "x.tsv")
+    good2 = "DONE." not in part2 and "NO VERDICT" in part2
+    ok &= good2
+    sys.stderr.write(f"  10 addresses errored out of 4,550 -> still PARTIAL, "
+                     f"not DONE: {'OK' if good2 else 'FAIL'}\n")
+    full = summary_line(False, 4550, 4550, 4353, 197, 0, 0, "x.tsv")
+    good3 = "DONE." in full
+    ok &= good3
+    sys.stderr.write(f"  a run that evaluated all 4,550 IS summarised as DONE: "
+                     f"{'OK' if good3 else 'FAIL'}\n")
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
+
+
+def summary_line(interrupted, done, total, fetched, cached, hits, err, out):
+    """The final line. It MUST distinguish a finished run from a partial one.
+
+    The first real run printed "DONE. 4,550 addresses, 0 EVER-FUNDED" after
+    Ctrl-C at 888 evaluated -- a false completed null, the class of error this
+    project guards against hardest. "DONE." is reserved for a run that
+    evaluated every address. Addresses that exhausted their retries (err) were
+    NOT evaluated and are counted as unresolved, not folded into "evaluated".
+    """
+    unresolved = total - done
+    if interrupted or unresolved > 0:
+        return (f"\n  INTERRUPTED / PARTIAL -- {done:,} of {total:,} evaluated "
+                f"({fetched:,} fetched, {cached:,} from cache); {hits} "
+                f"EVER-FUNDED so far; {err} errored.\n"
+                f"  NO VERDICT on the remaining {unresolved:,}. Re-run to "
+                f"resume from the cache. -> {out}\n")
+    return (f"\n  DONE. {total:,} addresses, {hits} EVER-FUNDED -> {out}\n")
 
 
 def main():
@@ -430,7 +470,7 @@ def main():
     ap.add_argument("--auto", action="store_true",
                     help="ramp the rate up until the endpoint throttles, then "
                          "back off and keep probing (AIMD)")
-    ap.add_argument("--workers", type=int, default=32,
+    ap.add_argument("--workers", type=int, default=8,
                     help="concurrent requests, with --auto")
     ap.add_argument("--start-qps", type=float, default=8.0)
     ap.add_argument("--cap-qps", type=float, default=400.0)
@@ -554,6 +594,7 @@ def main():
     fh.write("phrase\taddress\tfunded_txo_count\treceived_btc\tbalance_btc"
              "\tverdict\twhy\n")
     state = {"done": 0, "hits": 0, "err": 0, "fetched": 0}
+    interrupted = False
     lock = threading.Lock()
     t0 = time.time()
 
@@ -657,6 +698,7 @@ def main():
             for t in ts:
                 t.join()
         except KeyboardInterrupt:
+            interrupted = True
             sys.stderr.write("\n  interrupted — everything fetched so far is "
                              "in the cache; re-run to resume\n")
     fh.close()
@@ -667,8 +709,9 @@ def main():
                      + (f", peak rate {ad.peak:.0f}/s, {ad.throttles} throttles"
                         if ad else "") + f"), {state['err']} errors\n")
     hits = state["hits"]
-    sys.stderr.write(f"\n  DONE. {len(items):,} addresses, {hits} EVER-FUNDED "
-                     f"-> {a.out}\n")
+    sys.stderr.write(summary_line(interrupted, state["done"], len(items),
+                                  state["fetched"], len(cached), hits,
+                                  state["err"], a.out))
     sys.stderr.write("  Note: 'ever-funded' includes dust and unrelated "
                      "collisions. Check received amount and date before "
                      "concluding anything.\n")
