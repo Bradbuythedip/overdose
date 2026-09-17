@@ -67,3 +67,32 @@ peel shape raises its prior but does not tie it to Keiser.
 
 None of these can run from this container (no Bitcoin network). All are one
 lookup each on blockstream.info or mempool.space.
+
+## Derivation tests enabled by the tx (2026-09-17) — all null
+
+Having the funding tx exposed the setter's own wallet material for the first
+time, so two derivation families that were never possible before were tried
+against the prize address 1BX2q (h160 735f452fed8ca297de0484be1b63200b726077c1)
+directly, both compressed and uncompressed:
+
+1. **Self-referential.** 792 constructions from material the setter chose
+   BEFORE creating the prize address — the two input pubkeys (full and
+   x-coord), the input/change addresses, pairwise concatenations in both
+   orders with separators, the pubkey-x XOR — through 6 hashes. None produces
+   1BX2q. (The funding txid and prevout txids are deliberately excluded: the
+   address exists before the funding, so its key cannot depend on them.)
+
+2. **Article × wallet.** 247 high-prior article phrases (sentences, lines,
+   highlight runs, clue words) crossed with the 5 tx elements, 4 join forms,
+   2 hashes = 9,880 keys. None produces 1BX2q.
+
+Plus the full corpus + HD stack (`target_sweep --scope all`) against all four
+tx addresses: the high-prior corpus (article, n-grams, highlights, persona)
+cleared null; the edit1 tail continued low-prior. Planted-key control passed,
+so the null is real.
+
+Combined with the earlier reachability checks, every derivation family this
+project has — now including ones tying the article to the funder's own
+wallet — fails to reach the prize address or any of the four funding-tx
+addresses. The tx confirms the prize was set up deliberately; it yields no
+derivation foothold.
