@@ -566,14 +566,14 @@ def main():
                 # the BIP-39 zero-entropy vector and the genesis coinbase
                 # headline -- and both read exactly like the answer. Label
                 # them by phrase AND by on-chain shape before printing.
+                # ONE tested function, NOT classify(balance=...). The dust
+                # rule belongs to the current-balance oracle; here balance 0
+                # is the claimed-prize shape, not dust. The first wiring got
+                # this wrong and would have labelled a swept 20 BTC as a decoy.
                 try:
                     import decoys
                     phrase = src.split("|")[0] if "|" in src else src
-                    is_d, why = decoys.classify(phrase=phrase, balance=bal)
-                    if not is_d and decoys.looks_like_public_tip_jar(fc, fs, bal):
-                        is_d, why = True, (f"public tip-jar shape: {fc} deposits, "
-                                           f"{100*(1-bal/max(fs,1)):.0f}% swept, "
-                                           f"{bal} sats left")
+                    is_d, why = decoys.classify_everfunded(phrase, fc, fs, bal)
                 except Exception:
                     is_d, why = False, ""
                 state["hits"] += 1

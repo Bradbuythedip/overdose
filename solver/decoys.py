@@ -121,6 +121,37 @@ def classify(phrase=None, key=None, balance=None):
     return False, ""
 
 
+def classify_everfunded(phrase, funded_count, funded_sats, balance_sats):
+    """The ONE decision for an ever-funded hit. (is_decoy, reason).
+
+    ORDER MATTERS, and getting it wrong hides the answer. classify()'s dust
+    rule is for the CURRENT-BALANCE oracle, where a 0-balance address never
+    appears at all. In the ever-funded context balance 0 is not dust -- it is
+    what a prize that was funded and then swept looks like, and that is the
+    single most important shape this oracle exists to see. So here:
+
+      1. a famous phrase is a decoy regardless of numbers
+      2. a many-deposits / nearly-all-swept / dust-left SHAPE is a public tip
+         jar regardless of phrase
+      3. everything else -- including funded once and swept once -- is a HIT
+         to be read by hand
+
+    The dust rule is deliberately NOT applied. The first wiring of record()
+    applied classify(balance=bal) first, and a 20 BTC funded-once-swept-once
+    case came back "decoy: dust: 0 sats". The selftest had tested the tip-jar
+    function directly and never the sequence record() ran. This function IS
+    that sequence, so the test and the code cannot diverge.
+    """
+    r = is_decoy_phrase(phrase)
+    if r:
+        return True, r
+    if looks_like_public_tip_jar(funded_count, funded_sats, balance_sats):
+        return True, (f"public tip-jar shape: {funded_count} deposits, "
+                      f"{100*(1-balance_sats/max(funded_sats,1)):.0f}% swept, "
+                      f"{balance_sats} sats left")
+    return False, ""
+
+
 def selftest():
     ok = True
     d, why = classify(phrase="abandon " * 11 + "about", balance=330)
@@ -187,6 +218,31 @@ def selftest():
     sys.stderr.write(f"  20 BTC funded once and swept once -> NOT a tip jar "
                      f"(that is the claimed-prize shape): "
                      f"{'OK' if not swept_once else 'FAIL — would hide the answer'}\n")
+    # END-TO-END through the exact function everfunded.record() calls. These
+    # are the tests that would have caught the dust-rule bug.
+    art = "They are the sum of all our neuroses."
+    e1, w1 = classify_everfunded(art, 1, 2_000_000_000, 0)
+    ok &= not e1
+    sys.stderr.write(f"  EVERFUNDED: 20 BTC funded once, swept once -> HIT "
+                     f"(the claimed-prize shape): "
+                     f"{'OK' if not e1 else 'FAIL - ' + w1}\n")
+    e2, _ = classify_everfunded(art, 1, 2_000_000_000, 2_000_000_000)
+    ok &= not e2
+    sys.stderr.write(f"  EVERFUNDED: 20 BTC held -> HIT: {'OK' if not e2 else 'FAIL'}\n")
+    e3, w3 = classify_everfunded("password", 28099, 35_670_000, 0)
+    ok &= e3
+    sys.stderr.write(f"  EVERFUNDED: sha256('password') 28,099 deposits -> decoy: "
+                     f"{'OK' if e3 else 'FAIL'}\n")
+    e4, w4 = classify_everfunded("some novel phrase", 47, 3_862_600, 0)
+    ok &= e4 and "tip-jar" in w4
+    sys.stderr.write(f"  EVERFUNDED: unknown phrase, 47 deposits 100% swept -> "
+                     f"tip jar by shape alone: {'OK' if e4 else 'FAIL'}\n")
+    e5, _ = classify_everfunded("some novel phrase", 2, 50_000_000, 0)
+    ok &= not e5
+    sys.stderr.write(f"  EVERFUNDED: unknown phrase, 2 deposits swept -> HIT "
+                     f"(too few deposits to be a tip jar): "
+                     f"{'OK' if not e5 else 'FAIL'}\n")
+
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
