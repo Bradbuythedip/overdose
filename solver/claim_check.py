@@ -79,12 +79,21 @@ def reachable(spk, corpus_paths):
 
 
 def offline_balance(spk):
+    """(balance_or_0, oracle_name, why) -- NAME which oracle answered.
+
+    IndexOracle silently falls back to the April-2023 rich list when the 56M
+    balance index is absent. The two answer different questions, and a hit or
+    miss means different things depending which one spoke. The first version of
+    this tool hardcoded "the 56M funded set (snapshot 2025-10-11)" in its
+    output regardless -- so on a machine using the fallback it mislabelled a
+    richlist miss as an index miss, which is how 1BX2q... (present in the real
+    index at 20 BTC) printed as "not in the 56M funded set". Report the name."""
     import continuous_solver as CS
     o = CS.IndexOracle()
     if not o.ready:
-        return None, o.why
+        return None, getattr(o, "name", "?"), o.why
     hits = o.check([spk])
-    return (hits[0][1] if hits else 0), ""
+    return (hits[0][1] if hits else 0), getattr(o, "name", "?"), o.why
 
 
 def selftest():
@@ -148,11 +157,16 @@ def main():
         print(f"   script type      : {t}")
         found, how, n = reachable(spk, a.corpus)
         print(f"   reachable offline: {'YES -- ' + how if found else f'no (checked {n:,} phrases, direct hashes)'}")
-        bal, why = offline_balance(spk)
+        bal, oname, why = offline_balance(spk)
         if bal is None:
-            print(f"   offline index    : unavailable ({why})")
+            print(f"   offline oracle   : unavailable ({why})")
+        elif bal:
+            print(f"   offline oracle   : FUNDED, {bal} sats ({bal/1e8:.8f} BTC) "
+                  f"per {oname}")
         else:
-            print(f"   offline index    : {'funded, ' + str(bal) + ' sats' if bal else 'not in the 56M funded set (snapshot 2025-10-11)'}")
+            print(f"   offline oracle   : absent from {oname} "
+                  f"(this oracle only; NOT proof it was never funded -- "
+                  f"use --base for that)")
         if a.base:
             try:
                 import everfunded as EF, decoys
