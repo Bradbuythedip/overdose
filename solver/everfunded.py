@@ -551,7 +551,8 @@ def main():
                          f"(~{len(todo)/max(a.qps,0.01)/60:.0f} min)\n")
 
     fh = open(a.out, "w")
-    fh.write("phrase\taddress\tfunded_txo_count\treceived_btc\tbalance_btc\n")
+    fh.write("phrase\taddress\tfunded_txo_count\treceived_btc\tbalance_btc"
+             "\tverdict\twhy\n")
     state = {"done": 0, "hits": 0, "err": 0, "fetched": 0}
     lock = threading.Lock()
     t0 = time.time()
@@ -560,12 +561,34 @@ def main():
         with lock:
             state["done"] += 1
             if fc > 0:
+                # A funded address is not a solve. Two famous-brainwallet
+                # decoys have already fired here as "*** EVER-FUNDED ***" --
+                # the BIP-39 zero-entropy vector and the genesis coinbase
+                # headline -- and both read exactly like the answer. Label
+                # them by phrase AND by on-chain shape before printing.
+                try:
+                    import decoys
+                    phrase = src.split("|")[0] if "|" in src else src
+                    is_d, why = decoys.classify(phrase=phrase, balance=bal)
+                    if not is_d and decoys.looks_like_public_tip_jar(fc, fs, bal):
+                        is_d, why = True, (f"public tip-jar shape: {fc} deposits, "
+                                           f"{100*(1-bal/max(fs,1)):.0f}% swept, "
+                                           f"{bal} sats left")
+                except Exception:
+                    is_d, why = False, ""
                 state["hits"] += 1
-                fh.write(f"{src}\t{addr}\t{fc}\t{fs/1e8:.8f}\t{bal/1e8:.8f}\n")
+                tag = "decoy" if is_d else "HIT"
+                fh.write(f"{src}\t{addr}\t{fc}\t{fs/1e8:.8f}\t{bal/1e8:.8f}"
+                         f"\t{tag}\t{why}\n")
                 fh.flush()
-                sys.stderr.write(f"  *** EVER-FUNDED {addr}  received "
-                                 f"{fs/1e8:.8f} BTC, balance {bal/1e8:.8f} "
-                                 f":: {src}\n")
+                if is_d:
+                    sys.stderr.write(f"  (decoy, not a solve -- {why})\n"
+                                     f"      {addr}  received {fs/1e8:.8f} BTC "
+                                     f":: {src[:60]}\n")
+                else:
+                    sys.stderr.write(f"  *** EVER-FUNDED {addr}  received "
+                                     f"{fs/1e8:.8f} BTC, balance {bal/1e8:.8f} "
+                                     f":: {src}\n")
             n = state["done"]
             if n % 250 == 0:
                 el = max(time.time() - t0, 1e-9)

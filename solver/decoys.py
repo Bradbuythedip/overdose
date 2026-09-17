@@ -40,7 +40,37 @@ DECOY_PHRASES = {
     "correct horse battery staple",
     "satoshi nakamoto", "password", "123456", "bitcoin", "test", "hello world",
     "ER8FT+HFjk0",                       # the WarpWallet published vector
+    # THE GENESIS COINBASE HEADLINE. The second famous-brainwallet false positive
+    # this project produced: the user's everfunded run reported its compressed
+    # and uncompressed P2PKH addresses as EVER-FUNDED (11,000 and 3,862,600
+    # sats). It is the most-hashed string in Bitcoin's history and sweeper
+    # bots empty it in seconds. stream_hits.tsv shows an earlier session had
+    # already hit it once. Never again.
+    "the times 03/jan/2009 chancellor on brink of second bailout for banks",
+    "chancellor on brink of second bailout for banks",
+    # and the rest of the canonical brainwallet-cracker wordlist head
+    "satoshi", "nakamoto", "you", "me", "i", "a", "abc", "qwerty", "letmein",
+    "admin", "secret", "money", "freedom", "hodl", "blockchain", "crypto",
+    "the quick brown fox jumps over the lazy dog",
+    "to be or not to be", "hello", "love", "god", "sex", "1", "0", "",
 }
+
+
+def looks_like_public_tip_jar(funded_count, funded_sats, balance_sats):
+    """Structural rule: a drained public brainwallet, from chain stats alone.
+
+    A LIST of famous phrases is never complete. But every famous brainwallet
+    shares a shape on-chain, whatever the phrase: MANY separate deposits (people
+    test-sending, bots probing), NEARLY ALL of it swept out again, and only dust
+    left. A key someone actually hid holds its funding; a public tip jar does
+    not. This needs only the fields everfunded.py already has in hand.
+    """
+    if funded_count < 3:
+        return False
+    if funded_sats <= 0:
+        return False
+    swept_frac = 1.0 - (balance_sats / funded_sats)
+    return swept_frac >= 0.95 and balance_sats < DUST_SATS
 
 # degenerate private keys
 DECOY_KEYS = {bytes(32), bytes([1]) + bytes(31), b"\xff" * 32,
@@ -124,6 +154,39 @@ def selftest():
     ok &= not d7
     sys.stderr.write(f"  a genuine 12-distinct-word mnemonic at 20 BTC "
                      f"survives: {'OK' if not d7 else 'FAIL'}\n")
+
+    # REGRESSION: the genesis coinbase headline -- the second famous-brainwallet
+    # false positive this project produced -- must classify as a decoy in the
+    # exact form the transcript and candidate corpora carry it.
+    g = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
+    d8, why8 = classify(phrase=g)
+    ok &= d8
+    sys.stderr.write(f"  the genesis coinbase headline is a decoy: "
+                     f"{'OK' if d8 else 'FAIL'}\n")
+
+    # the STRUCTURAL rule: a drained public tip jar fires on chain shape alone,
+    # with no phrase list at all -- and a held prize does not.
+    # 1Nbm3Jo...: 3,862,600 sats received across many deposits, ~0 left
+    tj = looks_like_public_tip_jar(funded_count=47, funded_sats=3_862_600,
+                                   balance_sats=0)
+    ok &= tj
+    sys.stderr.write(f"  47 deposits, 100% swept, 0 left -> public tip jar: "
+                     f"{'OK' if tj else 'FAIL'}\n")
+    held = looks_like_public_tip_jar(funded_count=1, funded_sats=2_000_000_000,
+                                     balance_sats=2_000_000_000)
+    ok &= not held
+    sys.stderr.write(f"  1 deposit of 20 BTC, still held -> NOT a tip jar: "
+                     f"{'OK' if not held else 'FAIL — would suppress a solve'}\n")
+    # the dangerous middle case: a prize that WAS 20 BTC and got swept once by
+    # its rightful solver. One deposit, one sweep. Must NOT be called a tip jar
+    # -- funded_count=1 keeps it clear of the many-deposits shape.
+    swept_once = looks_like_public_tip_jar(funded_count=1,
+                                           funded_sats=2_000_000_000,
+                                           balance_sats=0)
+    ok &= not swept_once
+    sys.stderr.write(f"  20 BTC funded once and swept once -> NOT a tip jar "
+                     f"(that is the claimed-prize shape): "
+                     f"{'OK' if not swept_once else 'FAIL — would hide the answer'}\n")
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
 
