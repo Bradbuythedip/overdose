@@ -127,3 +127,33 @@ does not yield the prize key without the seed. The only paths from "same
 wallet" to "the key" are (a) the seed leaking, or (b) a funder address in that
 wallet leaking its key via nonce reuse AND the wallet being non-hardened with a
 known xpub. Both are long shots, both need the cluster the tracer builds.
+
+## Tracer result: three candidates, three unrelated funders (2026-09-17)
+
+`trace.py --loop --max-depth 6` on a live endpoint, same-wallet test on the
+FUNDERS:
+
+```
+1BX2qZ9y...  funded by d931904b  inputs 1A3RB79H, 1BCYmbDS   cluster 1RRx7yf...
+1AkNdBrf...  funded by c2ce87cd  input  1CZpLtPt            cluster 1CZpLtPt...
+1H8Ki8vU...  funded by a65f9ebe  input  16JgEHcx            cluster 16JgEHcx...
+
+=> funders are in DIFFERENT clusters. No shared funding inputs.
+```
+
+**Decisive against the peel-candidate thread.** If one setter (Keiser) had
+funded three 20-BTC prizes, the fundings would trace to one wallet. They trace
+to three unrelated wallets. So the three "personal peel" candidates are three
+coincidental 20-BTC payments by three different parties, not one deliberate
+setup. The exactly-20-BTC property -- already known to be shared by 962
+addresses -- discriminates nothing at the funding level either.
+
+Caveat: clusters could merge further upstream (the loop widens past depth 6),
+but the strong test is shared DIRECT inputs, of which there are none; upstream
+convergence would be weak evidence regardless. The only funder-side addresses
+flagged against repo data are the three candidates themselves.
+
+This does not touch the article-derivation question -- it never did -- but it
+removes the one on-chain lead that briefly looked like it might confirm a
+specific prize address. 1BX2q is back to being 1 of 962, now with its funding
+understood: an ordinary peel from an unrelated wallet.
