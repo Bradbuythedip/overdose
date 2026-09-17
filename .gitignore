@@ -74,3 +74,5 @@ solver/everfunded_shortlist.txt
 solver/everfunded_shortlist.txt.labels
 # regenerable trace cache
 solver/trace_cache.jsonl
+# regenerable
+solver/tx_targetsweep.out
