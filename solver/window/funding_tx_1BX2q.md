@@ -157,3 +157,27 @@ This does not touch the article-derivation question -- it never did -- but it
 removes the one on-chain lead that briefly looked like it might confirm a
 specific prize address. 1BX2q is back to being 1 of 962, now with its funding
 understood: an ordinary peel from an unrelated wallet.
+
+## Byte-level forensics of the funding tx (2026-09-17)
+
+Looked inside the tx, not just its graph. It is an ordinary standard-wallet
+spend with no puzzle-craft:
+
+- 366 tx-internal 32-byte values (pubkey x-coords, R, S, sighashes, prevout
+  txids, reversals, pairwise XOR/sum/diff, 16+16 splices) tested directly as
+  the prize/change private key -> none matches. The key is not hidden in the
+  tx's own numbers.
+- No ASCII message anywhere in the pubkeys/signatures/txids -- only the random
+  printable bytes any hash-random data contains.
+- All four R/S are full-entropy (254-256 bits): NO chosen or small nonce, so no
+  nonce-recovery foothold here either.
+- Both S values are canonical low-S (BIP-62) -- the signature of standard
+  wallet software. A hand-crafted puzzle tx would not necessarily be low-S;
+  this being low-S is mild positive evidence AGAINST puzzle-craft and FOR an
+  ordinary wallet.
+- Amounts are ordinary (20 BTC payment + 30.99997382 change); no structure in
+  the digits, both inputs at the usual change vout index 1.
+
+Together with the three-unrelated-funders cluster result, the funding tx is
+best read as a routine payment that happens to be 20 BTC -- not a setter's
+deliberate prize funding. Nothing further is extractable from this transaction.
