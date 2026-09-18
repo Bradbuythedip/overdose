@@ -7,6 +7,7 @@
 # bot-check and you need a browser -- see the instructions it prints.
 #
 #   ./fetch_pamphlet.sh                     # Buy Love, Sell Fear
+#   ./fetch_pamphlet.sh --assets            # what asset URLs does the page really use?
 #   ./fetch_pamphlet.sh --probe             # what does the CDN actually return?
 #   ./fetch_pamphlet.sh --inspect           # what does the page actually offer?
 #   ./fetch_pamphlet.sh <url> <outfile>     # any direct URL you find
@@ -30,6 +31,29 @@ try () {  # url outfile
   if is_pdf "$2.part"; then mv "$2.part" "$2"; return 0; fi
   rm -f "$2.part"; return 1
 }
+
+if [ "${1:-}" = "--assets" ]; then
+  # The guessed CDN URL 404s, so stop guessing: list the asset URLs the page
+  # itself uses. Working image URLs reveal the correct host, transform prefix
+  # and id shape, and any .pdf among them is the real one.
+  echo "== asset URLs in the saved pages"
+  for f in article_page.html dl_page.html; do
+    [ -f "$f" ] || { echo "  ($f not saved yet -- run --inspect first)"; continue; }
+    echo
+    echo "-- $f"
+    echo "   any PDF:"
+    grep -oiE 'https?://[^"'"'"' \\)]+\.pdf[^"'"'"' \\)]*' "$f" | sort -u | head -10 | sed 's/^/     /' || echo "     none"
+    echo "   saymedia / CDN assets (first 8 distinct):"
+    grep -oiE 'https?://[^"'"'"' \\)]*(saymedia|cloudfront|imgix|amazonaws|cdn)[^"'"'"' \\)]*' "$f" \
+      | sed 's/\\//g' | sort -u | head -8 | sed 's/^/     /' || echo "     none"
+    echo "   the Keiser asset id(s) referenced:"
+    grep -oiE 'keiser[a-z0-9_.-]*' "$f" | sort -u | head -10 | sed 's/^/     /' || echo "     none"
+  done
+  echo
+  echo "  Paste this back. A working image URL shows the right host, transform"
+  echo "  prefix and id shape; the PDF sits at the same shape."
+  exit 0
+fi
 
 if [ "${1:-}" = "--probe" ]; then
   # Show what the CDN ACTUALLY returns for each URL shape. The browser said
