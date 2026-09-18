@@ -60,3 +60,43 @@ a rebus; author tells; the typographic channels decoded rather than counted),
 each finding re-measured by a skeptic; the PDF forensics workflow; the depth-4
 discovery closure; the language wordlist run; the forced-HD wallet-format run.
 Their results are appended below as they land.
+
+## Results landed after the first write (same day)
+
+- **Two-serial combination sweep (`serial_combine.py --loop`) finished**: all
+  families plus the transform closure to depth 4 (960,000 nodes, cap reported):
+  0 index hits, 0 checksum-valid WIF. Closed.
+- **Highlight runs as a pointer (`reading_hlkey.py`)**: 38 runs located; 4,630
+  forms; 44.1M scripts; 0 hits; 100 checksum-valid mnemonic windows vs 117.6
+  expected. Null.
+- **Grille lens (scavenger, verified measurements)**: the 45 highlight
+  rectangles measured properly for the first time (23 knock-out bars included;
+  p79's bars tilt 2.9 deg); the body pages do NOT share one layout grid, only
+  same-leaf pairs share a baseline phase; all 20 ordered page-pair overlays,
+  absolute and mirrored, and every index-mode grille produce text fragments at
+  the random-shift null (max z 2.1 over 40 tests). Null.
+- **Pull-quote / furniture lens**: exactly TWO verbatim printings of the
+  pull-quote, both on p78 (body, and white type inside the "X FUCK ALL X"
+  scribble); the repo's "third printing" counted the transcript twice; p79's
+  orange run is a different sentence. Running heads, folios, headline, byline,
+  credit and sign-off carry no marks (mask-size differences are padding).
+  **One physical mark**: in the scribble printing the 'o' of "love" is a closed
+  ring with a horizontal bar through its centre exiting right into the 'v', in
+  both the Canon layer and the phone photo; the printing's three other o's are
+  clean rings and its e's have the bar inside the bowl. Font quirk or designer's
+  mark cannot be decided at 200-215 dpi (no mask covers the scribble); a 600 dpi
+  scan of that 3 x 2 cm patch would. Every reading it could imply
+  (`reading_barred_o.py`: deletion, 0, e, o-slash, theta, the word, the position
+  4/2 and letter 14, all-o variants, the four-line layout, the graffiti frame,
+  plus the scavenger's own list): 177 forms x full stack, null.
+- **PDF forensics on the column pages** (five lenses, skeptics pending): the
+  Canon encoder inpaints under every mask (nothing hidden beneath text); the
+  backgrounds are JPEG inside Flate (not lossless); highlighted phrases live only
+  in the 200 dpi layer; facing-page set-off is strong and registered, reverse-side
+  show-through is below 0.5/255 (pages 71 and 80 unrecoverable from this stock);
+  all 22 orange bars are one ink, the "black" bars are the same dark warm brown
+  as page 77's ground, the white bars are paper white, page 77 has no dark-on-dark
+  content; the p79 pills are the p73 pill photograph reused (scale 0.760,
+  rotation 10.15 deg) so pill geometry gives five readings not ten; 8 notes
+  across 73/74, no plate letters legible beyond the serial; 14-15 bitcoin logos
+  on the boxers.
