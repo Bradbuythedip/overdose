@@ -496,11 +496,16 @@ class Sweep:
         self.meta, self.spks, self.hits = [], [], []
         self.n = self.nkeys = self.certif = self.bip = self.bipn12 = self.bipn24 = 0
         self.t0 = time.time()
+        self.MN = {}
         try:
             from mnemonic import Mnemonic
-            self.MNE = Mnemonic("english")
+            for lang in ("english", "spanish", "french", "italian", "portuguese", "czech"):
+                try: self.MN[lang] = Mnemonic(lang)
+                except Exception: pass
         except Exception:
-            self.MNE = None
+            pass
+        self.MNE = self.MN.get("english")
+        self.bipn = {}          # (lang, nwords) -> candidates tested
 
     def flush(self):
         if not self.spks: return
@@ -517,13 +522,23 @@ class Sweep:
         if len(self.spks) >= 50000: self.flush()
 
     def material(self, tag, s):
+        checked = False
+        if isinstance(s, str) and s.startswith("mn:"):
+            try:
+                _, lang, phrase = s.split(":", 2)
+            except ValueError:
+                return
+            self.mnemonic_words(tag, phrase.split(), lang)
+            s, checked = phrase, True
         if isinstance(s, str):
             flat = s.replace(" ", "")
             if wif_valid(flat):
                 self.certif += 1; self.log(f"\n  *** WIF-VALID STRING :: {tag} :: {flat}\n")
             ws = s.lower().split()
-            if self.MNE and len(ws) in (12, 15, 18, 21, 24) and all(w in self.MNE.wordlist for w in ws):
-                self.mnemonic_words(tag, ws)
+            if not checked and len(ws) in (12, 15, 18, 21, 24):
+                for lang, M in self.MN.items():
+                    if all(w in M.wordlist for w in ws):
+                        self.mnemonic_words(tag, ws, lang); break
             hs = s.strip()
             if len(hs) == 64:
                 try: self.key(f"{tag}|literal_hex", bytes.fromhex(hs))
@@ -556,16 +571,29 @@ class Sweep:
             self.seed(f"{tag}|mn|pw={pw!r}", Mnemonic.to_seed(mn, pw))
         self.material(f"{tag}|mnemonic_as_text", mn)
 
-    def mnemonic_words(self, tag, ws):
-        if not self.MNE: return
-        if len(ws) == 12: self.bipn12 += 1
-        elif len(ws) == 24: self.bipn24 += 1
+    def mnemonic_words(self, tag, ws, lang="english"):
+        M = self.MN.get(lang)
+        if not M or len(ws) not in (12, 15, 18, 21, 24): return
+        self.bipn[(lang, len(ws))] = self.bipn.get((lang, len(ws)), 0) + 1
         mn = " ".join(ws)
-        if self.MNE.check(mn):
-            self.bip += 1; self.log(f"\n  *** CHECKSUM-VALID MNEMONIC :: {tag} :: {mn}\n")
+        try:
+            valid = M.check(mn)
+        except Exception:
+            valid = False
+        if valid:
+            self.bip += 1; self.log(f"\n  *** CHECKSUM-VALID {lang.upper()} MNEMONIC :: {tag} :: {mn}\n")
             from mnemonic import Mnemonic
             for pw in PASSPHRASES:
-                self.seed(f"{tag}|valid_mn|pw={pw!r}", Mnemonic.to_seed(mn, pw))
+                self.seed(f"{tag}|valid_mn[{lang}]|pw={pw!r}", Mnemonic.to_seed(mn, pw))
+
+    def chance(self):
+        """Expected checksum-valid count if every tested mnemonic were random."""
+        return sum(n / (2 ** (k // 3)) for (_l, k), n in self.bipn.items())
+
+    def tested_summary(self):
+        by = {}
+        for (l, k), n in self.bipn.items(): by[l] = by.get(l, 0) + n
+        return ", ".join(f"{l} {n:,}" for l, n in sorted(by.items())) or "none"
 
     def progress(self, what):
         self.log(f"\r  {what}: {self.n:,} scripts, {self.nkeys:,} keys, "
@@ -609,6 +637,17 @@ def selftest():
     sw2 = Sweep(_Fake(spk), [], lambda m: None)
     sw2.material("other", "not the plant"); sw2.flush()
     rep("an unrelated phrase is NOT a hit", not sw2.hits)
+    try:
+        from mnemonic import Mnemonic
+        ms = Mnemonic("spanish"); mf = Mnemonic("french")
+        good = ms.check(ms.to_mnemonic(b"\x01" * 16)) and mf.check(mf.to_mnemonic(b"\x02" * 16)) \
+               and not ms.check(mf.to_mnemonic(b"\x02" * 16))
+        rep("Spanish/French wordlists checksum-validate their own mnemonics and reject each other's", good)
+        sw3 = Sweep(_Fake(b"\x00"), [], lambda m: None)
+        sw3.material("t", "mn:spanish:" + ms.to_mnemonic(b"\x03" * 16))
+        rep("an mn:<lang>: value is checksum-tested in that language", sw3.bip == 1 and ("spanish", 12) in sw3.bipn)
+    except Exception as e:
+        rep(f"multi-language mnemonics (exception {e!r})", False)
     S = string_forms(); rep(f"{len(S):,} combined string forms", len(S) > 1500)
     m, k = numeric_forms(); rep(f"{len(m):,} numeric materials, {len(k):,} raw integer keys", len(k) > 100)
     ti, mnw = text_index_forms(); rep(f"{len(ti):,} text-index readings, {len(mnw)} mnemonic-shaped", len(ti) > 300)
@@ -670,8 +709,10 @@ def main():
         sw.flush(); sw.progress("textindex"); log("\n")
     if "plugins" in fams:
         P = plugin_forms(log, a.plugin_glob)
-        do_hd = len(P) <= 8000
-        log(f"  plugins: {len(P):,} forms; HD seeds x 72 paths {'ON' if do_hd else 'OFF (>8000 forms; direct hashes only)'}\n")
+        n_plain = sum(1 for _t, v in P if not (isinstance(v, str) and v.startswith(("mn:", "hex:", "path:"))))
+        do_hd = n_plain <= 8000
+        log(f"  plugins: {len(P):,} forms ({n_plain:,} plain text); HD seeds x 72 paths on plain text "
+            f"{'ON' if do_hd else 'OFF (>8000 plain forms; direct hashes only)'}\n")
         path_seeds = None
         for i, (t, s) in enumerate(P, 1):
             if isinstance(s, str) and s.startswith("hex:"):
@@ -699,15 +740,15 @@ def main():
         depth += 1; a.cap *= 4
         log(f"\n  --loop: widening discovery to depth {depth} (cap {a.cap:,})\n")
     sw.flush()
-    exp12, exp24 = sw.bipn12 / 16, sw.bipn24 / 256
+    exp = sw.chance()
     log(f"\n  {sw.n:,} scripts from {sw.nkeys:,} keys vs {orc.name}: {len(sw.hits)} index hit(s); "
         f"{sw.certif} checksum-valid WIF; {sw.bip} checksum-valid mnemonic(s) "
-        f"(chance expectation {exp12 + exp24:.2f} over {sw.bipn12} twelve- and {sw.bipn24} 24-word readings)\n")
+        f"(chance expectation {exp:.2f}; mnemonic candidates tested: {sw.tested_summary()})\n")
     if sw.hits:
         with open("serial_combine_hits.tsv", "w") as f:
             for t, bal in sw.hits: f.write(f"{bal}\t{t}\n")
         log("  hits -> serial_combine_hits.tsv  (re-derive by hand before believing any of them)\n")
-    elif not sw.certif and sw.bip <= exp12 + exp24 + 1:
+    elif not sw.certif and sw.bip <= exp + 1 + 2 * (exp ** 0.5):
         log("  no combination of the two serials reaches a funded address or a self-certifying key.\n")
 
 
