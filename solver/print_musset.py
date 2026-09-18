@@ -32,7 +32,7 @@ nonsense -- the failure mode that would quietly break the whole test.
   python3 print_musset.py --pdf buy_love_sell_fear.pdf
   python3 print_musset.py --text article_transcript.txt
 """
-import argparse, os, re, statistics, sys, random
+import argparse, os, re, shutil, statistics, sys, random
 
 STOP_OPENERS = {"the", "a", "an", "of", "and", "to", "in", "is", "was", "that",
                 "it", "for", "on", "with", "as", "at", "by", "from", "but"}
@@ -48,9 +48,35 @@ IMPERATIVES = {"buy", "sell", "read", "take", "use", "find", "look", "go",
 def lines_from_pdf(path, col_gap=60.0):
     """Printed lines in reading order, columns kept separate.
 
-    Groups spans by baseline, then splits each page into columns by clustering
-    span x-positions; without that, a two-column page reads across the gutter
-    and every device built on line order is silently wrong."""
+    Four backends, tried in order of how well they preserve the thing this
+    whole test depends on -- the printed line break. No single PDF library is
+    universally installed, and the test is worthless if it cannot run."""
+    for fn in (_pdf_fitz, _pdf_plumber, _pdf_pdftotext, _pdf_pypdf):
+        try:
+            lines = fn(path, col_gap)
+        except ImportError:
+            continue
+        except FileNotFoundError:
+            continue
+        except Exception as e:
+            sys.stderr.write(f"  {fn.__name__}: {e!r}\n")
+            continue
+        if lines and len(lines) >= 20:
+            sys.stderr.write(f"  line extraction: {fn.__name__} "
+                             f"({len(lines)} printed lines)\n")
+            return lines
+    raise SystemExit(
+        "no usable PDF text backend.\n"
+        "  Install ONE of these, then re-run:\n"
+        "    pip install pymupdf          # best: real glyph baselines\n"
+        "    pip install pdfplumber       # also has coordinates\n"
+        "    sudo apt install poppler-utils   # pdftotext -layout\n"
+        "    pip install pypdf            # last resort\n"
+        "  If the file is a scan with no text layer, none of them will help:\n"
+        "  this test needs real line breaks, and OCR would invent them.")
+
+
+def _pdf_fitz(path, col_gap):
     import fitz
     doc = fitz.open(path)
     out = []
@@ -82,6 +108,73 @@ def lines_from_pdf(path, col_gap=60.0):
             s = re.sub(r"\s+", " ", "".join(parts)).strip()
             if s:
                 out.append(s)
+    return out
+
+
+def _pdf_plumber(path, col_gap):
+    """pdfplumber: words with x/top, grouped into lines then columns."""
+    import pdfplumber
+    out = []
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            words = page.extract_words(use_text_flow=False, keep_blank_chars=False)
+            if not words:
+                continue
+            xs = sorted(w["x0"] for w in words)
+            cuts, prev = [], xs[0]
+            for x in xs[1:]:
+                if x - prev > col_gap:
+                    cuts.append((prev + x) / 2)
+                prev = x
+            def col_of(x):
+                return sum(1 for c in cuts if x > c)
+            rows = {}
+            for w in words:
+                rows.setdefault((col_of(w["x0"]), round(w["top"], 0)), []).append((w["x0"], w["text"]))
+            for k in sorted(rows, key=lambda k: (k[0], k[1])):
+                s_ = re.sub(r"\s+", " ", " ".join(t for _x, t in sorted(rows[k]))).strip()
+                if s_:
+                    out.append(s_)
+    return out
+
+
+def _pdf_pdftotext(path, col_gap):
+    """poppler's pdftotext -layout: keeps line breaks and column geometry."""
+    import subprocess, tempfile
+    exe = shutil.which("pdftotext")
+    if not exe:
+        raise ImportError("pdftotext not installed")
+    with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as t:
+        tmp = t.name
+    try:
+        subprocess.run([exe, "-layout", "-enc", "UTF-8", path, tmp],
+                       check=True, capture_output=True, timeout=180)
+        raw = open(tmp, encoding="utf-8", errors="replace").read()
+    finally:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+    out = []
+    for ln in raw.splitlines():
+        # -layout pads columns with runs of spaces; split them back apart so a
+        # two-column page does not read across the gutter.
+        for part in re.split(r"\s{%d,}" % 6, ln):
+            s_ = part.strip()
+            if s_ and not re.fullmatch(r"[\f\s]*", s_):
+                out.append(re.sub(r"\s+", " ", s_))
+    return out
+
+
+def _pdf_pypdf(path, col_gap):
+    """pypdf: text with line breaks, no coordinates. Last resort."""
+    from pypdf import PdfReader
+    out = []
+    for page in PdfReader(path).pages:
+        for ln in (page.extract_text() or "").splitlines():
+            s_ = re.sub(r"\s+", " ", ln).strip()
+            if s_:
+                out.append(s_)
     return out
 
 
@@ -233,6 +326,39 @@ def selftest():
     rep("an imperative opening is recognised as a command", cmd)
     cmd2, _ = looks_like_command("The economy of love is")
     rep("a function-word opening is NOT a command", not cmd2)
+
+    # PDF round trip: build a PDF with KNOWN line breaks, extract it back.
+    # Without this the user cannot tell a working backend from one that
+    # silently reflows, and a reflowed extraction would fake or destroy a
+    # reading either way.
+    try:
+        import fitz, tempfile
+        want = ["Buy low and sell high", "love is the only asset",
+                "fear is a liability", "and war is the most expensive",
+                "sell everything that is not scarce",
+                "fear nothing that you can verify"] * 5
+        d = fitz.open()
+        pg = d.new_page()
+        y = 60
+        for ln in want:
+            pg.insert_text((60, y), ln, fontsize=9)
+            y += 14
+            if y > 760:
+                pg = d.new_page(); y = 60
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as f:
+            tmp = f.name
+        d.save(tmp); d.close()
+        got = lines_from_pdf(tmp)
+        os.unlink(tmp)
+        same = got[:len(want)] == want
+        rep(f"a PDF with known line breaks round-trips ({len(got)} lines back)", same)
+        if not same:
+            w(f"      wanted[0]={want[0]!r}\n      got[0]={got[0] if got else None!r}\n")
+    except ImportError:
+        w("  (no PDF library here to build a round-trip fixture; install one "
+          "before trusting a PDF reading)\n")
+    except Exception as e:
+        rep(f"PDF round trip (exception {e!r})", False)
 
     # the control: Issue 24's own line-faithful transcript must reproduce the
     # KNOWN-BROKEN reading. If the extractor were wrong, it could invent one.
