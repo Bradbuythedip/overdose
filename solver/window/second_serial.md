@@ -71,3 +71,28 @@ The repair that matters is to the record rather than to the puzzle: a value
 this project had written off as unreadable is now readable, and the module that
 wrote it off has been corrected so no future session re-derives the same
 limitation from a lower-resolution source.
+
+## Tying both serials to the funding-tx wallets (2026-09-17)
+
+`serial_wallet.py` -- 823 combinations of {CL forms, KB forms, the four wallet
+addresses, the two input pubkeys, the prize/change hash160s} joined every way,
+through 7 hashes x 25 script forms (~144k keys), against all four tx addresses.
+Planted-key control passed.
+
+  0 hits. No serial x wallet derivation reaches the prize, the change, or
+  either input.
+
+Structural dissection:
+  - the serial digits (76841714, 46279860, forward and reversed) appear in NONE
+    of the pubkeys, hash160s, or addresses as substrings.
+  - no numeric relationship: CL=76841714, KB=46279860, sum 123121574, diff
+    30561854, gcd 2, ratio 1.66 -- nothing that maps to an address.
+  - no h160 head equals a serial in hex or decimal.
+
+INTERPRETATION. The serials do not bridge to the on-chain wallets by any
+derivation or structure. This fits the rest of the evidence: the serials are
+ARTWORK -- a $100-bill prop the designer placed in the photo (CL on the p73/74
+bills) and ghosted behind the p72 graphics (KB) -- part of the visual
+puzzle-theme, not identifiers of the funding wallets. The wallets are whoever
+actually sent 20 BTC, and the funding tx is an ordinary spend by an unrelated
+party. Serial-side and chain-side do not connect.
