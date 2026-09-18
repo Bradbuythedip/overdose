@@ -130,10 +130,10 @@ def forms():
                 for k in sizes:
                     for i in range(0, len(ws) - k + 1):
                         out.append((f"{lang}/{name}/b{base}/w{k}@{i}", f"mn:{lang}:" + " ".join(ws[i:i + k])))
-    for ph in PHRASES:
-        out.append((f"phrase/{ph[:30]}", ph))
-        if ph != ph.lower(): out.append((f"phrase/{ph[:30]}/lower", ph.lower()))
-        if ph != ph.upper(): out.append((f"phrase/{ph[:30]}/upper", ph.upper()))
+    for i, ph in enumerate(PHRASES):
+        out.append((f"phrase/{i}/{ph[:30]}", ph))
+        if ph != ph.lower(): out.append((f"phrase/{i}/{ph[:30]}/lower", ph.lower()))
+        if ph != ph.upper(): out.append((f"phrase/{i}/{ph[:30]}/upper", ph.upper()))
     seen, uniq = set(), []
     for t, v in out:
         if v not in seen: seen.add(v); uniq.append((t, v))
