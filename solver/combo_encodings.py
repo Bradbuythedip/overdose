@@ -60,8 +60,12 @@ digit-wise ops, concatenations, x20, 21e6) as decimal/hex/hex8/hex16/raw-int/LE-
 mirror, sorted digits, series/district/denomination phrases, alphabet positions of the
 letters -- serial_combine.string_forms; hex<->int readings of the digit strings
 ("1988564756", "49482f2"), base58 of the BCD bytes, sha256/dsha256 hex text, halves,
-even/odd digits, digit sums, tiles -- serial_combine discovery BFS (depth <= 2; every
-value that closure produces is filtered out of this module's output at build time);
+even/odd digits, digit sums, tiles -- serial_combine discovery BFS (depth <= 2). The 199
+values of this module's raw output that those serial_combine families already emit
+are frozen below as the literal SWEPT_BY_SERIAL_COMBINE (derived once, 2026-09-18,
+from numeric_forms/string_forms/bfs_forms(2, 1e6)/PASSPHRASES in a scratch process)
+and dropped at build time; this module imports only the stdlib and never
+serial_combine, clue_serial, index_oracle or continuous_solver;
 BIP-39 entropy tilings/pads, HMAC/PBKDF2/scrypt/WarpWallet pairings, text-index
 readings -- serial_combine entropy/pairing/textindex; small ints, dates, powers,
 repeated bytes as raw keys against the four tx addresses -- lowentropy.py; RNG-seeded
@@ -1127,21 +1131,57 @@ CAT_JOINS = [("+d", lambda v, d, s: v + d), ("d+", lambda v, d, s: d + v),
              ("+s", lambda v, d, s: v + s), ("s+", lambda v, d, s: s + v),
              ("+ s", lambda v, d, s: v + " " + s), ("s +", lambda v, d, s: s + " " + v)]
 
+# Values this module's raw output shares with what serial_combine.py already sweeps.
+# Derived ONCE (2026-09-18) in a scratch process by intersecting the unfiltered builder
+# output (18,444 values) with serial_combine.numeric_forms() materials, string_forms(),
+# bfs_forms(2, 10**6) nodes and PASSPHRASES: 199 values, mostly the hex readings of the
+# digit strings, base58 of the BCD bytes, byte-swaps, halves/truncations and small
+# digit-sum integers. Frozen as a literal so this module never imports serial_combine
+# (or any module that could touch the index) at import or forms() time. If
+# serial_combine ever DROPS one of these families the value would go unswept, so the
+# list is deliberately the exact intersection and nothing wider.
+SWEPT_BY_SERIAL_COMBINE = (
+    '0000000046279860', '02c22cb4049482f2', '049482f202c22cb4', '06897264', '0689726441714867',
+    '076841714', '1', '10', '107120FA22B6F2', '107120fa22b6f2', '109671012', '1097943143', '11',
+    '118', '12', '1213', '123121574', '128', '13', '135', '164', '166', '17', '17147684', '173',
+    '1778111883040020', '19', '198770485240300274', '1B4CB69572DEB4', '1b4cb69572deb4',
+    '1d2563e', '1e04', '2', '2 46279860', '2 76841714', '20', '206', '21', '212', '212 76841714',
+    '21276841714', '23', '24', '246279860', '25', '2556446247', '26', '276841714', '29',
+    '2C22CB4', '2c22cb4', '2c22cb4 CL76841714A', '2c22cb4049482f2', '2c22cb476841714', '2o1S71',
+    '2o1S71 CL76841714A', '2o1S7176841714', '30', '30561854', '330032648644865204',
+    '3556223766080040', '36', '38', '38 CL76841714A', '387217028', '3876841714', '3ab57d3', '4',
+    '41', '41714768', '41714867', '4171486706897264', '42', '42huaT', '42huaT KB46279860',
+    '42huaT46279860', '45', '4627', '4627 CL76841714A', '462776841714', '4627986', '46279860',
+    '46279860 2', '46279860 76841714', '46279860 CL76841714A', '46279860+76841714',
+    '46279860-76841714', '46279860.76841714', '46279860/76841714', '462798600', '462798602',
+    '462798604', '4627986042huaT', '4627986049482f2', '462798607684', '4627986076841',
+    '46279860768417', '4627986076841714', '46279860CL76841714A', '46279860HguvSrzykt8C4qn',
+    '471033410957166695', '4715629892162122340', '48', '49', '49482F2', '49482f2',
+    '49482f2 KB46279860', '49482f202c22cb4', '49482f246279860', '5', '50', '5055176646819321620',
+    '52', '56', '5923ZEKNxUE5bKmyxhGPugnBUgXd9', '5EEYnuygRTDosd', '5EEYnuygRTDosd CL76841714A',
+    '5EEYnuygRTDosd76841714', '6', '61560787', '64', '6512eef28d514', '6897264',
+    '689726441714867', '7', '70', '71', '74', '756afa6', '76', '7684', '7684 KB46279860',
+    '7684171', '76841714', '76841714 2', '76841714 212', '76841714 46279', '76841714 46279860',
+    '76841714 KB46279860', '76841714+46279860', '76841714-46279860', '76841714.46279860',
+    '76841714/46279860', '768417140', '768417142', '76841714212', '768417142c22cb4',
+    '768417142o1S71', '7684171438', '768417144', '768417144627', '7684171446279',
+    '76841714462798', '7684171446279860', '768417145EEYnuygRTDosd', '76841714KB46279860',
+    '768446279860', '77', '79860462', '8', '80', '84', '85', '8539976169245087840', '92', '93',
+    '96', '98604627', 'CL76841714A 46279860', 'CL76841714A KB46279860', 'CL76841714A+46279860',
+    'CL76841714A-46279860', 'CL76841714A46279860', 'Cjb7bSfFfET', 'HguvSrzykt8C4qn',
+    'HguvSrzykt8C4qn KB46279860', 'HguvSrzykt8C4qn46279860', 'KB46279860 76841714',
+    'KB46279860+76841714', 'KB46279860-76841714', 'KB4627986076841714',
+    'KGPcHFn7uqAjGVsMktAN7reWDK3g15', 'LpkhZicg4vB', 'ca25dde51aa28', 'f',
+    'hex:02c22cb4049482f2', 'hex:049482f202c22cb4', 'hex:1417847660982746', 'hex:46279860',
+    'hex:4627986076841714', 'hex:60982746', 'hex:6098274614178476', 'hex:7684171446279860',
+    'hex:b42cc202', 'hex:b42cc202f2829404', 'hex:b4de7295b64c1b00', 'hex:f2829404',
+    'hex:f2829404b42cc202', 'hex:f2b622fa20711000',
+)
+
 def _already_swept():
-    """Every value serial_combine.py already runs, so nothing here is a re-run."""
+    """The frozen serial_combine overlap plus the ten literal serial constants."""
     seen = {A_D, B_D, A_STR, B_STR, A_SP, B_SP, AB, BA, A_STR + B_STR, B_STR + A_STR}
-    try:
-        import serial_combine as SC
-        mats, _keys = SC.numeric_forms()
-        for _t, m in mats:
-            seen.add(m if isinstance(m, str) else "hex:" + m.hex())
-        seen |= set(SC.string_forms())
-        nodes, _tr = SC.bfs_forms(2, 10 ** 6)
-        seen |= {v for _t, v in nodes}
-        seen |= set(SC.PASSPHRASES)
-    except Exception as e:                       # pragma: no cover
-        sys.stderr.write(f"  combo_encodings: serial_combine skip-set unavailable ({e!r}); "
-                         f"falling back to the literal constants only\n")
+    seen.update(SWEPT_BY_SERIAL_COMBINE)
     return seen
 
 
@@ -1224,9 +1264,11 @@ def selftest():
     rep("continued fraction of a/b starts [1; 1, 1, 1, 16] and reduces to 38420857/23139930",
         contfrac(a, b)[:5] == [1, 1, 1, 1, 16] and list(convergents(contfrac(a, b)))[-1] == (38420857, 23139930))
     rep("Bezout: 76841714*(-7800347) + 46279860*12951466 = 2", a * -7800347 + b * 12951466 == 2)
-    # --- the built forms (rebuilt from scratch so the timing is honest)
+    # --- the built forms, rebuilt with the module-level caches (forms cache AND the
+    # 77 MB prime sieve) cleared, so the timing below is a cold forms() build; only
+    # sys.modules stays warm, and the import itself is separately ~0.02 s.
     global _CACHE
-    _CACHE = None
+    _CACHE = None; _PI_CACHE.clear()
     t0 = time.time(); F = forms(); dt = time.time() - t0
     D = dict(F); V = set(D.values())
     rep(f"{len(F):,} forms built in {dt:.1f}s (<= 20,000, < 30 s)", 0 < len(F) <= 20000 and dt < 30)
@@ -1281,8 +1323,12 @@ def selftest():
         got = D.get(tag)
         rep(f"{tag} == {want[:48]!r}" + ("  [already swept by serial_combine, omitted]" if got is None and want in _SKIP else ""),
             got == want or (got is None and want in _SKIP))
-    rep("the skip set really came from serial_combine (holds a+b and a BFS node)",
-        "123121574" in _SKIP and "7684171438" in _SKIP and len(_SKIP) > 5000)
+    rep("frozen skip list: 199 unique non-empty literals, holds a+b, a BFS node and the hex reading",
+        len(SWEPT_BY_SERIAL_COMBINE) == 199 == len(set(SWEPT_BY_SERIAL_COMBINE))
+        and all(SWEPT_BY_SERIAL_COMBINE) and {"123121574", "7684171438", "49482f2"} <= _SKIP)
+    rep("no runtime import of serial_combine / clue_serial / index_oracle / continuous_solver",
+        not any(m in sys.modules for m in ("serial_combine", "clue_serial", "index_oracle", "continuous_solver"))
+        or __name__ != "__main__")
     for gone in ("123121574", "7684171446279860", "76841714", "1988564756", "49482f2",
                  "CL76841714A KB46279860", "7466824719781640", "2001 76841714"):
         rep(f"omits already-swept {gone!r}", gone not in V)

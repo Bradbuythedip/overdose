@@ -23,9 +23,10 @@ token is paired with its own note's digits and full serial (joins "", " ", "-", 
 lower-cased no-space brainwallet form) and with CL76841714AKB46279860; pair tokens with the
 joined serials in both orders. OMITS, because already swept: the bare series years, district
 names / numbers and the $100 / Franklin / In God We Trust / Federal Reserve Note / Independence
-Hall vocabulary x the six digit-forms (serial_combine.string_forms -- that vocabulary is
-snapshotted below as SC_WORDS and those exact pairings are skipped statically, without
-importing that module); every signatory-name variant and every legend x the CL serial / its
+Hall vocabulary x the six digit-forms, the clue words x the pair, the bare serial-part pairs
+and its explicit combos (serial_combine.string_forms -- those lists are snapshotted below as
+SC_* and the exact strings they produce are dropped statically, without importing that
+module); every signatory-name variant and every legend x the CL serial / its
 digits / L12 / 2001 (note_signatures); KB46279860 + a suffix letter and the page-72 text
 (page72); reversal / rot180 / mirror of each serial alone (mirror_serial, serial2_exhaust);
 numeric arithmetic on the serials and the BFS closure (serial_combine). Dropped after review as
@@ -87,13 +88,17 @@ SC_CLUE_FORMS = (AB_D, A_D + " " + B_D, AB_S, A_STR + " " + B_STR, BA_D, BA_S)
 SC_PARTS_A = (A_STR, A_D, A_L + A_D, A_D + A_S, A_SP, A_DIST + A_D, A_D + A_DIST)
 SC_PARTS_B = (B_STR, B_D, B_SP, B_L)
 SC_SEPS = ("", " ", "-", "/", "\n", "_", ".", ",", "|", "+")
+SC_COMBOS = ("2001 76841714 2006 46279860", "12 76841714 2 46279860",
+             "C 2001 L 12 76841714 A K 2006 B 2 46279860", "L 76841714 A B 46279860",
+             "CL 76841714 A KB 46279860", "76841714 2001 46279860 2006", "76841714 12 46279860 2",
+             "200176841714200646279860", "1276841714246279860", "20017684171420062006A46279860",
+             "CL76841714A 2001 L12 KB46279860 2006A B2")
 
 
 def _sc_snapshot():
-    S = set()
+    S = set(SC_WORDS) | set(SC_COMBOS)
     for words, ds in ((SC_WORDS, SC_FORMS), (SC_CLUES, SC_CLUE_FORMS)):
         for w in words:
-            S.add(w)
             for d in ds:
                 for jn in ("", " "):
                     S.add(w + jn + d); S.add(d + jn + w)

@@ -667,6 +667,7 @@ def main():
     ap.add_argument("--loop", action="store_true", help="widen discovery depth to 4")
     ap.add_argument("--no-heavy", action="store_true", help="skip WarpWallet scrypt 2^18")
     ap.add_argument("--plugin-glob", default="combo_*.py", help="which plugin modules to sweep")
+    ap.add_argument("--force-hd", action="store_true", help="HD seeds x 72 paths on plugin text even above 8000 forms")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     log = lambda m: (sys.stderr.write(m), sys.stderr.flush())
@@ -712,7 +713,7 @@ def main():
     if "plugins" in fams:
         P = plugin_forms(log, a.plugin_glob)
         n_plain = sum(1 for _t, v in P if not (isinstance(v, str) and v.startswith(("mn:", "hex:", "path:"))))
-        do_hd = n_plain <= 8000
+        do_hd = n_plain <= 8000 or a.force_hd
         log(f"  plugins: {len(P):,} forms ({n_plain:,} plain text); HD seeds x 72 paths on plain text "
             f"{'ON' if do_hd else 'OFF (>8000 plain forms; direct hashes only)'}\n")
         path_seeds = None
