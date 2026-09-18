@@ -21,6 +21,11 @@ usage: ./run.sh <command> [args]
   sigreuse <rawtxhex>.. recover a key from ECDSA nonce reuse across given txs
   snowflake <tweetid>.. date a tweet from its ID (offline)
   lowentropy            test the low-entropy key-value space vs the tx addresses
+  everused-build        download + index EVERY address ever used (~10GB, one-off)
+                        closes the swept-key blind spot: the balance index only
+                        sees addresses that still hold coins
+  resweep               re-run the derivations against the ever-used oracle
+  qr [glob]             barcode/QR/DataMatrix hunt (default: the 400dpi renders)
   ideas <file> [--hd]   YOUR phrases (one per line) -> addresses -> "ever funded" (\$ESPLORA)
   control <text.txt>    run the Issue-24 device battery on a sibling Keiser column
   combine               the two serials combined every way vs the local oracle (slow)
@@ -40,6 +45,14 @@ case "$cmd" in
   sigreuse)   for t in "$@"; do "$P" sig_reuse.py --tx "$t"; done ;;
   snowflake)  exec "$P" snowflake.py "$@" ;;
   lowentropy) exec "$P" lowentropy.py --max-int "${1:-3000000}" ;;
+  everused-build)
+              exec "$P" everused.py --build "$@" ;;
+  resweep)    [ -f /tmp/everused/manifest.txt ] || {
+                echo "no ever-used index yet -- run ./run.sh everused-build first" >&2; exit 1; }
+              export OVERDOSE_ORACLE=everused
+              exec "$P" serial_combine.py --families plugins \
+                   --plugin-glob "${1:-reading_*.py}" --force-hd ;;
+  qr)         exec "$P" qr_hunt.py --images "${1:-hires/p7[3-9]_400dpi.png}" ;;
   ideas)      f="${1:?phrase file}"; shift || true
               "$P" ideas.py --phrases "$f" --out ideas_addrs.txt "$@"
               exec "$P" everfunded.py --addresses ideas_addrs.txt \
@@ -47,7 +60,7 @@ case "$cmd" in
   control)    exec "$P" control_corpus.py --text "${1:?plain-text file of the column}" ;;
   combine)    exec "$P" serial_combine.py --loop ;;
   selftest)   for m in trace claim_check everfunded shortlist_everfunded \
-                        sig_reuse snowflake lowentropy decoys ideas control_corpus serial_combine; do
+                        sig_reuse snowflake lowentropy decoys ideas control_corpus serial_combine everused; do
                 echo "== $m"; "$P" "$m.py" --selftest 2>&1 | tail -1; done ;;
   *)          usage; exit 1 ;;
 esac

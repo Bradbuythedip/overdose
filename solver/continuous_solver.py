@@ -46,6 +46,7 @@ from solver_ledger import Ledger
 INDEX = "index56m"
 CHECKSUM = "serial_checksum"
 RICHLIST = "richlist1m"
+EVERUSED = "everused"
 
 
 # ---------------------------------------------------------------- oracles
@@ -61,6 +62,29 @@ class IndexOracle:
         self.ready = False
         self.why = ""
         self.name = INDEX
+
+        # STRONGEST TIER: "was this address EVER used". The balance index below
+        # is a UTXO snapshot, so an address funded and later SWEPT is absent
+        # from it -- which STATUS.md calls "the most likely history of all" for
+        # a magazine-printed key. Opt in with OVERDOSE_ORACLE=everused so an
+        # existing run's oracle never changes underneath it; a null from this
+        # tier answers a strictly larger question and says so in .name/.why.
+        if os.environ.get("OVERDOSE_ORACLE", "").lower() == "everused":
+            try:
+                from everused import EverUsed, DEFAULT_DIR
+                e = EverUsed(os.environ.get("EVERUSED_DIR", DEFAULT_DIR))
+                if e.ready and e.control():
+                    self.o = e
+                    self.ready = True
+                    self.name = EVERUSED
+                    self.why = ("answers 'was this address ever used', not "
+                                "'does it hold coins now': " + e.why)
+                    return
+                self.why = (f"everused requested but unusable: "
+                            f"{e.why if not e.ready else 'control failed'}; ")
+            except Exception as ex:
+                self.why = f"everused requested but unavailable: {ex!r}; "
+
         try:
             from index_oracle import Oracle, MAP
             if os.path.exists(MAP):
