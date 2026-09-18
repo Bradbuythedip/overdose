@@ -27,6 +27,9 @@ usage: ./run.sh <command> [args]
   resweep               re-run the 12 phrase corpora against the ever-used oracle
   resweep-plugins       same, for the reading_*/combo_* plugins
   qr [glob]             barcode/QR/DataMatrix hunt (default: the 400dpi renders)
+  musset <file.pdf>     Sand/Musset on PRINTED line breaks (the open literary
+                        test): reads the pamphlet, prints the readings, hashes
+                        NOTHING unless one opens as an English command
   ideas <file> [--hd]   YOUR phrases (one per line) -> addresses -> "ever funded" (\$ESPLORA)
   control <text.txt>    run the Issue-24 device battery on a sibling Keiser column
   combine               the two serials combined every way vs the local oracle (slow)
@@ -56,6 +59,9 @@ case "$cmd" in
               exec "$P" serial_combine.py --families plugins \
                    --plugin-glob "${1:-reading_*.py}" --force-hd ;;
   qr)         exec "$P" qr_hunt.py --images "${1:-hires/p7[3-9]_400dpi.png}" ;;
+  musset)     f="${1:?a PDF or line-faithful text of the column}"; shift || true
+              case "$f" in *.pdf|*.PDF) exec "$P" print_musset.py --pdf "$f" "$@" ;;
+                           *) exec "$P" print_musset.py --text "$f" "$@" ;; esac ;;
   ideas)      f="${1:?phrase file}"; shift || true
               "$P" ideas.py --phrases "$f" --out ideas_addrs.txt "$@"
               exec "$P" everfunded.py --addresses ideas_addrs.txt \
@@ -63,7 +69,7 @@ case "$cmd" in
   control)    exec "$P" control_corpus.py --text "${1:?plain-text file of the column}" ;;
   combine)    exec "$P" serial_combine.py --loop ;;
   selftest)   for m in trace claim_check everfunded shortlist_everfunded \
-                        sig_reuse snowflake lowentropy decoys ideas control_corpus serial_combine everused; do
+                        sig_reuse snowflake lowentropy decoys ideas control_corpus serial_combine everused print_musset; do
                 echo "== $m"; "$P" "$m.py" --selftest 2>&1 | tail -1; done ;;
   *)          usage; exit 1 ;;
 esac
