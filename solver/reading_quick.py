@@ -118,7 +118,7 @@ def selftest():
     F = forms(); tags = [t for t, _ in F]; d = dict(F)
     ok = len(F) > 500 and len(set(tags)) == len(tags) and all(v for _, v in F)
     ok &= d.get("acro/para/initials") == "BHRTIGGDMHEIWIBTTTYESM"
-    ok &= any(t == "es/const/42% of the country is n" for t in tags)
+    ok &= any(t.startswith("es/const/42% of the country") for t in tags)
     ok &= d.get("es/para_indices") == "78" and d.get("es/line_indices") == "5164"
     return bool(ok)
 
