@@ -212,6 +212,17 @@ def selftest():
     sys.stderr.write(f"  candidate #1 flagged from repo data ({len(f)} known "
                      f"addrs): {'OK' if '1BX2qZ9y1Db8SpRKjeViUhjuadWtL4X29t' in f else 'FAIL'}\n")
     sys.stderr.write("  SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
+    class _Fake:
+        def tx(self, txid):
+            return {"vin": [{"prevout": None, "is_coinbase": True}, {"prevout": {"scriptpubkey_address": "1A"}}],
+                    "vout": [{"scriptpubkey_address": "1B", "value": 1}]}
+    try:
+        ins, outs = input_addrs(_Fake(), "x")
+        good = ins == ["1A"] and outs == [("1B", 1)]
+    except Exception:
+        good = False
+    ok &= good
+    sys.stderr.write(f"  a coinbase input (prevout: null) is skipped, not a crash: {'OK' if good else 'FAIL'}\n")
     return ok
 
 
@@ -219,7 +230,9 @@ def input_addrs(chain, txid):
     t = chain.tx(txid)
     if not t:
         return [], []
-    ins = [vin.get("prevout", {}).get("scriptpubkey_address")
+    # Esplora returns "prevout": null (not a missing key) on coinbase inputs,
+    # which the crawl reaches once it is deep enough -- treat null as {}.
+    ins = [(vin.get("prevout") or {}).get("scriptpubkey_address")
            for vin in t.get("vin", [])]
     outs = [(vo.get("scriptpubkey_address"), vo.get("value", 0))
             for vo in t.get("vout", [])]
