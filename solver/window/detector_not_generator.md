@@ -98,3 +98,32 @@ have seen. It does not touch the branch that no chain oracle can ever reach --
 remains the only test. An ever-used hit on a drained address would be evidence
 that the puzzle had a solution and somebody took it. That is a result, not a
 payday, and it should be written up as one.
+
+## Base rate measured: it is zero, and that corrects my earlier warning
+
+A 30-file ever-used index was built here from a reachable mirror
+(`raw.githubusercontent.com/Qalander/bitcoin-all-addresses`): **80,305,062
+addresses ever used**, horizon 2021-01-17, control passing (the swept
+brainwallet present here, absent from `address_map.bin`).
+
+Its horizon predates the article's publication, so it CANNOT contain the prize.
+What it can do is measure the false-alarm rate, and that number was unknown:
+
+```
+6,429 article phrases (lines, sentences, paragraphs, 2-6-grams)
+  -> 225,015 addresses
+  -> 0 ever-used hits
+```
+
+**I predicted "tens to a few thousand hits, dominated by generic phrases".
+For this corpus that was wrong, and the measurement says so.** The reason is
+already in `window/swept_key_untested.md`: brainwallet crackers walk
+dictionaries and famous quotes, not arbitrary multi-word spans of arbitrary
+prose. Of the ~25 distinct ever-funded phrases that pass had found, 23 were
+single words. The article is 0.6% single words; a generic corpus is 24%.
+
+The consequence is favourable and worth stating plainly: **for article-derived
+phrases the noise floor is zero, so in the user's full-horizon run any hit is
+signal rather than something to be triaged away.** The triage ladder still
+applies to what a hit means, but the expectation of drowning in false alarms
+was unfounded.
