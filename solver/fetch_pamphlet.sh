@@ -7,6 +7,7 @@
 # bot-check and you need a browser -- see the instructions it prints.
 #
 #   ./fetch_pamphlet.sh                     # Buy Love, Sell Fear
+#   ./fetch_pamphlet.sh --inspect           # what does the page actually offer?
 #   ./fetch_pamphlet.sh <url> <outfile>     # any direct URL you find
 set -uo pipefail
 cd "$(dirname "$0")"
@@ -24,6 +25,30 @@ try () {  # url outfile
   if is_pdf "$2.part"; then mv "$2.part" "$2"; return 0; fi
   rm -f "$2.part"; return 1
 }
+
+if [ "${1:-}" = "--inspect" ]; then
+  echo "== saving the article page and listing everything that could be the print edition"
+  curl -sSL --compressed -A "$UA" --max-time 90 "$ART" -o article_page.html
+  echo "  saved article_page.html ($(wc -c < article_page.html) bytes)"
+  echo
+  echo "-- any .pdf anywhere in the HTML:"
+  grep -oiE '[^"'"'"' (]+\.pdf' article_page.html | sort -u | head -20 || echo "   none"
+  echo
+  echo "-- iframes / embedded viewers (issuu, flipbook, scribd, drive, yumpu):"
+  grep -oiE '<iframe[^>]+src="[^"]+"' article_page.html | head -10 || true
+  grep -oiE 'https?://[^"'"'"' ]*(issuu|flipbook|scribd|yumpu|drive\.google|dropbox|calameo)[^"'"'"' ]*' article_page.html | sort -u | head -10 || echo "   none"
+  echo
+  echo "-- links whose text or href mentions download / print / issue / pdf:"
+  grep -oiE '<a[^>]+href="[^"]+"[^>]*>[^<]{0,60}' article_page.html \
+    | grep -iE 'download|print|issue|pdf|magazine/[0-9]|store' | sort -u | head -20 || echo "   none"
+  echo
+  echo "-- og:image / cover art (a print facsimile often ships as page images):"
+  grep -oiE '<meta[^>]+(og:image|twitter:image)[^>]+>' article_page.html | head -5 || true
+  echo
+  echo "  Send me the output above. If there is no PDF and no viewer, this"
+  echo "  column has no print edition online and test B cannot run on it."
+  exit 0
+fi
 
 if [ $# -ge 1 ]; then
   echo "== direct URL"
