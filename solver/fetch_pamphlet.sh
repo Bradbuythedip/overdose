@@ -14,6 +14,10 @@ cd "$(dirname "$0")"
 
 UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
 ART="https://bitcoinmagazine.com/print/buy-love-sell-fear-bitcoin-magazine-withdrawal-issue"
+# Found by --inspect on the article page: the "download" link does not point at
+# a PDF on the magazine's host, it points at a Mailchimp landing page.
+DL="https://mailchi.mp/bitcoinmagazine.com/buylovesellfear"
+PREVIEW="https://bitcoinmagazine.com/wp-content/uploads/2024/11/keiser_preview.jpg"
 OUT="${2:-buy_love_sell_fear.pdf}"
 
 is_pdf () { [ -s "$1" ] && [ "$(head -c 5 "$1")" = "%PDF-" ]; }
@@ -27,8 +31,9 @@ try () {  # url outfile
 }
 
 if [ "${1:-}" = "--inspect" ]; then
-  echo "== saving the article page and listing everything that could be the print edition"
-  curl -sSL --compressed -A "$UA" --max-time 90 "$ART" -o article_page.html
+  TARGET="${2:-$ART}"
+  echo "== saving $TARGET and listing everything that could be the print edition"
+  curl -sSL --compressed -A "$UA" --max-time 90 "$TARGET" -o article_page.html
   echo "  saved article_page.html ($(wc -c < article_page.html) bytes)"
   echo
   echo "-- any .pdf anywhere in the HTML:"
@@ -56,6 +61,35 @@ if [ $# -ge 1 ]; then
   echo "  that URL did not return a PDF"; exit 1
 fi
 
+echo "== 0. the download landing page found on the article"
+if curl -sSL --compressed -A "$UA" --max-time 90 "$DL" -o dl_page.html 2>/dev/null; then
+  echo "  fetched $DL ($(wc -c < dl_page.html) bytes)"
+  grep -oiE 'https?://[^"'"'"' )]+\.pdf' dl_page.html | sort -u > /tmp/dl_pdfs.txt || true
+  if [ -s /tmp/dl_pdfs.txt ]; then
+    echo "  PDF link(s) on the download page:"; cat /tmp/dl_pdfs.txt
+    while read -r u; do try "$u" "$OUT" && { echo "  OK -> $OUT ($(wc -c < "$OUT") bytes)"; exit 0; }; done < /tmp/dl_pdfs.txt
+  else
+    echo "  no direct .pdf on the download page (it is probably an email form)."
+    echo "  Inspect it yourself:  ./fetch_pamphlet.sh --inspect '$DL'"
+    echo "  If it asks for an email, submit one -- the PDF arrives by mail."
+  fi
+else
+  echo "  could not fetch the download page"
+fi
+
+echo
+echo "== 0b. the print preview image (may show the printed column itself)"
+if curl -sSL --compressed -A "$UA" --max-time 90 "$PREVIEW" -o keiser_preview.jpg 2>/dev/null \
+   && [ -s keiser_preview.jpg ]; then
+  echo "  saved keiser_preview.jpg ($(wc -c < keiser_preview.jpg) bytes) -- open it:"
+  echo "  if it shows the PRINTED column, its line breaks are the ones the test needs,"
+  echo "  and a careful transcription of them feeds ./run.sh musset <file>.txt"
+else
+  rm -f keiser_preview.jpg
+  echo "  preview not fetched"
+fi
+
+echo
 echo "== 1. looking for a PDF link on the article page"
 PAGE=$(curl -sSL --compressed -A "$UA" --max-time 90 "$ART" 2>/dev/null || true)
 if [ -n "$PAGE" ]; then
