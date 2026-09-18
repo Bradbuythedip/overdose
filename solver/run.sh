@@ -24,7 +24,8 @@ usage: ./run.sh <command> [args]
   everused-build        download + index EVERY address ever used (~10GB, one-off)
                         closes the swept-key blind spot: the balance index only
                         sees addresses that still hold coins
-  resweep               re-run the derivations against the ever-used oracle
+  resweep               re-run the 12 phrase corpora against the ever-used oracle
+  resweep-plugins       same, for the reading_*/combo_* plugins
   qr [glob]             barcode/QR/DataMatrix hunt (default: the 400dpi renders)
   ideas <file> [--hd]   YOUR phrases (one per line) -> addresses -> "ever funded" (\$ESPLORA)
   control <text.txt>    run the Issue-24 device battery on a sibling Keiser column
@@ -47,7 +48,9 @@ case "$cmd" in
   lowentropy) exec "$P" lowentropy.py --max-int "${1:-3000000}" ;;
   everused-build)
               exec "$P" everused.py --build "$@" ;;
-  resweep)    [ -f /tmp/everused/manifest.txt ] || {
+  resweep)    exec ./resweep.sh "$@" ;;
+  resweep-plugins)
+              [ -f "${OVERDOSE_EVERUSED:-/tmp/everused}/manifest.txt" ] || {
                 echo "no ever-used index yet -- run ./run.sh everused-build first" >&2; exit 1; }
               export OVERDOSE_ORACLE=everused
               exec "$P" serial_combine.py --families plugins \

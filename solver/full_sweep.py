@@ -143,8 +143,14 @@ def selftest(oracle):
     for j, a in enumerate(known):
         good = j in hits
         ok &= good
-        sys.stderr.write(f"      {a[:26]:26} "
-                         f"{f'{hits[j]/1e8:.4f} BTC OK' if good else 'FAIL'}\n")
+        # An ever-used oracle answers presence and returns None, so the value
+        # must never be divided or formatted as a number here.
+        if good:
+            v = hits[j]
+            shown = "PRESENT OK" if v is None else f"{v/1e8:.4f} BTC OK"
+        else:
+            shown = "FAIL"
+        sys.stderr.write(f"      {a[:26]:26} {shown}\n")
 
     sys.stderr.write("SELFTEST " + ("PASS\n" if ok else "FAIL\n"))
     return ok
@@ -162,6 +168,13 @@ def main():
                     help="score against the HISTORICAL ever-funded index instead "
                          "of current balances — finds a key whose coins were "
                          "already swept, which the current-balance index cannot")
+    ap.add_argument("--everused", action="store_true",
+                    help="score against the EVER-USED set: every address that "
+                         "has appeared on chain, funded or swept. This is the "
+                         "blind spot -- a balance index cannot see a key that "
+                         "was funded and later emptied, which STATUS.md calls "
+                         "the most likely history for a printed key")
+    ap.add_argument("--everused-dir", default=None)
     a = ap.parse_args()
 
     oracle = Oracle(verbose=True)
@@ -173,6 +186,23 @@ def main():
         sys.stderr.write(f"HISTORICAL MODE: scoring against {len(hist):,} "
                          f"addresses funded as of Apr 2023\n")
         oracle = hist
+    if a.everused:
+        # The balance oracle stays constructed above so its selftest still
+        # runs; we then REPLACE it, and refuse rather than silently falling
+        # back, because a null reported under this flag must answer the
+        # question the flag names.
+        from everused import EverUsed, DEFAULT_DIR
+        ev = EverUsed(a.everused_dir or DEFAULT_DIR)
+        if not ev.ready:
+            sys.exit(f"--everused requested but no usable index: {ev.why}\n"
+                     f"build it first:  python3 everused.py --build")
+        if not ev.control():
+            sys.exit("--everused index failed its control (a known swept "
+                     "address is not in it); a null would be void")
+        sys.stderr.write(f"EVER-USED MODE: {ev.why}\n"
+                         f"  this answers 'did this address ever appear on "
+                         f"chain', NOT 'does it hold coins'\n")
+        oracle = ev
 
     if a.selftest:
         sys.exit(0 if selftest(oracle) else 1)
@@ -184,8 +214,10 @@ def main():
     paths = [] if a.direct_only else build_paths()
     phrases = [l.rstrip("\n") for l in open(a.phrases, encoding="utf-8", errors="replace")]
     phrases = [p for p in phrases if p.strip()]
+    noun = "ever-used" if getattr(oracle, "name", "") == "everused" else "funded"
     sys.stderr.write(f"\n{len(phrases):,} phrases x {len(paths) or 1} paths "
-                     f"-> sweeping against {oracle.n:,} funded addresses\n\n")
+                     f"-> sweeping against {oracle.n:,} {noun} addresses "
+                     f"[{getattr(oracle, 'name', 'index56m')}]\n\n")
 
     out = open(a.out, "w")
     out.write("phrase\tderivation\tscript_type\tbalance_sats\tbalance_btc\n")
@@ -201,10 +233,15 @@ def main():
         for j, bal in oracle.contains_spks(spks):
             ph, dv, st = meta[j]
             n_hit += 1
-            out.write(f"{ph}\t{dv}\t{st}\t{bal}\t{bal/1e8:.8f}\n")
+            # bal is None under the ever-used oracle: presence, no amount.
+            # Never format it as a number -- "0.00000000 BTC" would read as an
+            # empty address and "-1 sats" as a negative balance.
+            shown = ("PRESENT (ever-used; no balance in this oracle)"
+                     if bal is None else f"{bal/1e8:.8f} BTC")
+            out.write(f"{ph}\t{dv}\t{st}\t{bal}\t{shown}\n")
             out.flush()
-            sys.stderr.write(f"\n*** HIT  {bal/1e8:.8f} BTC  {st}  "
-                             f"{dv}  phrase={ph!r}\n\n")
+            sys.stderr.write(f"\n*** {getattr(oracle, 'name', 'INDEX')} HIT  "
+                             f"{shown}  {st}  {dv}  phrase={ph!r}\n\n")
             sys.stderr.flush()
         meta, spks = [], []
 
