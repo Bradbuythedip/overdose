@@ -31,8 +31,8 @@ def forms():
         if v: out.append((t, v))
     for d in DIGITS:
         add(f"d/{d}", d)
-        for f in FRAME:
-            add(f"d/{d}/frame_after", f + " " + d); add(f"d/{d}/frame_before", d + " " + f); add(f"d/{d}/frame_in", f.replace(" X", f" {d} X", 1) if " X" in f else f + d)
+        for fi, f in enumerate(FRAME):
+            add(f"d/{d}/f{fi}/after", f + " " + d); add(f"d/{d}/f{fi}/before", d + " " + f); add(f"d/{d}/f{fi}/in", f.replace(" X", f" {d} X", 1) if " X" in f else f + d)
         add(f"d/{d}/quote", Q + " " + d); add(f"d/{d}/quote_before", d + " " + Q); add(f"d/{d}/love", "love " + d); add(f"d/{d}/love2", d + " love")
         add(f"d/{d}/nospace", d.replace(" ", ""))
     # pointers
