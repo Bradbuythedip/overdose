@@ -521,8 +521,10 @@ class Sweep:
             self.meta.append(f"{tag}|{st}"); self.spks.append(spk); self.n += 1
         if len(self.spks) >= 50000: self.flush()
 
-    def material(self, tag, s):
-        checked = False
+    def material(self, tag, s, skip_mn=False):
+        """skip_mn: the text is a mnemonic this sweep CONSTRUCTED from entropy;
+        its checksum is valid by construction and must not be counted as a find."""
+        checked = skip_mn
         if isinstance(s, str) and s.startswith("mn:"):
             try:
                 _, lang, phrase = s.split(":", 2)
@@ -569,7 +571,7 @@ class Sweep:
         mn = self.MNE.to_mnemonic(e)
         for pw in passphrases:
             self.seed(f"{tag}|mn|pw={pw!r}", Mnemonic.to_seed(mn, pw))
-        self.material(f"{tag}|mnemonic_as_text", mn)
+        self.material(f"{tag}|mnemonic_as_text", mn, skip_mn=True)
 
     def mnemonic_words(self, tag, ws, lang="english"):
         M = self.MN.get(lang)
