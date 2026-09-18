@@ -172,6 +172,12 @@ to discovery depth 4: null. Clue x serial n-grams to 10: null.
   the signature, the pistol pose) are as described.
 - The forced-HD wallet-format run finished: 112.0M scripts, 0 hits, 613 valid
   mnemonics vs 646.6 expected.
+- **The three-language wordlist run (`reading_lang.py`) finished**: 536,512,200
+  scripts from 21,460,488 keys, 0 index hits, 0 checksum-valid WIF, 1,624
+  checksum-valid mnemonics vs 1,590.6 expected (13,842 candidates in each of
+  English, Spanish, French, Italian): exactly chance. This was the last open
+  sweep. The container restarted shortly after; only waiter shells were lost,
+  every result was already on disk.
 
 ## Where this leaves the column
 
