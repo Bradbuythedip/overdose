@@ -88,6 +88,20 @@ of all. See `window/the_oracle_blind_spot.md`.
 Plus ~2.6M from the earlier big-corpus sweep. **Roughly 69M derived addresses,
 zero funded.**
 
+> **2026-09-18 — READ `window/final_assessment.md` BEFORE QUOTING ANY NUMBER HERE.**
+> The table above is the only auditable derivation count in the repo: it sums to
+> exactly **67,031,575** addresses over 485,606 phrases, plus ~2.6M, so **~69M**.
+> The 100M / 150M / 350M figures elsewhere in this repo and in `PREMISE.md`,
+> `SOLVE_PROMPT.md` and `window/clue_ledger.md` are unaudited prose estimates.
+>
+> More importantly, every null in this table was scored by a **balance
+> snapshot**, so none of them rules out a key that was funded and later swept —
+> which this file itself calls the most likely history for a printed key.
+> `everused.py` now closes that blind spot; its control *discriminates* the two
+> oracles (a swept brainwallet is present in it and absent from
+> `address_map.bin`), and the measured false-alarm rate for article-derived
+> phrases is **zero**, so in a full-horizon run any hit is signal.
+
 ## What was corrected this session
 
 1. **The exactly-20-BTC pool is 962, not 212.** Measured directly rather than
