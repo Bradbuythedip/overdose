@@ -78,3 +78,5 @@ solver/trace_cache.jsonl
 solver/tx_targetsweep.out
 # regenerable
 solver/lowentropy.out
+# regenerable
+solver/clue_serial.out
