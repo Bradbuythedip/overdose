@@ -21,13 +21,13 @@ get "https://mcusercontent.com/1c17effa0923c7e916d862f99/images/df5fd5fb-5153-5e
 [ -f keiser_preview.jpg ] && cp -f keiser_preview.jpg previews/ 2>/dev/null
 
 echo
-echo "== committing so the solver can read them"
-git add -f previews/*.jpg 2>/dev/null
-if git diff --cached --quiet; then
-  echo "  nothing new to commit"
-else
-  git commit -q -m "previews: print-preview images of Buy Love, Sell Fear for line-break inspection"
-  for i in 1 2 3 4 5; do git push -u origin master 2>&1 | tail -1 && break; sleep $((2**i)); done
-fi
+echo "== getting them to the solver"
+echo "  Files are in: $(pwd)/previews/"
+ls -l previews/*.jpg 2>/dev/null | sed 's/^/    /'
 echo
-echo "  Done. Tell the solver to pull and look at previews/."
+echo "  SIMPLEST: attach those files directly in the chat. No git needed."
+echo
+echo "  Only if you would rather push them (needs a GitHub token configured):"
+echo "    git add -f previews/*.jpg && git commit -m 'print previews' && git push origin master"
+echo "  If push asks for a username, you have no credentials set -- use the"
+echo "  attach route instead; it is faster and needs nothing."
