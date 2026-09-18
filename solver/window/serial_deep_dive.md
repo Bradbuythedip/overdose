@@ -41,9 +41,10 @@ what remains running. Nothing here is a hit; every null carried its control.
 | every clue x both serials, n-grams to 10 | clue_serial.py | 58.6M+ scripts/round | rounds 6-8 null; 9-10 running |
 | **both serials combined**: arithmetic, interleave, digit-wise ops, letters+banknote meaning, 128-bit entropy readings, HMAC/PBKDF2/scrypt/WarpWallet pairings, text-index, transform closure | serial_combine.py | 10^8 scripts | families 1-5 null; discovery depths 2-4 running |
 | the two notes as **Key A / Key B of a multisig** (1-of-2, 2-of-2, 2-of-3 with a clue key; P2SH/P2WSH/P2SH-P2WSH; c/u; sorted) | serial_cipher.py | 3,744 scripts | **null, planted control found** |
-| serial as **ciphertext**: base58 (CL76841714A is valid base58; KB46279860 is not), base36/62, Roman CL=150, Salvadoran formats (+503 mobile, DUI check digit 5 for both, IPv4), digit-wise Caesar/Vigenere with clue key streams, elements, ordinal sat names | serial_cipher.py forms | 501 forms x HD | running |
+| serial as **ciphertext**: base58 (CL76841714A is valid base58; KB46279860 is not), base36/62, Roman CL=150, Salvadoran formats (+503 mobile, DUI check digit 5 for both, IPv4), digit-wise Caesar/Vigenere with clue key streams, elements, ordinal sat names | serial_cipher.py forms | 501 forms x HD = 4.87M scripts | **null** (its '25 checksum-valid mnemonics' were mnemonics the pipeline itself built from 32-byte decodings, valid by construction; fixed in 31f7844b) |
 | the clue **languages' wordlists** (Spanish / French / Italian) over every index sequence incl. serial digit groupings | reading_lang.py | 55,368 mnemonic candidates | running |
-| KB suffix letter, all 24 | reading_kb_suffix.py | 912 forms | null |
+| KB suffix letter, all 24 | reading_kb_suffix.py | 912 forms, 8.4M scripts | null |
+| author-controlled channels: acrostics, first/last words per unit, rule-picked BIP-39 words as every 12-24 word window, 'El Salvador' as a position marker (lines 51/64, paragraphs 7/8) | reading_quick.py | 3,788 forms, 36.2M scripts | null; 91 checksum-valid windows vs 90.9 expected by chance over all window sizes -- exactly chance |
 | critics' plugins: numismatic, wallet-format, setter, encodings | combo_*.py | ~32k forms | verified, sweep pending |
 
 ## 3. What this means
