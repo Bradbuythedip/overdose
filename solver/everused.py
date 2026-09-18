@@ -98,28 +98,78 @@ class BucketWriter:
             self.fh[b].close()
 
 
-def open_source(path_or_url):
-    """A text stream over the address dump. Local file or http(s) URL."""
+HEADERS = {"recipient", "address", "addresses"}   # dump column headers, not data
+
+
+def split_names(n):
+    """xaa, xab, ... -- the conventional split(1) naming these dumps use."""
+    import string
+    out = []
+    for a in string.ascii_lowercase:
+        for b in string.ascii_lowercase:
+            out.append(f"x{a}{b}")
+            if len(out) >= n:
+                return out
+    return out
+
+
+def _one_stream(path_or_url):
     if path_or_url.startswith(("http://", "https://")):
         import urllib.request
-        r = urllib.request.urlopen(path_or_url)
-        return gzip.open(r, "rt", encoding="utf-8", errors="replace"), True
+        req = urllib.request.Request(
+            path_or_url, headers={"User-Agent": "overdose-everused/1"})
+        r = urllib.request.urlopen(req, timeout=120)
+        if path_or_url.endswith(".gz"):
+            return gzip.open(r, "rt", encoding="utf-8", errors="replace")
+        import io
+        return io.TextIOWrapper(r, encoding="utf-8", errors="replace")
     if path_or_url.endswith(".gz"):
-        return gzip.open(path_or_url, "rt", encoding="utf-8",
-                         errors="replace"), False
-    return open(path_or_url, "rt", encoding="utf-8", errors="replace"), False
+        return gzip.open(path_or_url, "rt", encoding="utf-8", errors="replace")
+    return open(path_or_url, "rt", encoding="utf-8", errors="replace")
+
+
+def open_source(spec):
+    """A line iterator over one dump, or over a list of split files.
+
+    `spec` is a path, a URL, or 'BASEURL#N' meaning the first N split files
+    (xaa, xab, ...) under BASEURL -- the layout the blockchair-derived
+    'all addresses ever used' mirrors publish. Reading them in sequence is
+    equivalent to reading one concatenated dump."""
+    if "#" in spec and spec.startswith(("http://", "https://")):
+        base, _, n = spec.partition("#")
+        names = split_names(int(n))
+
+        def gen():
+            for i, nm in enumerate(names, 1):
+                url = f"{base.rstrip('/')}/{nm}"
+                try:
+                    st = _one_stream(url)
+                except Exception as e:
+                    sys.stderr.write(f"\n  [{i}/{len(names)}] {nm}: {e!r} -- "
+                                     f"stopping; the index covers {i-1} files\n")
+                    return
+                sys.stderr.write(f"\n  [{i}/{len(names)}] {nm}\n")
+                with st:
+                    for line in st:
+                        yield line
+        return gen()
+    st = _one_stream(spec)
+    return st
 
 
 def build(source, outdir, limit=0, log=sys.stderr.write):
     """Stream the dump into 256 raw buckets, then sort each in place."""
-    stream, streaming = open_source(source)
+    stream = open_source(source)
     w = BucketWriter(outdir)
-    bad, blank, t0 = [], 0, time.time()
+    bad, blank, hdr, t0 = [], 0, 0, time.time()
     try:
         for i, line in enumerate(stream, 1):
             a = line.strip()
             if not a:
                 blank += 1
+                continue
+            if a.lower() in HEADERS:
+                hdr += 1
                 continue
             p = prefix_of_address(a)
             if p is None:
@@ -135,13 +185,17 @@ def build(source, outdir, limit=0, log=sys.stderr.write):
                 break
     finally:
         w.close()
-        stream.close()
+        try:
+            stream.close()
+        except Exception:
+            pass
     log(f"\n  streamed: {w.n:,} addresses indexed, {blank:,} blank, "
-        f"{len(bad)} unparseable (first few: {bad[:5]})\n")
+        f"{hdr} header line(s), {len(bad)} unparseable "
+        f"(first few: {bad[:5]})\n")
     sort_buckets(outdir, log)
     with open(os.path.join(outdir, MANIFEST), "w") as f:
         f.write(f"source\t{source}\nindexed\t{w.n}\nunparsed\t{len(bad)}\n"
-                f"built\t{int(time.time())}\n")
+                f"headers\t{hdr}\nbuilt\t{int(time.time())}\n")
     return w.n, len(bad)
 
 

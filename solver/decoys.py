@@ -115,7 +115,13 @@ def classify(phrase=None, key=None, balance=None):
         r = is_decoy_key(key)
         if r:
             return True, r
-    if balance is not None and balance < DUST_SATS:
+    # A PRESENCE sentinel is not a balance. The ever-used oracle answers "this
+    # address has existed on chain" and carries no amount, so it reports None
+    # (never 0, which would read as "unfunded"). Guarding on `0 <= balance`
+    # keeps such a hit out of the dust branch: filing the one result this
+    # project has been structurally unable to see as "dust: 20 BTC prize, this
+    # is dust" would be the most expensive misclassification available.
+    if balance is not None and 0 <= balance < DUST_SATS:
         return True, (f"dust: {balance} sats = {balance/1e8:.8f} BTC, and the "
                       f"prize is 20 BTC")
     return False, ""
