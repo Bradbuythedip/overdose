@@ -65,6 +65,7 @@ def lines_from_pdf(path, col_gap=60.0):
         if lines and len(lines) >= 20:
             sys.stderr.write(f"  line extraction: {fn.__name__} "
                              f"({len(lines)} printed lines)\n")
+            warn_if_web_print(lines, path)
             return lines
     raise SystemExit(
         "no backend could read text from that PDF.\n"
@@ -118,6 +119,38 @@ def describe_pdf_file(path):
         f"in a browser,\n  use its own download/print-to-PDF control, and check "
         f"the saved file opens as a PDF\n  before re-running. This test needs "
         f"the printed line breaks; there is nothing to read here.")
+
+
+def warn_if_web_print(lines, path):
+    """The dangerous file is a VALID PDF with the WRONG line breaks.
+
+    Printing the web article to PDF from a browser produces a perfectly good
+    PDF whose lines are the browser's reflow, not the printed column's. It
+    passes every check above and then answers a different question in silence.
+    A print facsimile of a magazine column has short measure (roughly 30-60
+    characters) and many lines; a browser print has long lines and usually a
+    header or footer carrying the URL and the date."""
+    body = [l for l in lines if len(l) > 15]
+    if not body:
+        return
+    med = sorted(len(l) for l in body)[len(body) // 2]
+    urlish = sum(1 for l in lines[:6] + lines[-6:]
+                 if re.search(r"https?://|bitcoinmagazine\.com|\b\d{1,2}/\d{1,2}/\d{2,4}\b", l))
+    if med > 75 or urlish:
+        sys.stderr.write(
+            "\n  ****************************************************************\n"
+            f"  WARNING: median line length {med} characters"
+            f"{', and a URL/date in the margins' if urlish else ''}.\n"
+            "  This looks like a WEB PAGE PRINTED TO PDF, not the print\n"
+            "  facsimile. Its line breaks are the browser's reflow, so Sand and\n"
+            "  Musset would be run on lines the typesetter never set, and the\n"
+            "  answer -- either way -- would mean nothing.\n"
+            "  A printed magazine column runs about 30-60 characters a line.\n"
+            "  Use the magazine's own PDF/pamphlet, not File > Print.\n"
+            "  ****************************************************************\n")
+    else:
+        sys.stderr.write(f"  median line length {med} characters: consistent "
+                         f"with a printed column\n")
 
 
 def _pdf_fitz(path, col_gap):
