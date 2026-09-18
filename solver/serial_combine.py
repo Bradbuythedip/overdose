@@ -722,7 +722,7 @@ def main():
                 try: s = bytes.fromhex(s[4:])
                 except ValueError: continue
                 sw.material("plug:" + t, s)
-                if len(s) in ENT_SIZES: sw.entropy("plug:" + t, s, ["", "El Salvador"])
+                if len(s) in ENT_SIZES: sw.entropy("plug:" + t, s, PASSPHRASES)
             elif isinstance(s, str) and s.startswith("path:"):
                 if path_seeds is None: path_seeds = _path_seeds()
                 _apply_path(sw, "plug:" + t, s[5:].strip(), path_seeds)

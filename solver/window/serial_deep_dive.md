@@ -58,3 +58,20 @@ object itself shows no retouching and no prop provenance. If the serial
 encodes the key, it does so under a rule none of this reaches, and there is
 no second reading of the bill left to take from these scans. The one new
 fact from this pass is the KB suffix letter, and it changes nothing.
+
+## 4. The mirrored serial as entropy, judged by the magazine (2026-09-18, user's idea)
+
+Criterion independent of the chain: if the serial a reader sees in the mirrored
+note (A 41714867 LC; the KB note mirrored I 06897264 BK) were the entropy of a
+mnemonic hidden "in the text", the mnemonic's words should occur in the column
+far above chance. `reading_mirror_entropy.py`: every mirror / rot180 form of
+both serials plus the originals as controls, extended to 16 or 32 bytes every
+way a person would (209 entropies), in four languages (836 mnemonics), scored
+by words-in-article against 1,500 random mnemonics per size and language.
+Best: 6 of 24 words (random 24-word English mnemonics reach 5 at the 99th
+percentile and 7 at the max), i.e. expected given ~100 candidates. Mirrored
+forms average 0.22 words in the article, originals 0.33. The 209 entropies
+also swept against the index with 9 passphrases x 72 paths: null. The inverse
+(every checksum-valid mnemonic window formed by the column's own wordlist
+words, converted back to entropy and searched for the serial digits) finds no
+8-digit match. The serial is not the entropy of a mnemonic hidden in the text.
