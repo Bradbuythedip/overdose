@@ -7,6 +7,7 @@
 # bot-check and you need a browser -- see the instructions it prints.
 #
 #   ./fetch_pamphlet.sh                     # Buy Love, Sell Fear
+#   ./fetch_pamphlet.sh --probe             # what does the CDN actually return?
 #   ./fetch_pamphlet.sh --inspect           # what does the page actually offer?
 #   ./fetch_pamphlet.sh <url> <outfile>     # any direct URL you find
 set -uo pipefail
@@ -29,6 +30,39 @@ try () {  # url outfile
   if is_pdf "$2.part"; then mv "$2.part" "$2"; return 0; fi
   rm -f "$2.part"; return 1
 }
+
+if [ "${1:-}" = "--probe" ]; then
+  # Show what the CDN ACTUALLY returns for each URL shape. The browser said
+  # ERR_INVALID_RESPONSE, not 404, so the resource probably exists and the
+  # response is malformed or gated -- status, content-type and the first bytes
+  # tell us which, and guessing more URL shapes without that is wasted effort.
+  ID="MjAxMTQ2NTAyNDEwNjc1OTk0"; F="6-keiser_the_withdrawal_issue.pdf"
+  REF="https://bitcoinmagazine.com/print/buy-love-sell-fear-bitcoin-magazine-withdrawal-issue"
+  i=0
+  for u in \
+    "https://images.saymedia-content.com/.image/cs_srgb/$ID/$F" \
+    "https://images.saymedia-content.com/.image/$ID/$F" \
+    "https://images.saymedia-content.com/$ID/$F" \
+    "https://images.saymedia-content.com/.image/t_original/$ID/$F" \
+    "https://images.saymedia-content.com/.image/MTk5NTQ0/$F" ; do
+    i=$((i+1))
+    echo "-- [$i] $u"
+    curl -sS -D /tmp/h.$i -o /tmp/b.$i -A "$UA" -e "$REF" \
+         -H 'Accept: application/pdf,application/octet-stream,*/*' \
+         --max-time 60 -L "$u" 2>/dev/null
+    echo "     status : $(awk 'BEGIN{IGNORECASE=1}/^HTTP\//{c=$2}END{print c}' /tmp/h.$i 2>/dev/null)"
+    echo "     type   : $(awk 'BEGIN{IGNORECASE=1}/^content-type:/{print $2}' /tmp/h.$i 2>/dev/null | tr -d '\r' | tail -1)"
+    echo "     bytes  : $(wc -c < /tmp/b.$i 2>/dev/null)"
+    echo "     starts : $(head -c 16 /tmp/b.$i 2>/dev/null | od -c | head -1 | cut -c9-)"
+    if head -c 5 /tmp/b.$i 2>/dev/null | grep -q '%PDF-'; then
+      cp /tmp/b.$i "$OUT"; echo "     *** REAL PDF -> saved as $OUT"
+    fi
+  done
+  echo
+  echo "  If any line says REAL PDF, run:  ./run.sh musset $OUT"
+  echo "  Otherwise paste this whole output back."
+  exit 0
+fi
 
 if [ "${1:-}" = "--inspect" ]; then
   TARGET="${2:-$ART}"
