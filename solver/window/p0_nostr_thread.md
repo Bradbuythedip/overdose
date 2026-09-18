@@ -19,9 +19,15 @@ relay    : wss://nostr.wine
 ```
 
 The TLV carries no author pubkey and no kind — only the event id and one relay
-hint. Dated **2023-05-03 per the search index — i.e. the same window as the
-mirror-writing tweet**, and described as a thread of **seven** notes, which
-matches pages 73–79 one note per page.
+hint. Dated **2023-03-05 per the search index — the *same day* as the
+mirror-writing tweet (1632391507008278528)**, and described as a thread of
+**seven** notes, which matches pages 73–79 at one note per page.
+
+That coincidence is the interesting part. On one day he posted the mirror
+clue to X and pushed the page images to Nostr. The seven-note shape means the
+Nostr thread is the only place the pages were published *one per note* rather
+than as a tweet gallery — so its per-note text, if any, is captioning that has
+no counterpart in the X record.
 
 ### Why it matters, and why it is not a solve
 
