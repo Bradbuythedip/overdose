@@ -447,9 +447,9 @@ def bfs_forms(depth, cap, log=None):
 
 
 # ---------------------------------------------------------------- plugins
-def plugin_forms(log=None):
+def plugin_forms(log=None, pattern="combo_*.py"):
     out = []
-    for path in sorted(glob.glob("combo_*.py")):
+    for path in sorted(glob.glob(pattern)):
         mod = os.path.splitext(os.path.basename(path))[0]
         try:
             m = importlib.import_module(mod)
@@ -521,6 +521,9 @@ class Sweep:
             flat = s.replace(" ", "")
             if wif_valid(flat):
                 self.certif += 1; self.log(f"\n  *** WIF-VALID STRING :: {tag} :: {flat}\n")
+            ws = s.lower().split()
+            if self.MNE and len(ws) in (12, 15, 18, 21, 24) and all(w in self.MNE.wordlist for w in ws):
+                self.mnemonic_words(tag, ws)
             hs = s.strip()
             if len(hs) == 64:
                 try: self.key(f"{tag}|literal_hex", bytes.fromhex(hs))
@@ -622,6 +625,7 @@ def main():
     ap.add_argument("--cap", type=int, default=60000, help="max discovery nodes per round")
     ap.add_argument("--loop", action="store_true", help="widen discovery depth to 4")
     ap.add_argument("--no-heavy", action="store_true", help="skip WarpWallet scrypt 2^18")
+    ap.add_argument("--plugin-glob", default="combo_*.py", help="which plugin modules to sweep")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     log = lambda m: (sys.stderr.write(m), sys.stderr.flush())
@@ -665,7 +669,9 @@ def main():
         for t, ws in mnw: sw.mnemonic_words("idx:" + t, ws)
         sw.flush(); sw.progress("textindex"); log("\n")
     if "plugins" in fams:
-        P = plugin_forms(log)
+        P = plugin_forms(log, a.plugin_glob)
+        do_hd = len(P) <= 8000
+        log(f"  plugins: {len(P):,} forms; HD seeds x 72 paths {'ON' if do_hd else 'OFF (>8000 forms; direct hashes only)'}\n")
         path_seeds = None
         for i, (t, s) in enumerate(P, 1):
             if isinstance(s, str) and s.startswith("hex:"):
@@ -678,6 +684,7 @@ def main():
                 _apply_path(sw, "plug:" + t, s[5:].strip(), path_seeds)
             else:
                 sw.material("plug:" + t, s)
+                if do_hd: sw.hd("plug:" + t, s)
             if i % 500 == 0: sw.progress(f"plugins {i:,}/{len(P):,}")
         sw.flush(); sw.progress("plugins"); log("\n")
     depth = a.depth
