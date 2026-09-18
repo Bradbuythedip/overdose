@@ -26,8 +26,8 @@ colour subsets, initials and first words; [str] the digits as a skip/stride key 
 one; cyclic) over the article words, the highlighted words, the page-72 words and the letters of
 the article / highlights / pull-quote, both bases, first 12 / 24 picks and the initials of the
 whole walk; [perm] the digits as a permutation key over the 38 highlighted phrases -- digit,
-pair and cumulative indices into the list, columnar reordering, and a stable sort by cyclic
-digit, emitted as phrases, first words and initials; [ptr] digit groups as page:line:word and
+pair and cumulative indices into the list, columnar reordering (which is the stable sort by
+cyclic digit) and its reverse, emitted as phrases, first words and initials; [ptr] digit groups as page:line:word and
 page:paragraph:word pointers into pages 72 and 75-79 (group shapes 1/2-digit page, 1/2-digit
 line, 1/2-digit word; page maps as-printed 2-digit, 7d, 72+d, body index, mod), and [xptr] the
 two serials combined as ONE pointer -- A picks the line and B the word (and vice versa), digit-
@@ -487,7 +487,7 @@ def fam_perm(put):
                 emit(f"perm:idx:{nm}:{sn}:b{base}", [H[(i - base) % n] for i in seq])
         emit(f"perm:columnar:{nm}", columnar_enc(H, sing))
         emit(f"perm:columnar_dec:{nm}", columnar_dec(H, sing))
-        emit(f"perm:stablesort:{nm}", [H[i] for i in sorted(range(n), key=lambda i: (sing[i % 8], i))])
+        # a stable sort by the cyclic digit IS the columnar reordering above; only its reverse is new
         emit(f"perm:stablesort_desc:{nm}", [H[i] for i in sorted(range(n), key=lambda i: (-sing[i % 8], i))])
 
 
