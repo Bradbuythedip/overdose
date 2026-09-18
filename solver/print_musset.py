@@ -51,6 +51,7 @@ def lines_from_pdf(path, col_gap=60.0):
     Four backends, tried in order of how well they preserve the thing this
     whole test depends on -- the printed line break. No single PDF library is
     universally installed, and the test is worthless if it cannot run."""
+    describe_pdf_file(path)
     for fn in (_pdf_fitz, _pdf_plumber, _pdf_pdftotext, _pdf_pypdf):
         try:
             lines = fn(path, col_gap)
@@ -66,14 +67,57 @@ def lines_from_pdf(path, col_gap=60.0):
                              f"({len(lines)} printed lines)\n")
             return lines
     raise SystemExit(
-        "no usable PDF text backend.\n"
-        "  Install ONE of these, then re-run:\n"
-        "    pip install pymupdf          # best: real glyph baselines\n"
-        "    pip install pdfplumber       # also has coordinates\n"
-        "    sudo apt install poppler-utils   # pdftotext -layout\n"
-        "    pip install pypdf            # last resort\n"
-        "  If the file is a scan with no text layer, none of them will help:\n"
-        "  this test needs real line breaks, and OCR would invent them.")
+        "no backend could read text from that PDF.\n"
+        "  If a backend reported an error above, that is the real cause.\n"
+        "  If it says none is installed, this repo already uses a venv "
+        "(run.sh prefers ./.venv):\n"
+        "    python3 -m venv .venv && ./.venv/bin/pip install pymupdf\n"
+        "    ./run.sh musset <file.pdf>\n"
+        "  (Debian blocks system-wide pip by design -- PEP 668 -- so use the "
+        "venv rather\n   than --break-system-packages.)\n"
+        "  If the PDF has no text layer (a scan, or image-only export), none of "
+        "them will\n  help: this test needs real line breaks and OCR would "
+        "invent them.")
+
+
+def describe_pdf_file(path):
+    """Fail loudly if the file is not a PDF.
+
+    A download from a site behind a bot-check or a login wall saves as HTML,
+    or as a few hundred bytes of error page, under whatever name you gave it.
+    Every PDF library then reports its own confusing failure and the real
+    cause -- you do not have the document -- never gets said."""
+    if not os.path.exists(path):
+        raise SystemExit(f"{path}: no such file")
+    n = os.path.getsize(path)
+    with open(path, "rb") as f:
+        head = f.read(1024)
+    if head[:5] == b"%PDF-":
+        ver = head[5:8].decode("ascii", "replace")
+        sys.stderr.write(f"  {path}: {n:,} bytes, PDF {ver}\n")
+        if n < 5000:
+            sys.stderr.write("  WARNING: that is very small for a printed "
+                             "column; it may be a stub or a cover page.\n")
+        return
+    sniff = head.lstrip()[:400].decode("utf-8", "replace")
+    low = sniff.lower()
+    if low.startswith(("<!doctype html", "<html", "<?xml")) or "<title" in low:
+        what = "an HTML page, not a PDF"
+        m = re.search(r"<title[^>]*>(.*?)</title>", sniff, re.S | re.I)
+        if m:
+            what += f" (title: {m.group(1).strip()[:80]!r})"
+    elif head[:2] == b"PK":
+        what = "a ZIP archive (epub/docx?), not a PDF"
+    elif not head.strip():
+        what = "empty"
+    else:
+        what = f"not a PDF (starts {head[:16]!r})"
+    raise SystemExit(
+        f"{path} is {what}. {n:,} bytes.\n"
+        f"  The download did not give you the document. Open the article page "
+        f"in a browser,\n  use its own download/print-to-PDF control, and check "
+        f"the saved file opens as a PDF\n  before re-running. This test needs "
+        f"the printed line breaks; there is nothing to read here.")
 
 
 def _pdf_fitz(path, col_gap):
@@ -147,8 +191,11 @@ def _pdf_pdftotext(path, col_gap):
     with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as t:
         tmp = t.name
     try:
-        subprocess.run([exe, "-layout", "-enc", "UTF-8", path, tmp],
-                       check=True, capture_output=True, timeout=180)
+        r = subprocess.run([exe, "-layout", "-enc", "UTF-8", path, tmp],
+                           capture_output=True, timeout=180)
+        if r.returncode != 0:
+            msg = (r.stderr or b"").decode("utf-8", "replace").strip()
+            raise RuntimeError(f"pdftotext exit {r.returncode}: {msg or 'no message'}")
         raw = open(tmp, encoding="utf-8", errors="replace").read()
     finally:
         try:
