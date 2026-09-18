@@ -61,6 +61,26 @@ if [ $# -ge 1 ]; then
   echo "  that URL did not return a PDF"; exit 1
 fi
 
+# The pamphlet PDF, found on the magazine's CDN. The browser refuses it
+# (ERR_INVALID_RESPONSE) because /.image/cs_srgb/ is an image-transform path
+# and a PDF is not an image -- but the bytes are served, and curl takes them.
+SAY_ID="MjAxMTQ2NTAyNDEwNjc1OTk0"
+SAY_F="6-keiser_the_withdrawal_issue.pdf"
+echo "== 00. the pamphlet PDF on the CDN (several URL shapes)"
+for u in \
+  "https://images.saymedia-content.com/.image/cs_srgb/$SAY_ID/$SAY_F" \
+  "https://images.saymedia-content.com/.image/$SAY_ID/$SAY_F" \
+  "https://images.saymedia-content.com/$SAY_ID/$SAY_F" \
+  "https://images.saymedia-content.com/.image/c_limit%2Ccs_srgb/$SAY_ID/$SAY_F" ; do
+  if try "$u" "$OUT"; then
+    echo "  OK -> $OUT ($(wc -c < "$OUT") bytes)"
+    echo "  now run:  ./run.sh musset $OUT"
+    exit 0
+  fi
+done
+echo "  none of the CDN URL shapes returned a PDF"
+echo
+
 echo "== 0. the download landing page found on the article"
 if curl -sSL --compressed -A "$UA" --max-time 90 "$DL" -o dl_page.html 2>/dev/null; then
   echo "  fetched $DL ($(wc -c < dl_page.html) bytes)"
