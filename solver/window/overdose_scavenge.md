@@ -100,3 +100,48 @@ Their results are appended below as they land.
   rotation 10.15 deg) so pill geometry gives five readings not ten; 8 notes
   across 73/74, no plate letters legible beyond the serial; 14-15 bitcoin logos
   on the boxers.
+
+## Corrections to the record from this pass (measured, not impressions)
+
+- **Page 74 shows Keiser upright**, wide stance, two-handed pistol aimed at the
+  reader, $100 bills issuing from the muzzle, shirt / tie / waistcoat / Bitcoin-
+  logo boxers / socks / sneakers, on a dry scrub hillside (a ranch gate, two posts
+  and a utility pole at right). The "man upside down" in earlier notes, including
+  mine this session, was the 180-degree-rotated scan. No head-in-the-sand reading
+  exists. The photograph captions a sentence already in the text ("It's a stun gun
+  to the genitals."), which was swept long ago.
+- **The five capsules are one photograph placed twice** (p73 and again on p79,
+  scaled 0.758, rotated -10.1 deg, 1.3 px rms), so the capsule pattern carries no
+  page-specific information. No capsule carries an imprint.
+- **The pull-quote is printed twice, not three times** (p78 body and p78 scribble);
+  p79's orange run is a different sentence.
+- **Underline and strikethrough DO exist**, contrary to typography_closed.md, and
+  they are printed design devices visible to any reader: a rule under "They
+  discount stuff in advance." and under "protocol." (p75), and a mid-height rule
+  through the two-line parenthetical "(and 10years of watching Peter Schiff miss
+  buying bitcoin / since I started honey-badgering him to buy some at $1 back in
+  2011)" after the "nonsense" knockout (p76). The p79 signature reads MAX <heart>
+  KEISER; the transcript has "MAX KEISER". Readings of all three
+  (`reading_marks.py`: the underlined phrases, the struck line, the text with and
+  without it, the signature with the heart in every spelling): 153 forms, null.
+- **The bilevel masks omit every highlighted phrase**, several knockout boxes, and
+  on p79 four plain lines and the signature: the most emphasised text in the
+  column exists only in the 200 dpi JPEG layer. Every mask-based glyph
+  measurement in the record therefore never saw the highlighted words. xref 65 on
+  p79 is an EMPTY mask; the duplicate-rect pairs are two-colour separations.
+- **Glyph-shape outlier pass over 5,000+ mask glyphs**: no rotated, mirrored,
+  foreign-font or altered glyph. Running heads identical on all pages.
+- **The p78 marker strokes** ("5"-like squiggle, a "15"/"75"-like pair, two
+  drips) are illegible blobs at 200 dpi; their digit and pointer readings
+  (`reading_graffiti.py`, 245 forms) are null.
+
+## Sweeps added in this pass (all null, all with the genesis control)
+`reading_scavenge.py` 1,867 forms / 17.1M scripts; `reading_hlkey.py` 4,630 /
+44.1M; `reading_furniture.py` 167 / 1.5M; `reading_mirror_entropy.py` 209
+entropies x 9 passphrases x 72 paths / 3.5M; `reading_barred_o.py` 177 / 1.6M;
+`reading_graffiti.py` 245 / 2.2M; `reading_scribble_layout.py` 26 / 0.2M;
+`reading_prose_tells.py` 80 / 0.7M; `reading_keyword_anchor.py` 226 / 2.1M;
+`reading_rebus.py` 336 / (with reading_record) 6.5M; `reading_marks.py` 153 /
+1.4M. Critic plugins: setter 42.2M, numismatic 31.6M, walletformats 15.7M (613
+valid mnemonics vs 647 expected), encodings 4.8M. Two-serial combination sweep
+to discovery depth 4: null. Clue x serial n-grams to 10: null.
