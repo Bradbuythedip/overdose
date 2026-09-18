@@ -145,3 +145,40 @@ entropies x 9 passphrases x 72 paths / 3.5M; `reading_barred_o.py` 177 / 1.6M;
 1.4M. Critic plugins: setter 42.2M, numismatic 31.6M, walletformats 15.7M (613
 valid mnemonics vs 647 expected), encodings 4.8M. Two-serial combination sweep
 to discovery depth 4: null. Clue x serial n-grams to 10: null.
+
+## Skeptics' verdicts (both workflows complete)
+
+- **The barred 'o' of "love" HOLDS as a physical mark.** Independent re-segmentation
+  of the white type in the scribble printing: 58 glyph components; the o and v of
+  "love" merge into one component at print px (686, 3584), centre-column ink
+  profile [1.0, 0, 0, 0.45, 0.36]; the printing has FIVE o's (economy x2, of,
+  more, love), and only love's is barred; the e's carry their bar inside the bowl.
+  The phone photo shows the same ring + bar + bridge. Mask x74 has 0 ink pixels in
+  the scribble region, so no lossless capture exists. The skeptic's judgement: the
+  two captures are of the SAME printed copy, so a press-side cause (plate or
+  blanket scratch, a hickey trail through the solid) is not excluded, but the
+  streak's confinement to the o-to-v span and its crossbar-like tilt make a
+  design-file origin (distressed-glyph texture, a grunge layer mask, or a
+  strikethrough attribute) the likelier; nothing at 200-215 dpi separates them.
+  **It is one anomalous glyph in 58 with no second mark to give it a syntax**, and
+  every reading it could carry is already swept null. What would settle it: a
+  600 dpi flatbed scan of that 3 x 2 cm patch, or the same patch on a second copy
+  of the issue (a press fault differs between copies; a design-file mark repeats).
+- Grille: 5/6 hold, none worth a sweep. Author tells: 10/10 hold, none. Decoded
+  channels: 5/5 hold, none. Chroma 8/8, under-mask 7/7, show-through 4/5, artwork
+  10/11: hold, none worth a sweep. The mask-glyph and photo-rebus skeptics did not
+  run (session limit); those two reports stand as single-agent measurements, and
+  the parts I checked by eye (the p75 underline, the p76 struck line, the heart in
+  the signature, the pistol pose) are as described.
+- The forced-HD wallet-format run finished: 112.0M scripts, 0 hits, 613 valid
+  mnemonics vs 646.6 expected.
+
+## Where this leaves the column
+
+Every channel a reader can see on pages 73-79 has now been read as content, as
+pointer, as index, as cipher, as grille and as rebus, at chance throughout, and
+every string those readings produce is null against the funded index and the
+checksums. The physical object still holds three things this container cannot
+reach: the barred 'o' at 600 dpi (or on a second copy), page 77 at a resolution
+equal to the other pages, and the highlighted words in a lossless capture. None
+of those is likely to change the answer; they are the only measurements left.
