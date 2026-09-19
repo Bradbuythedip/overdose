@@ -1,0 +1,5 @@
+# Binary evidence artifacts: never diff or merge these as text.
+*.pdf   binary
+*.jpeg  binary
+*.jpg   binary
+*.png   binary
