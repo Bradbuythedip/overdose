@@ -2,7 +2,13 @@
 
 ## The new artifact: a 7-note Nostr thread
 
-Search surfaced a Nostr event this project had never recorded:
+**Correction (2026-09-19):** this session first reported the thread as new to
+the repo. It is not. `window/p72_banknote_is_printed.md` already names the same
+event `2d73d713…` and `nostr.build` as the canonical release. What is new here
+is only the offline decode below, and the observation that the thread is the
+same *day* as the mirror tweet.
+
+Search surfaced the Nostr event:
 
 > "20 BTC hidden in Bitcoin Magazine Issue 24, by Max Keiser. Check out the
 > pages in [a 7 note thread] … Happy Treasure Hunting! Repost far and wide"
